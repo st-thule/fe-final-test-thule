@@ -1,0 +1,17 @@
+@use '../base/' as *;
+
+.list {
+  &-menus {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 32px;
+  }
+  &-item {
+    padding: 10px 20px;
+    border-radius: 6px;
+    &:hover {
+      background-color: $color-grey-light;
+    }
+  }
+}
