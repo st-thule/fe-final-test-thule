@@ -5,13 +5,15 @@ export const Header = () => {
   return (
     <header className="header">
       <div className="container">
-        <h2 className="logo">
-          <Link to="">
-            <img src="/assets/images/logo.png" />
-          </Link>
-        </h2>
-        <div className="header-action">
-          <button className="btn btn-primary">Login</button>
+        <div className="wrapper">
+          <h1 className="logo">
+            <Link to="">
+              <img src="/assets/images/logo.png" />
+            </Link>
+          </h1>
+          <div className="header-action">
+            <button className="btn btn-primary">Login</button>
+          </div>
         </div>
       </div>
     </header>
