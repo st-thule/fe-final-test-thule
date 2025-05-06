@@ -24,6 +24,10 @@
 
   &-xl {
     width: 100%;
+
+    @media screen and (max-width: $md) {
+      width: 100%;
+    }
   }
 
   &-sm {
