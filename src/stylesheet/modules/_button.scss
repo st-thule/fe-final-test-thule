@@ -1,0 +1,23 @@
+@use '../base/' as *;
+
+.btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+
+  &-primary {
+    background-color: $color-primary;
+
+    color: $color-white;
+    font-size: $font-size-base;
+    font-weight: $font-weight-base;
+
+    &:hover {
+      box-shadow: 0px 5px 20px 0px rgba($color-primary, 0.3);
+    }
+
+    @media screen and (max-width: $md) {
+      padding: 8px 10px;
+    }
+  }
+}
