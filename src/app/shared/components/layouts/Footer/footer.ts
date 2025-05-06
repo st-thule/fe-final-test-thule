@@ -1,5 +1,3 @@
-import { href } from 'react-router-dom';
-
 export const footerList = [
   {
     id: 1,
