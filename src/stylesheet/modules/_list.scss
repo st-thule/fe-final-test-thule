@@ -1,0 +1,22 @@
+@use '../base/' as *;
+
+.list {
+  &-legal {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+
+    .item {
+      color: $color-black-light;
+      font-size: $font-size-xs;
+      font-weight: $font-weight-base;
+
+      &:hover {
+        color: $color-grey;
+      }
+    }
+  }
+}
