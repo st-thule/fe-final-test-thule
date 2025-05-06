@@ -1,3 +1,4 @@
+import { Footer } from '@shared/components/layouts/Footer/Footer';
 import { Header } from '@shared/components/layouts/Header';
 import React from 'react';
 
@@ -10,6 +11,7 @@ export const Page = () => {
       <main className="main">
         <Outlet />
       </main>
+      <Footer />
     </>
   );
 };
