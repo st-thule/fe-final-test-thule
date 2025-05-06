@@ -1,8 +1,8 @@
-import { StrictMode } from 'react';
+import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import React from 'react';
 import { BrowserRouter, useRoutes } from 'react-router-dom';
 
+import '../stylesheet/styles.scss';
 import appRoutes from './app.routes';
 
 const App = () => {
