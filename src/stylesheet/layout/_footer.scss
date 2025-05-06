@@ -1,0 +1,16 @@
+@use '../base/' as *;
+
+.footer {
+  padding: 56px 0;
+  .wrapper {
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    img {
+      width: 50%;
+      height: auto;
+    }
+  }
+}
