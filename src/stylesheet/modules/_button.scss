@@ -4,6 +4,7 @@
   padding: 8px 20px;
   border: none;
   border-radius: 6px;
+  cursor: pointer;
 
   &-primary {
     background-color: $color-primary;
@@ -19,5 +20,17 @@
     @media screen and (max-width: $md) {
       padding: 8px 10px;
     }
+  }
+
+  &-xl {
+    width: 100%;
+
+    @media screen and (max-width: $md) {
+      width: 100%;
+    }
+  }
+
+  &-sm {
+    padding: 8px 15px;
   }
 }
