@@ -1,29 +1,26 @@
 //Colors
-$color-black: #29294b;
-$color-purple-light: #9895ff;
-$color-purple-medium: #5955d1;
-$color-purple-dark: #514dcc;
-$color-grey: #696981;
-$color-grey-light: #e1e1e8;
+$color-black-light: #30333c;
+$color-black: #212121;
+$color-primary: #2980b9;
+$color-grey: #97989f;
+$color-grey-dark: #757575;
+$color-grey-light: #9a9a9a;
 $color-white: #ffffff;
-$color-shadow: #7272ff;
 
 // Font size
-$font-size-2xl: 52px;
-$font-size-xl: 42px;
-$font-size-lg: 21px;
+$font-size-3xl: 40px;
+$font-size-2xl: 32px;
+$font-size-xl: 24px;
+$font-size-lg: 20px;
 $font-size-md: 18px;
 $font-size-base: 16px;
-$font-size-sm: 15px;
 $font-size-xs: 14px;
-$font-size-2xs: 12px;
-$font-size-3xs: 11px;
 
 // Font weight
 $font-weight-extra: 800;
 $font-weight-bold: 700;
 $font-weight-semi: 600;
-$font-weight-base: 400;
+$font-weight-regular: 500;
 
 // Breakpoints
 $sm: 576px;
