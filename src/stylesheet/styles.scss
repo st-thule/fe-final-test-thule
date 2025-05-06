@@ -1,5 +1,5 @@
-@use './base/';
-@use './layouts/';
-@use './modules/';
-@use './pages/';
-@use './state/';
+@use './base/' as *;
+@use './layout/' as *;
+@use './modules/' as *;
+@use './pages/' as *;
+@use './state/' as *;
