@@ -13,6 +13,10 @@
       color: $color-black-light;
       font-size: $font-size-xs;
       font-weight: $font-weight-base;
+
+      &:hover {
+        color: $color-grey;
+      }
     }
   }
 }

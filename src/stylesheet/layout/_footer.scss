@@ -3,8 +3,15 @@
 .footer {
   padding: 56px 0;
   .wrapper {
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+
+    @media screen and (max-width: $md) {
+      justify-content: center;
+      gap: 24px;
+      text-align: center;
+    }
   }
 
   .logo {
