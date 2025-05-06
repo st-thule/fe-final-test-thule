@@ -8,6 +8,10 @@
   border: 1px solid $color-grey-light;
   border-radius: 6px;
 
+  &:has(input:focus) {
+    border-color: $color-primary;
+  }
+
   .input {
     flex: 1;
 
