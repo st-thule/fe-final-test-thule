@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Navbar } from '../NavBar';
+
+import { Navbar } from '@app/shared/components/NavBar';
 
 export const Header = () => {
   return (

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { navItems } from '@app/core/constants/nav';
 
@@ -8,9 +9,9 @@ export const Navbar = () => {
       <ul className="list-menus">
         {navItems.map((nav) => (
           <li className="list-item">
-            <a className="menu" href={nav.href}>
+            <Link className="menu" to={nav.href}>
               {nav.title}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>
