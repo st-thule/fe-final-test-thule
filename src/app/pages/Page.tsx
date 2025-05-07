@@ -13,7 +13,6 @@ const Page = () => {
         <Outlet />
       </main>
       <Footer />
-      <ToastContainer />
     </>
   );
 };

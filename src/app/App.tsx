@@ -8,6 +8,7 @@ import appRoutes from './app.routes';
 import AppErrorBoundaryFallback from './AppErrorBoundaryFallback';
 import AppSuspense from './AppSuspense';
 import { renderChildren } from './core/modules/custom-router-dom/RouterOutlet';
+import { ToastContainer } from 'react-toastify';
 
 export const Root = () => {
   return (
@@ -24,4 +25,10 @@ const router = createBrowserRouter([
 ]);
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
-root.render(<RouterProvider router={router} />);
+root.render(
+  <>
+    {' '}
+    <RouterProvider router={router} />{' '}
+    <ToastContainer position="top-right" autoClose={3000} />
+  </>
+);
