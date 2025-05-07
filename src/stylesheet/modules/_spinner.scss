@@ -1,0 +1,50 @@
+@use 'sass:map';
+
+@use '../base/' as *;
+
+@keyframes bounce-delay {
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .bounce {
+    @include animation(bounce-delay 1.4s infinite ease-in-out both);
+    @include pxRem(margin-left, 5);
+    border-radius: 50%;
+    background: rgba($color-white, 0.8);
+    &:first-child {
+      @include animation-delay(-0.32s);
+    }
+
+    &:nth-child(2) {
+      @include animation-delay(-0.16s);
+    }
+  }
+
+  &-lg > .bounce {
+    @include pxRem(width, 20);
+    @include pxRem(height, 20);
+  }
+
+  &-md > .bounce {
+    @include pxRem(width, 10);
+    @include pxRem(height, 10);
+  }
+
+  &-sm > .bounce {
+    @include pxRem(width, 5);
+    @include pxRem(height, 5);
+  }
+}
