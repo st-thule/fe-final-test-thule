@@ -8,6 +8,8 @@ import { RegrexPattern } from '@app/core/constants/regrexPattern';
 
 import hideIcon from '@assets/icons/hide.svg';
 import showIcon from '@assets/icons/show.svg';
+import { registerAccount } from '@app/core/services/auth.service';
+import { toast } from 'react-toastify';
 
 interface IRegisterForm {
   email: string;
@@ -23,6 +25,7 @@ interface IRegisterForm {
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
     register,
@@ -31,8 +34,23 @@ const Register = () => {
     getValues,
   } = useForm<IRegisterForm>();
 
-  const onSubmit = (data: IRegisterForm) => {
+  const onSubmit = async (data: IRegisterForm) => {
     console.log('Form submitted:', data);
+    try {
+      await registerAccount({
+        email: data.email!,
+        password: data.password!,
+        firstName: data.firstName!,
+        lastName: data.lastName!,
+        gender: data.gender!,
+        dob: data.dob!,
+        phone: data.phone!,
+        displayName: data.displayName!,
+      });
+      toast.success('Create successfully');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
