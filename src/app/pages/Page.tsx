@@ -5,7 +5,7 @@ import { Footer } from '@shared/components/layouts/Footer/Footer';
 import { Header } from '@shared/components/layouts/Header';
 import { ModalComponent } from '@shared/components/Modal';
 
-export const Page = () => {
+const Page = () => {
   return (
     <>
       <Header />
@@ -17,3 +17,5 @@ export const Page = () => {
     </>
   );
 };
+
+export default Page;
