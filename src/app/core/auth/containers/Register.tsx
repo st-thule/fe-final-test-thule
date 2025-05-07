@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Input } from '@shared/components/partials/Input';
 import { Button } from '@shared/components/partials/Button';
@@ -24,6 +24,7 @@ interface IRegisterForm {
 }
 
 const Register = () => {
+  const navigation = useNavigate();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -37,6 +38,7 @@ const Register = () => {
   const onSubmit = async (data: IRegisterForm) => {
     console.log('Form submitted:', data);
     try {
+      setIsLoading(true);
       await registerAccount({
         email: data.email!,
         password: data.password!,
@@ -48,8 +50,11 @@ const Register = () => {
         displayName: data.displayName!,
       });
       toast.success('Create successfully');
+      navigation('/auth/login');
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data?.errors?.[0]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
