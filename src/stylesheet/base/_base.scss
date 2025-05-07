@@ -1,5 +1,6 @@
 @use 'sass:map';
-@use '../base/' as *;
+@use './mixins' as mixins;
+@use './variables' as variables;
 
 * {
   -webkit-box-sizing: border-box;
@@ -11,12 +12,12 @@
 html,
 body {
   @include mixins.pxRem(font-size, 16);
-  font-family: $font-body;
+  font-family: variables.$font-body;
   position: relative;
   font-weight: 400;
   line-height: 1.7;
   letter-spacing: 0.8px;
-  background-color: $color-white;
+  background-color: variables.$color-white;
   overscroll-behavior: contain;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -29,7 +30,7 @@ a {
   color: inherit;
 
   &:hover {
-    color: $color-primary;
+    color: variables.$color-primary;
   }
 }
 
@@ -44,6 +45,6 @@ h3,
 h4,
 h5,
 h6 {
-  @include pxRem(margin-bottom, 10);
+  @include mixins.pxRem(margin-bottom, 10);
   font-weight: bold;
 }

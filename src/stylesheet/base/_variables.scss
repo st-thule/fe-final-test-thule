@@ -7,7 +7,7 @@ $color-grey: #97989f;
 $color-grey-dark: #757575;
 $color-grey-light: #d4d7e3;
 $color-white: #ffffff;
-$color-red: #fa5f55;
+$color-danger: #fa5f55;
 
 // Font size
 $font-size-3xl: 40px;
@@ -42,3 +42,7 @@ $lg: 1280px;
 $columns: 12;
 $gap: 20px;
 $gap-mobile: 12px;
+
+$space-value: 5;
+$AppErrorBoundaryFallback: 5;
+$size-list: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;

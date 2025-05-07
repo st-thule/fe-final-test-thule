@@ -1,6 +1,5 @@
 @use 'sass:map';
-@use '../base/variables' as vars;
-@use '../base/mixins' as mixins;
+@use '../base/' as *;
 
 .txt-prewarp {
   white-space: pre-wrap;
@@ -30,15 +29,15 @@
   text-transform: capitalize;
 }
 .txt-link {
-  @include mixins.pxRem(padding-bottom, 2);
-  color: map.get(vars.$color, primary);
+  @include pxRem(padding-bottom, 2);
+  color: $color-primary;
   position: relative;
   font-weight: normal;
   &:after {
     content: '';
     height: 1px;
     width: 0;
-    background: map.get(vars.$color, primary);
+    background: $color-primary;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -50,9 +49,9 @@
     }
   }
   &.txt-link-error {
-    color: map.get(vars.$color, danger);
+    color: $color-danger;
     &::after {
-      background: map.get(vars.$color, danger);
+      background: $color-danger;
     }
   }
 }

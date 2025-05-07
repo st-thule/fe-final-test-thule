@@ -3,32 +3,29 @@ import React from 'react';
 import { Spinner } from '../common';
 
 interface IButtonProps {
-  title: React.ReactNode;
+  className?: string;
   isDisabled?: boolean;
   isLoading?: boolean;
-  className?: string;
   type?: 'button' | 'submit';
-  onClick: () => void;
-  btnRef?: React.Ref<HTMLButtonElement>;
+  label?: string | '';
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 export const Button: React.FC<IButtonProps> = ({
-  title,
+  className = '',
   isDisabled = false,
   isLoading = false,
-  className = 'btn btn-primary',
+  type = 'button',
+  label,
   onClick,
-  type = 'submit',
-  btnRef,
 }) => {
   return (
     <button
       className={`btn ${className}`}
-      ref={btnRef}
       type={type}
-      disabled={isDisabled}
       onClick={onClick}
+      disabled={isDisabled}
     >
-      <span>{title}</span>
+      {label}
       {isLoading && <Spinner className="spinner-sm" />}
     </button>
   );
