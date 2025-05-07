@@ -1,8 +1,11 @@
 @use '../base/' as *;
 
+.input-group {
+  flex: 1;
+}
 .input-wrapper {
   display: flex;
-  padding: 16px;
+  padding: 8px;
   gap: 8px;
 
   border: 1px solid $color-grey-light;
@@ -36,3 +39,4 @@
   font-size: $font-size-md;
   font-weight: $font-weight-semi;
 }
+

@@ -42,7 +42,7 @@ export const Input = forwardRef<HTMLInputElement, IInputProps>(
     ref
   ) => {
     return (
-      <>
+      <div className="input-group">
         {label && <p className="input-label">{label}</p>}
         <div className="input-wrapper">
           <input
@@ -65,7 +65,7 @@ export const Input = forwardRef<HTMLInputElement, IInputProps>(
           )}
         </div>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
-      </>
+      </div>
     );
   }
 );
