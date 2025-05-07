@@ -1,8 +1,9 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
+import { Footer } from '@shared/components/layouts/Footer/Footer';
 import { Header } from '@shared/components/layouts/Header';
-import { Footer } from '@shared/components/layouts/footer/Footer';
+import { ModalComponent } from '@shared/components/Modal';
 
 export const Page = () => {
   return (
@@ -12,6 +13,7 @@ export const Page = () => {
         <Outlet />
       </main>
       <Footer />
+      <ModalComponent />
     </>
   );
 };
