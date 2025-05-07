@@ -2,6 +2,7 @@
 $color-black-light: #30333c;
 $color-black: #212121;
 $color-primary: #2980b9;
+$color-blue-light: #f6f8ff;
 $color-grey: #97989f;
 $color-grey-dark: #757575;
 $color-grey-light: #d4d7e3;
@@ -17,6 +18,9 @@ $font-size-md: 18px;
 $font-size-base: 16px;
 $font-size-xs: 14px;
 
+// border radius
+$border-radius: 6px;
+
 // Font weight
 $font-weight-extra: 800;
 $font-weight-bold: 700;
@@ -27,3 +31,8 @@ $font-weight-base: 400;
 $sm: 576px;
 $md: 768px;
 $lg: 1280px;
+
+// Row, col
+$columns: 12;
+$gap: 20px;
+$gap-mobile: 12px;
