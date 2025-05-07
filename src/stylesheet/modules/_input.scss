@@ -1,0 +1,38 @@
+@use '../base/' as *;
+
+.input-wrapper {
+  display: flex;
+  padding: 16px;
+  gap: 8px;
+
+  border: 1px solid $color-grey-light;
+  border-radius: 6px;
+
+  &:has(input:focus) {
+    border-color: $color-primary;
+  }
+
+  .input {
+    flex: 1;
+
+    border: none;
+    outline: none;
+
+    font-size: $font-size-base;
+  }
+
+  .input-icon {
+    max-width: 24px;
+    height: auto;
+
+    cursor: pointer;
+  }
+}
+
+.input-label {
+  padding-bottom: 8px;
+
+  color: $color-black;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semi;
+}

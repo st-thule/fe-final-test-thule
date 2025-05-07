@@ -8,6 +8,8 @@ import appRoutes from './app.routes';
 import AppErrorBoundaryFallback from './AppErrorBoundaryFallback';
 import AppSuspense from './AppSuspense';
 import { renderChildren } from './core/modules/custom-router-dom/RouterOutlet';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 export const Root = () => {
   return (
@@ -24,4 +26,8 @@ const router = createBrowserRouter([
 ]);
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
-root.render(<RouterProvider router={router} />);
+root.render(
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
+);
