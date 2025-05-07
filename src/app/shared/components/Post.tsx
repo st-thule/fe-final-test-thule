@@ -6,7 +6,7 @@ interface IPostProps {
   onClick?: (id: string) => void;
 }
 
-export const PostComponent: React.FC<IPostProps> = ({ onClick, className }) => {
+export const Post: React.FC<IPostProps> = ({ onClick, className }) => {
   return (
     <li className={`list-item ${className}`}>
       <Link className="card" to="" onClick={() => onClick}>
