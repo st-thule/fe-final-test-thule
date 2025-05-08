@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 
 interface IInputProps {
   name?: string;
@@ -41,10 +41,23 @@ export const Input = forwardRef<HTMLInputElement, IInputProps>(
     },
     ref
   ) => {
+    const [isFocused, setIsFocused] = useState(false);
+    const [hasValue, setHasValue] = useState(!!value);
+
+    useEffect(() => {
+      setHasValue(!!value);
+    }, [value]);
+
     return (
       <div className="input-group">
-        {label && <p className="input-label">{label}</p>}
-        <div className="input-wrapper">
+        {label && (
+          <label className={`input-label ${isFocused || hasValue ? 'focused' : ''}`}>
+            {label}
+          </label>
+        )}
+        <div
+          className={`input-wrapper ${isFocused ? 'focused' : ''} ${hasValue ? 'has-value' : ''}`}
+        >
           <input
             ref={ref}
             id={name}
@@ -57,14 +70,27 @@ export const Input = forwardRef<HTMLInputElement, IInputProps>(
             minLength={minLength}
             readOnly={isReadOnly}
             disabled={isDisabled}
-            onBlur={onBlur}
-            onChange={onChange}
+            onFocus={() => setIsFocused(true)}
+            onBlur={(e) => {
+              setIsFocused(false);
+              if (onBlur) onBlur(e);
+              if (e.target.value) setHasValue(true);
+              else setHasValue(false);
+            }}
+            onChange={(e) => {
+              if (onChange) onChange(e);
+              setHasValue(!!e.target.value);
+            }}
           />
           {icon && (
             <img className="input-icon" src={icon} onClick={onIconClick} />
           )}
         </div>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        {errorMessage && (
+          <p className={`error-message ${errorMessage ? 'visible' : ''}`}>
+            {errorMessage}
+          </p>
+        )}
       </div>
     );
   }
