@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { PageRoute } from '@app/core/modules/custom-router-dom/router.interface';
+import { AppRoutes } from '../constants/app-routes';
 
 const Auth = React.lazy(() => import('./Auth'));
 const Login = React.lazy(() => import('./containers/Login'));
@@ -8,21 +9,21 @@ const Register = React.lazy(() => import('./containers/Register'));
 
 const authRoutes: PageRoute[] = [
   {
-    path: 'auth',
+    path: AppRoutes.AUTH,
     element: Auth,
     children: [
       {
         path: '',
-        redirect: 'login',
+        redirect: AppRoutes.LOGIN,
       },
 
       {
-        path: 'login',
+        path: AppRoutes.LOGIN,
         element: Login,
       },
 
       {
-        path: 'register',
+        path: AppRoutes.REGISTER,
         element: Register,
       },
     ],

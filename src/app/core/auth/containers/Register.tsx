@@ -13,6 +13,7 @@ import { validationRules } from '@shared/utils/validationRules';
 
 import hideIcon from '@assets/icons/hide.svg';
 import showIcon from '@assets/icons/show.svg';
+import { AppRoutes } from '@app/core/constants/app-routes';
 
 interface IRegisterForm {
   email: string;
@@ -188,7 +189,7 @@ const Register = () => {
 
         <p className="form-link">
           Yes, I have an account?{' '}
-          <Link to="/login">
+          <Link to={AppRoutes.LOGIN}>
             <span>Login</span>
           </Link>
         </p>
