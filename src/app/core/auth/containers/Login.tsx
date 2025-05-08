@@ -50,7 +50,7 @@ const Login = () => {
       toast.success('Login successfully');
       navigate(AppRoutes.HOME);
     } catch (error) {
-      toast.error(error.response?.data?.errors?.[0]);
+      toast.error(error?.response?.data?.errors?.[0]);
     } finally {
       setIsLoading(false);
     }

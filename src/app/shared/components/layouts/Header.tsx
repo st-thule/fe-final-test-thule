@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button } from '../partials/Button';
+import { AppRoutes } from '@app/core/constants/app-routes';
+import { USER_KEY } from '@app/core/constants/contants';
 import { authStorage } from '@app/core/services/auth-storage.service';
+import { Button } from '../partials/Button';
+import { getDataFromLocalStorage } from '@app/core/helpers/storage.helper';
+import { User } from '@shared/models/user';
 
 export const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const user = getDataFromLocalStorage(USER_KEY, {});
 
   useEffect(() => {
     const token = authStorage.getToken();
@@ -23,9 +28,9 @@ export const Header = () => {
           </h1>
           <div className="header-action">
             {isLoggedIn ? (
-              <Button className="btn btn-secondary" label="Logged" />
+              <p></p>
             ) : (
-              <Link to="/login">
+              <Link to={AppRoutes.LOGIN}>
                 <Button className="btn btn-primary" label="Login" />
               </Link>
             )}

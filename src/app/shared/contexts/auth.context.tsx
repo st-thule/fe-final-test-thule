@@ -1,5 +1,10 @@
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, ReactNode, useState } from 'react';
 
+import { USER_KEY } from '@app/core/constants/contants';
+import {
+  removeItemFromLocalStorage,
+  setDataToLocalStorage,
+} from '@app/core/helpers/storage.helper';
 import { User } from '../models/user';
 
 export interface AuthContextType {
@@ -24,11 +29,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const setUserSession = (user: User) => {
     setUser(user);
     setIsAuthenticated(true);
+    setDataToLocalStorage(USER_KEY, user);
   };
 
   const clearUserSession = () => {
     setUser(null);
     setIsAuthenticated(false);
+    removeItemFromLocalStorage(USER_KEY);
   };
 
   return (
