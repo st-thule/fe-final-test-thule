@@ -51,12 +51,16 @@ export const Input = forwardRef<HTMLInputElement, IInputProps>(
     return (
       <div className="input-group">
         {label && (
-          <label className={`input-label ${isFocused || hasValue ? 'focused' : ''}`}>
+          <label
+            className={`input-label ${isFocused || hasValue ? 'focused' : ''}`}
+          >
             {label}
           </label>
         )}
         <div
-          className={`input-wrapper ${isFocused ? 'focused' : ''} ${hasValue ? 'has-value' : ''}`}
+          className={`input-wrapper ${isFocused ? 'focused' : ''} ${
+            hasValue ? 'has-value' : ''
+          }`}
         >
           <input
             ref={ref}
