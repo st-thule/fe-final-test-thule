@@ -34,7 +34,7 @@ const Register = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     watch,
   } = useForm<IRegisterForm>({
     mode: 'onChange',
@@ -198,7 +198,7 @@ const Register = () => {
           className="btn btn-primary btn-xl"
           type="submit"
           label="Register"
-          isDisabled={!isValid || isLoading}
+          isDisabled={isLoading}
           isLoading={isLoading}
           onClick={() => {}}
         />

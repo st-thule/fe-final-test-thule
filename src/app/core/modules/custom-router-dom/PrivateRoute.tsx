@@ -1,10 +1,8 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { authStorage } from '@app/core/services/auth-storage.service';
-
 const isAuthenticated = (): boolean => {
-  const token = authStorage.getToken;
+  const token = '';
   return !!token;
 };
 
