@@ -9,13 +9,11 @@ const Home = () => {
     <div className="page page-home">
       <div className="container">
         <section className="section section-banner">
-          <h2 className="section-title"></h2>
-          <div className="section-footer">
-            <p className="section-subtitle"></p>
-            <div className="section-info info">
-              <img className="img info-img" />
-              <p className="info-text"></p>
-            </div>
+          <div className="section-content">
+            <h2 className="section-title">
+              The Impact of Technology on the Workplace: How Technology is
+              Changing
+            </h2>
           </div>
         </section>
         <section className="section section-list section-tags">
@@ -25,7 +23,7 @@ const Home = () => {
               Ideas, trends, and inspiration for a brighter future
             </p>
           </div>
-          <ul className="row">
+          <ul className="list-tags">
             <Tag />
             <Tag />
             <Tag />
@@ -40,12 +38,12 @@ const Home = () => {
               Discover how innovation and creativity drive meaningful change
             </p>
           </div>
-          <ul className="row">
-            <Post className={''} />
-            <Post className={''} />
-            <Post className={''} />
-            <Post className={''} />
-            <Post className={''} />
+          <ul className="list-posts row">
+            <Post className={'col-12 col-sm-6 col-md-3'} />
+            <Post className={'col-12 col-sm-6 col-md-3'} />
+            <Post className={'col-12 col-sm-6 col-md-3'} />
+            <Post className={'col-12 col-sm-6 col-md-3'} />
+            <Post className={'col-12 col-sm-6 col-md-3'} />
           </ul>
           <Pagination
             totalItems={0}

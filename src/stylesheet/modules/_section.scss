@@ -1,0 +1,44 @@
+@use '../base/' as *;
+
+.section {
+  &-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 56px 0;
+
+    color: $color-black;
+
+    @media screen and (max-width: $md) {
+      padding: 32px 0;
+    }
+  }
+
+  &-title {
+    font-weight: $font-weight-semi;
+    font-size: $font-size-2xl;
+
+    @media screen and (max-width: $md) {
+      font-size: $font-size-xl;
+    }
+  }
+
+  &-subtitle {
+    font-weight: $font-weight-base;
+    font-size: $font-size-md;
+    text-align: center;
+
+    @media screen and (max-width: $md) {
+      font-size: $font-size-base;
+    }
+  }
+
+  &-pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+}
