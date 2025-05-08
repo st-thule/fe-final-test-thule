@@ -1,0 +1,106 @@
+@use '../base/' as *;
+
+.input-group {
+  position: relative;
+  flex: 1;
+
+  min-width: 0;
+
+  .error-message {
+    position: absolute;
+    top: 100%;
+    left: 8px;
+
+    min-height: 20px;
+
+    font-size: $font-size-xs;
+    color: $color-danger;
+
+    transition: opacity 0.3s ease;
+
+    opacity: 0;
+
+    &.visible {
+      opacity: 1;
+    }
+  }
+
+  .input-label {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    z-index: 2;
+
+    padding: 0 4px;
+
+    background-color: $color-white;
+
+    color: $color-black;
+    font-size: $font-size-md;
+    font-weight: $font-weight-semi;
+
+    transform: translateY(-50%);
+    transition: all 0.3s ease;
+  }
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 16px;
+    border: 1px solid $color-grey-light;
+    border-radius: 6px;
+
+    &:has(input:focus) {
+      border-color: $color-primary;
+    }
+
+    &:has(+ .error-message.visible) {
+      border-color: $color-danger;
+    }
+
+    input,
+    select,
+    input[type='date'] {
+      flex: 1;
+
+      padding: 0;
+
+      width: 100%;
+      height: 100%;
+      border: none;
+      outline: none;
+
+      background: transparent;
+
+      font-size: $font-size-base;
+      color: $color-grey-dark;
+      font-family: inherit;
+
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    input[type='date']::-webkit-datetime-edit {
+      color: $color-grey-dark;
+    }
+
+    select {
+      background: transparent;
+      cursor: pointer;
+
+      option {
+        color: $color-grey-dark;
+      }
+    }
+
+    .input-icon {
+      max-width: 24px;
+      height: auto;
+      cursor: pointer;
+    }
+  }
+}

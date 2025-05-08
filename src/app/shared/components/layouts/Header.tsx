@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { Button } from '../partials/Button';
+
 export const Header = () => {
   return (
     <header className="header">
@@ -12,7 +14,7 @@ export const Header = () => {
             </Link>
           </h1>
           <div className="header-action">
-            <button className="btn btn-primary">Login</button>
+            <Button className="btn btn-primary" label="Login" />
           </div>
         </div>
       </div>

@@ -1,0 +1,11 @@
+@use '../base/' as *;
+
+.tag {
+  list-style: none;
+
+  &-title {
+    color: $color-black;
+    font-size: $font-size-md;
+    font-weight: $font-weight-semi;
+  }
+}

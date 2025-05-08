@@ -2,10 +2,12 @@
 $color-black-light: #30333c;
 $color-black: #212121;
 $color-primary: #2980b9;
+$color-blue-light: #f6f8ff;
 $color-grey: #97989f;
 $color-grey-dark: #757575;
-$color-grey-light: #9a9a9a;
+$color-grey-light: #d4d7e3;
 $color-white: #ffffff;
+$color-danger: #fa5f55;
 
 // Font size
 $font-size-3xl: 40px;
@@ -16,13 +18,31 @@ $font-size-md: 18px;
 $font-size-base: 16px;
 $font-size-xs: 14px;
 
+//Border radius
+$border-radius: 6px;
+
 // Font weight
 $font-weight-extra: 800;
 $font-weight-bold: 700;
 $font-weight-semi: 600;
 $font-weight-base: 400;
 
+// Font family
+$font-body: 'Roboto', sans-serif;
+
+// Border radius
+$border-radius: 6px;
+
 // Breakpoints
 $sm: 576px;
 $md: 768px;
 $lg: 1280px;
+
+// Row, col
+$columns: 12;
+$gap: 20px;
+$gap-mobile: 12px;
+
+$space-value: 5;
+$AppErrorBoundaryFallback: 5;
+$size-list: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;

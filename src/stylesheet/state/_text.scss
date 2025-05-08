@@ -1,0 +1,57 @@
+@use 'sass:map';
+@use '../base/' as *;
+
+.txt-prewarp {
+  white-space: pre-wrap;
+}
+.txt-left {
+  text-align: left;
+}
+.txt-right {
+  text-align: right;
+}
+.txt-center {
+  text-align: center;
+}
+.no-wrap {
+  white-space: nowrap;
+}
+.txt-bold {
+  font-weight: 700;
+}
+.txt-demi {
+  font-weight: 600;
+}
+.txt-uppercase {
+  text-transform: uppercase;
+}
+.txt-capitalize {
+  text-transform: capitalize;
+}
+.txt-link {
+  @include pxRem(padding-bottom, 2);
+  color: $color-primary;
+  position: relative;
+  font-weight: normal;
+  &:after {
+    content: '';
+    height: 1px;
+    width: 0;
+    background: $color-primary;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+  &:hover {
+    &:after {
+      transition: width 0.3s ease;
+      width: 100%;
+    }
+  }
+  &.txt-link-error {
+    color: $color-danger;
+    &::after {
+      background: $color-danger;
+    }
+  }
+}

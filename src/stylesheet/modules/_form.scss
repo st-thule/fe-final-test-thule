@@ -1,0 +1,45 @@
+@use '../base/' as *;
+
+.form {
+  width: 40%;
+  padding: 30px;
+
+  border-radius: $border-radius;
+  border: 1px solid $color-grey-light;
+
+  box-shadow: 0px 5px 20px 0px rgba($color-black, 0.3);
+
+  &-title {
+    font-size: $font-size-xl;
+    text-align: center;
+  }
+
+  &-control {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    padding-bottom: 25px;
+
+    .input-container {
+      flex: 1;
+    }
+  }
+
+  &-link {
+    padding-bottom: 10px;
+
+    text-align: center;
+    span {
+      color: $color-primary;
+    }
+  }
+  @media screen and (max-width: $sm) {
+    width: 90%;
+
+    &-control {
+      flex-direction: column;
+    }
+  }
+}
