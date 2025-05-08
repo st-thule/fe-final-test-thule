@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -8,15 +8,20 @@ import { validationRules } from '@shared/utils/validationRules';
 
 import hideIcon from '@assets/icons/hide.svg';
 import showIcon from '@assets/icons/show.svg';
+import { AuthContext } from '@shared/contexts/auth.context';
+import { loginAccount } from '@app/core/services/auth.service';
+import { toast } from 'react-toastify';
+import { authStorage } from '@app/core/services/auth-storage.service';
 
 interface ILoginForm {
   email: string;
   password: string;
 }
 const Login = () => {
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { setUserSession } = useContext(AuthContext);
 
   const {
     control,
@@ -26,7 +31,30 @@ const Login = () => {
     mode: 'onChange',
   });
 
-  const onSubmit = (data: ILoginForm) => {};
+  const onSubmit = async (data: ILoginForm) => {
+    try {
+      setIsLoading(true);
+      const response = await loginAccount({
+        email: data.email,
+        password: data.password,
+      });
+
+      const { accessToken, userInfo } = response;
+
+      if (!accessToken || !userInfo) {
+        throw new Error('Invalid login response');
+      }
+
+      setUserSession(userInfo);
+      authStorage.setToken(accessToken);
+      toast.success('Login successfully');
+      navigate(AppRoutes.HOME);
+    } catch (error) {
+      toast.error(error.response?.data?.errors?.[0]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="auth-wrapper">
