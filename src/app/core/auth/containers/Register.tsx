@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-import { Input } from '@shared/components/partials/Input';
+import { registerAccount } from '@app/core/services/auth.service';
 import { Button } from '@shared/components/partials/Button';
-import { RegrexPattern } from '@app/core/constants/regrexPattern';
+import { Input } from '@shared/components/partials/Input';
+import { Select } from '@shared/components/partials/Select';
+import { optionGender } from '@shared/constants/optionGender';
+import { formatDate } from '@shared/utils/formatDate';
+import { validationRules } from '@shared/utils/validationRules';
 
 import hideIcon from '@assets/icons/hide.svg';
 import showIcon from '@assets/icons/show.svg';
-import { registerAccount } from '@app/core/services/auth.service';
-import { toast } from 'react-toastify';
 
 interface IRegisterForm {
   email: string;
@@ -20,7 +23,6 @@ interface IRegisterForm {
   dob: string;
   phone: string;
   displayName: string;
-  confirmPassword: string;
 }
 
 const Register = () => {
@@ -29,14 +31,17 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
-    getValues,
-  } = useForm<IRegisterForm>();
+    watch,
+  } = useForm<IRegisterForm>({
+    mode: 'onChange',
+  });
+
+  const gender = watch('gender');
 
   const onSubmit = async (data: IRegisterForm) => {
-    console.log('Form submitted:', data);
     try {
       setIsLoading(true);
       await registerAccount({
@@ -45,7 +50,7 @@ const Register = () => {
         firstName: data.firstName!,
         lastName: data.lastName!,
         gender: data.gender!,
-        dob: data.dob!,
+        dob: formatDate(data.dob!),
         phone: data.phone!,
         displayName: data.displayName!,
       });
@@ -62,100 +67,122 @@ const Register = () => {
     <div className="auth-wrapper">
       <form className="form form-register" onSubmit={handleSubmit(onSubmit)}>
         <h1 className="form-title">Register</h1>
-        <div className="form-control">
-          <Input
-            {...register('firstName', {
-              required: 'First name is required',
-            })}
-            placeHolder="Enter first name"
-            errorMessage={errors.firstName?.message}
-          />
 
-          <Input
-            {...register('lastName', { required: 'Last name is required' })}
-            placeHolder="Enter last name"
-            errorMessage={errors.lastName?.message}
+        <div className="form-control">
+          <Controller
+            control={control}
+            name="firstName"
+            rules={validationRules.firstName}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeHolder="Enter first name"
+                errorMessage={errors.firstName?.message}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="lastName"
+            rules={validationRules.lastName}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeHolder="Enter last name"
+                errorMessage={errors.lastName?.message}
+              />
+            )}
           />
         </div>
 
         <div className="form-control">
-          <Input
-            {...register('displayName', {
-              required: 'Display name is required',
-            })}
-            placeHolder="Enter display name"
+          <Controller
+            control={control}
+            name="displayName"
+            rules={validationRules.displayName}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeHolder="Enter display name"
+                errorMessage={errors.displayName?.message}
+              />
+            )}
           />
         </div>
 
         <div className="form-control">
-          <Input
-            {...register('email', {
-              required: 'Email is required',
-              pattern: {
-                value: RegrexPattern.REGREX_EMAIL,
-                message: 'Invalid email format',
-              },
-            })}
-            placeHolder="Enter email"
-            errorMessage={errors.email?.message}
+          <Controller
+            control={control}
+            name="email"
+            rules={validationRules.email}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeHolder="Enter email"
+                errorMessage={errors.email?.message}
+              />
+            )}
           />
         </div>
 
         <div className="form-control">
-          <Input
-            {...register('password', {
-              required: 'Password is required',
-              pattern: {
-                value: RegrexPattern.REGREX_PASSWORD,
-                message:
-                  'Password must contain at least one letter, one number, at least 8 characters',
-              },
-            })}
-            type={showPassword ? 'text' : 'password'}
-            placeHolder="Enter password"
-            icon={showPassword ? showIcon : hideIcon}
-            onIconClick={() => setShowPassword((prev) => !prev)}
-            errorMessage={errors.password?.message}
+          <Controller
+            control={control}
+            name="password"
+            rules={validationRules.password}
+            render={({ field }) => (
+              <Input
+                {...field}
+                type={showPassword ? 'text' : 'password'}
+                placeHolder="Enter password"
+                icon={showPassword ? showIcon : hideIcon}
+                onIconClick={() => setShowPassword((prev) => !prev)}
+                errorMessage={errors.password?.message}
+              />
+            )}
           />
         </div>
 
         <div className="form-control">
-          <Input
-            {...register('confirmPassword', {
-              required: 'Please confirm your password',
-              validate: (value) =>
-                value === getValues('password') || 'Passwords do not match',
-            })}
-            type={showPassword ? 'text' : 'password'}
-            icon={showPassword ? showIcon : hideIcon}
-            onIconClick={() => setShowPassword((prev) => !prev)}
-            placeHolder="Confirm password"
-            errorMessage={errors.confirmPassword?.message}
+          <Controller
+            control={control}
+            name="gender"
+            rules={validationRules.gender}
+            render={({ field }) => (
+              <Select
+                {...field}
+                options={optionGender}
+                errorMsg={errors.gender?.message}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="dob"
+            rules={validationRules.dob}
+            render={({ field }) => (
+              <Input
+                {...field}
+                type="date"
+                placeHolder="Enter date of birth"
+                errorMessage={errors.dob?.message}
+              />
+            )}
           />
         </div>
 
         <div className="form-control">
-          <Input
-            {...register('gender', {
-              required: 'Gender is required',
-            })}
-            placeHolder="Enter gender"
-          />
-          <Input
-            {...register('dob', {
-              required: 'Date of Birth is required',
-            })}
-            type="date"
-            placeHolder="Enter date of birth"
-          />
-        </div>
-
-        <div className="form-control">
-          <Input
-            {...register('phone', {
-              required: 'Phone is required',
-            })}
-            placeHolder="Enter phone number"
+          <Controller
+            control={control}
+            name="phone"
+            rules={validationRules.phone}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeHolder="Enter phone number"
+                errorMessage={errors.phone?.message}
+              />
+            )}
           />
         </div>
 
@@ -165,10 +192,13 @@ const Register = () => {
             <span>Login</span>
           </Link>
         </p>
+
         <Button
           className="btn btn-primary btn-xl"
           type="submit"
           label="Register"
+          isDisabled={isLoading}
+          isLoading={isLoading}
           onClick={() => {}}
         />
       </form>
