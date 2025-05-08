@@ -1,7 +1,8 @@
+import React from 'react';
+
 import { Pagination } from '@shared/components/Pagination';
 import { Post } from '@shared/components/Post';
 import { Tag } from '@shared/components/TagComponent';
-import React from 'react';
 
 const Home = () => {
   return (
