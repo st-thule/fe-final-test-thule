@@ -58,7 +58,7 @@ const Login = () => {
 
   return (
     <div className="auth-wrapper">
-      <form className="form form-register" onSubmit={handleSubmit(onSubmit)}>
+      <form className="form form-login" onSubmit={handleSubmit(onSubmit)}>
         <h1 className="form-title">Login</h1>
         <div className="form-control">
           <Controller
