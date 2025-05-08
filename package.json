@@ -23,6 +23,7 @@
     "react-toastify": "^11.0.5",
     "redux": "^5.0.1",
     "reset-css": "^5.0.2",
+    "universalify": "^2.0.1",
     "vite-plugin-html": "^3.2.2"
   },
   "devDependencies": {
