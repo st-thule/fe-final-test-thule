@@ -42,4 +42,10 @@
       flex-direction: column;
     }
   }
+
+  &-login {
+    .form-link {
+      padding-top: 15px;
+    }
+  }
 }
