@@ -1,11 +1,86 @@
-import { Input } from '@shared/components/partials';
-import React from 'react';
+import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
 
+import { AppRoutes } from '@app/core/constants/app-routes';
+import { Button, Input } from '@shared/components/partials';
+import { validationRules } from '@shared/utils/validationRules';
+
+import hideIcon from '@assets/icons/hide.svg';
+import showIcon from '@assets/icons/show.svg';
+
+interface ILoginForm {
+  email: string;
+  password: string;
+}
 const Login = () => {
+  const navigation = useNavigate();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<ILoginForm>({
+    mode: 'onChange',
+  });
+
+  const onSubmit = (data: ILoginForm) => {};
+
   return (
-    <h1>
-      <Input />
-    </h1>
+    <div className="auth-wrapper">
+      <form className="form form-register" onSubmit={handleSubmit(onSubmit)}>
+        <h1 className="form-title">Login</h1>
+        <div className="form-control">
+          <Controller
+            control={control}
+            name="email"
+            rules={validationRules.email}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeHolder="Enter email"
+                errorMessage={errors.email?.message}
+              />
+            )}
+          />
+        </div>
+
+        <div className="form-control">
+          <Controller
+            control={control}
+            name="password"
+            rules={validationRules.password}
+            render={({ field }) => (
+              <Input
+                {...field}
+                type={showPassword ? 'text' : 'password'}
+                placeHolder="Enter password"
+                icon={showPassword ? showIcon : hideIcon}
+                onIconClick={() => setShowPassword((prev) => !prev)}
+                errorMessage={errors.password?.message}
+              />
+            )}
+          />
+        </div>
+        <p className="form-link">
+          Don't have an account?{' '}
+          <Link to={AppRoutes.REGISTER}>
+            <span>Register</span>
+          </Link>
+        </p>
+
+        <Button
+          className="btn btn-primary btn-xl"
+          type="submit"
+          label="Login"
+          isDisabled={!isValid || isLoading}
+          isLoading={isLoading}
+          onClick={() => {}}
+        />
+      </form>
+    </div>
   );
 };
 
