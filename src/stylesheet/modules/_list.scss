@@ -61,11 +61,27 @@
         color: $color-black;
         font-weight: $font-size-base;
       }
+
+      &:hover {
+        background-color: $color-primary;
+        a {
+          color: $color-white;
+        }
+      }
     }
     .list-active {
       background-color: $color-primary;
       a {
         color: $color-white;
+      }
+    }
+
+    .list-dots {
+      cursor: default;
+
+      a {
+        pointer-events: none;
+        cursor: default;
       }
     }
   }

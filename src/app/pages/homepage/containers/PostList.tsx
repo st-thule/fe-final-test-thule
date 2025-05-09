@@ -3,22 +3,22 @@ import { Pagination } from '@shared/components/Pagination';
 import { PostComponent } from '@shared/components/Post';
 import { getPublicPost } from '@shared/services/post.service';
 
+const SIZE_PAGE = 8;
+
 export const PostList = ({ currentPage, onPageChange }) => {
   const [publicPosts, setPublicPosts] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(7);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const response = await getPublicPost(currentPage, itemsPerPage);
+        const response = await getPublicPost(currentPage, SIZE_PAGE);
         setPublicPosts(response.data || []);
         setTotalItems(response.totalItems || 0);
         setTotalPages(response.totalPage || 0);
-        setItemsPerPage(response.itemsPerPage || itemsPerPage);
         console.log('Response:', response);
       } catch (error) {
         console.log('Error:', error);
@@ -27,13 +27,13 @@ export const PostList = ({ currentPage, onPageChange }) => {
       }
     };
     fetchPosts();
-  }, [currentPage, itemsPerPage]);
+  }, [currentPage, 8]);
 
   return (
     <>
       <ul className="list-posts row">
         {loading ? (
-          Array.from({ length: itemsPerPage }).map((_, index) => (
+          Array.from({ length: SIZE_PAGE }).map((_, index) => (
             <PostComponent
               key={`skeleton-${index}`}
               className="col-12 col-sm-6 col-md-3"
@@ -56,7 +56,7 @@ export const PostList = ({ currentPage, onPageChange }) => {
       {totalItems > 0 && !loading && (
         <Pagination
           totalItems={totalItems}
-          itemsPerPage={itemsPerPage}
+          itemsPerPage={SIZE_PAGE}
           currentPage={currentPage}
           onPageChange={onPageChange}
         />

@@ -62,8 +62,9 @@ export const Pagination: React.FC<PaginationProps> = ({
         </li>
         {pages.map((item, index) => (
           <li
-            className={`list-item ${item === currentPage ? 'list-active' : ''}`}
-            key={index}
+            className={`list-item ${item === currentPage ? 'list-active' : ''}${
+              item === '...' ? 'list-dots' : ''
+            }`}
           >
             <a
               className="page"
