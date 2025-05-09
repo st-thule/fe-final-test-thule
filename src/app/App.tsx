@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 import '../stylesheet/styles.scss';
 import appRoutes from './app.routes';

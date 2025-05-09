@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Pagination } from '@shared/components/Pagination';
-import { Post } from '@shared/components/Post';
 import { Tag } from '@shared/components/TagComponent';
+import { PostList } from './PostList';
 
 const Home = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="page page-home">
       <div className="container">
@@ -38,19 +43,7 @@ const Home = () => {
               Discover how innovation and creativity drive meaningful change
             </p>
           </div>
-          <ul className="list-posts row">
-            <Post className={'col-12 col-sm-6 col-md-3'} />
-            <Post className={'col-12 col-sm-6 col-md-3'} />
-            <Post className={'col-12 col-sm-6 col-md-3'} />
-            <Post className={'col-12 col-sm-6 col-md-3'} />
-            <Post className={'col-12 col-sm-6 col-md-3'} />
-          </ul>
-          <Pagination
-            totalItems={0}
-            itemsPerPage={0}
-            currentPage={0}
-            onPageChange={() => {}}
-          />
+          <PostList currentPage={currentPage} onPageChange={handlePageChange} />
         </section>
       </div>
     </div>
