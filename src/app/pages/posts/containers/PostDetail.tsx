@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import calendarIcon from '@assets/icons/calendar.svg';
 
@@ -7,24 +8,33 @@ const PostDetail = () => {
     <div className="page page-post">
       <div className="container">
         <div className="wrapper">
-          <section className="section section-user">
-            <div className="section-image">
-              <img className="img" src="/assets/images/author.png" />
-            </div>
-            <div className="section-content">
-              <h2 className="section-title">Cruz Mcintype</h2>
-              <p className="section-subtitle">Author</p>
-            </div>
-          </section>
-
           <section className="section section-post">
-            <h2 className="section-title"></h2>
-            <p className="section-subtitle"></p>
-            <img className="img thumbnail" src="/assets/images/banner.png" />
-            <div className="section-meta meta">
-              <img className="img" src={calendarIcon} />
-              <p className="meta-value"></p>
-            </div>
+            <Link className="section-tag" to={''}>
+              Technology
+            </Link>
+            <h2 className="section-title">
+              Creating a Modal Component: The Redux Way
+            </h2>
+            <p className="section-subtitle">
+              I recently interviewed for a Senior Frontend Engineer role at
+              Quizizz. The overall process was smooth, with four rounds covering
+              JavaScript
+            </p>
+
+            <section className="section section-meta meta">
+              <div className="meta-group">
+                <img className="img meta-img" src="/assets/images/author.png" />
+                <p className="meta-title">Cruz Mcintype</p>
+              </div>
+              <div className="meta-group">
+                <img className="img meta-img" src={calendarIcon} />
+                <p className="meta-title">21/09/2025</p>
+              </div>
+            </section>
+            <img
+              className="img section-thumbnail"
+              src="/assets/images/banner.png"
+            />
             <p className="section-content">
               Before embarking on your journey, take the time to research your
               destination. This includes understanding the local culture,
