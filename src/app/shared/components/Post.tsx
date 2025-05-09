@@ -48,7 +48,7 @@ export const PostComponent: React.FC<IPostProps> = ({
   }
   return (
     <li className={`list-item ${className}`}>
-      <Link className="card" to={`/post/${post.id}`} onClick={() => onClick}>
+      <Link className="card" to={`/posts/${post.id}`} onClick={() => onClick}>
         <div className="card-img">
           <img
             src={post.cover === 'cover' ? imagePost : post.cover}
