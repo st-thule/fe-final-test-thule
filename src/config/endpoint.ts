@@ -10,5 +10,6 @@ export const ENDPOINT = {
   },
   post: {
     postList: `${RESOURCES.post}`,
+    postDetail: (id: number | string) => `${RESOURCES.post}/${id}`,
   },
 };
