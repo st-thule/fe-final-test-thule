@@ -1,7 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import calendarIcon from '@assets/icons/calendar.svg';
-import { Link } from 'react-router-dom';
 
 const PostDetail = () => {
   return (
