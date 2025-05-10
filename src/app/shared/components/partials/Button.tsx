@@ -28,7 +28,7 @@ export const Button: React.FC<IButtonProps> = ({
       disabled={isDisabled}
     >
       {children}
-      {isLoading ? <Spinner className="spinner-sm" /> : label}
+      {isLoading ? <Spinner className="spinner-lg" /> : label}
     </button>
   );
 };

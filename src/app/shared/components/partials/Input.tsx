@@ -49,16 +49,16 @@ export const Input = forwardRef<HTMLInputElement, IInputProps>(
     }, [value]);
 
     return (
-      <div className="input-group">
+      <div className="form-control">
         {label && (
           <label
-            className={`input-label ${isFocused || hasValue ? 'focused' : ''}`}
+            className={`form-label ${isFocused || hasValue ? 'focused' : ''}`}
           >
             {label}
           </label>
         )}
         <div
-          className={`input-wrapper ${isFocused ? 'focused' : ''} ${
+          className={`input-group ${isFocused ? 'focused' : ''} ${
             hasValue ? 'has-value' : ''
           }`}
         >
@@ -87,7 +87,7 @@ export const Input = forwardRef<HTMLInputElement, IInputProps>(
             }}
           />
           {icon && (
-            <img className="input-icon" src={icon} onClick={onIconClick} />
+            <img className="form-icon" src={icon} onClick={onIconClick} />
           )}
         </div>
         {errorMessage && (
