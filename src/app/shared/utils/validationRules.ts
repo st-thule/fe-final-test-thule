@@ -22,8 +22,7 @@ export const validationRules = {
     required: 'Password is required',
     pattern: {
       value: RegrexPattern.REGREX_PASSWORD,
-      message:
-        'Password must contain at least 8 characters, including one letter and one number',
+      message: 'Password must contain at least 8 characters',
     },
   },
   gender: {

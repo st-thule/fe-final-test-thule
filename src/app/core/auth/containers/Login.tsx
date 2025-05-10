@@ -4,11 +4,11 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
-import { loginAccount } from '@app/core/services/auth.service';
 import { authStorage } from '@app/core/services/auth-storage.service';
+import { loginAccount } from '@app/core/services/auth.service';
 import { Button, Input } from '@shared/components/partials';
-import { validationRules } from '@shared/utils/validationRules';
 import { AuthContext } from '@shared/contexts/auth.context';
+import { validationRules } from '@shared/utils/validationRules';
 
 import hideIcon from '@assets/icons/hide.svg';
 import showIcon from '@assets/icons/show.svg';
@@ -49,9 +49,7 @@ const Login = () => {
       setUserSession(userInfo, accessToken);
       authStorage.setToken(accessToken);
       toast.success('Login successfully');
-      setTimeout(() => {
-        navigate(location.state?.from || AppRoutes.HOME, { replace: true });
-      }, 1500);
+      navigate(location.state?.from || AppRoutes.HOME, { replace: true });
     } catch (error) {
       const message =
         error?.response?.data?.message ||
@@ -64,41 +62,39 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-wrapper">
-      <form className="form form-login" onSubmit={handleSubmit(onSubmit)}>
+    <div className="page page-auth page-login">
+      <form
+        className="form form-auth form-login"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <h1 className="form-title">Login</h1>
-        <div className="form-control">
-          <Controller
-            control={control}
-            name="email"
-            rules={validationRules.email}
-            render={({ field }) => (
-              <Input
-                {...field}
-                placeHolder="Enter email"
-                errorMessage={errors.email?.message}
-              />
-            )}
-          />
-        </div>
-
-        <div className="form-control">
-          <Controller
-            control={control}
-            name="password"
-            rules={validationRules.password}
-            render={({ field }) => (
-              <Input
-                {...field}
-                type={showPassword ? 'text' : 'password'}
-                placeHolder="Enter password"
-                icon={showPassword ? showIcon : hideIcon}
-                onIconClick={() => setShowPassword((prev) => !prev)}
-                errorMessage={errors.password?.message}
-              />
-            )}
-          />
-        </div>
+        <Controller
+          control={control}
+          name="email"
+          rules={validationRules.email}
+          render={({ field }) => (
+            <Input
+              {...field}
+              placeHolder="Enter email"
+              errorMessage={errors.email?.message}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="password"
+          rules={validationRules.password}
+          render={({ field }) => (
+            <Input
+              {...field}
+              type={showPassword ? 'text' : 'password'}
+              placeHolder="Enter password"
+              icon={showPassword ? showIcon : hideIcon}
+              onIconClick={() => setShowPassword((prev) => !prev)}
+              errorMessage={errors.password?.message}
+            />
+          )}
+        />
         <p className="form-link">
           Don't have an account?{' '}
           <Link to={AppRoutes.REGISTER}>
