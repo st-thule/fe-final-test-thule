@@ -1,3 +1,9 @@
+import {
+  getDataFromLocalStorage,
+  removeItemFromLocalStorage,
+  setDataToLocalStorage,
+} from '../helpers/storage.helper';
+
 export interface AuthStorage {
   setToken(data?: string): void;
   getToken(): void;
@@ -9,15 +15,17 @@ export class AuthStorageService implements AuthStorage {
 
   setToken(token?: string) {
     if (token) {
-      localStorage.setItem(this.ACCESS_TOKEN, token);
+      setDataToLocalStorage(this.ACCESS_TOKEN, token);
     }
   }
 
   getToken() {
-    return localStorage.getItem(this.ACCESS_TOKEN);
+    return getDataFromLocalStorage(this.ACCESS_TOKEN, '');
   }
 
   removeToken() {
-    localStorage.removeItem(this.ACCESS_TOKEN);
+    removeItemFromLocalStorage(this.ACCESS_TOKEN);
   }
 }
+
+export const authStorage = new AuthStorageService();

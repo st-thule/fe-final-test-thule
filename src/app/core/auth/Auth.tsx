@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 const Auth = () => {
   return (
-    <div className="auth-page">
+    <div className="page page-auth">
       <main className="main">
         <Outlet />
       </main>

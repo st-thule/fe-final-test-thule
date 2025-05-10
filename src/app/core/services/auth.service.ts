@@ -1,26 +1,32 @@
-import AuthHelper from '../helpers/auth.helper';
-import { ENDPOINT } from '@config/endpoint';
-import { ApiService } from './api.service';
+import { User } from '@shared/models/user';
+import { apiService } from './api.service';
 
-type SignInBody = {
-  username: string;
+interface RegisterPayload {
+  email: string;
   password: string;
-};
-export class AuthService extends AuthHelper {
-  http = new ApiService();
-
-  constructor() {
-    super();
-  }
-
-  async signIn<T>(body: SignInBody): Promise<T> {
-    /* this is the default signIn,
-      If you want to override it, please write the same function in specific type of auth.
-    */
-    return this.http.post<T>([ENDPOINT.auth.login], body);
-  }
-
-  signOut() {
-    this.removeToken();
-  }
+  firstName: string;
+  lastName: string;
+  gender: string;
+  dob: string;
+  phone: string;
+  displayName: string;
 }
+
+interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+interface LoginResponse {
+  accessToken: string;
+  userInfo: User;
+}
+export const registerAccount = (data: RegisterPayload) => {
+  return apiService.post(['/users/register'], data);
+};
+
+export const loginAccount = async (
+  data: LoginPayload
+): Promise<LoginResponse> => {
+  return await apiService.post(['users/login'], data);
+};
