@@ -73,34 +73,51 @@
 
   &-paginations {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    flex-direction: row;
+    gap: 20px;
+
+    padding: 20px 0;
     .list-item {
       width: 40px;
       height: 40px;
-      border-radius: 6px;
-      a {
+      border-radius: $border-radius;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      transition: background-color 0.3s ease;
+
+      .list-link {
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 6px 20px;
 
-        cursor: pointer;
+        width: 100%;
+        height: 100%;
 
         color: $color-black;
         font-weight: $font-size-base;
       }
 
+      img {
+        width: 14px;
+        height: 14px;
+      }
+
       &:hover {
         background-color: $color-primary;
-        a {
+        .list-link {
           color: $color-white;
         }
       }
     }
+
     .list-active {
       background-color: $color-primary;
-      a {
+
+      .list-link {
         color: $color-white;
       }
     }
@@ -108,10 +125,14 @@
     .list-dots {
       cursor: default;
 
-      a {
+      .list-link {
         pointer-events: none;
         cursor: default;
       }
     }
+  }
+  .pagination-icon {
+    width: 12px;
+    height: 12px;
   }
 }

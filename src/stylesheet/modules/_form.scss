@@ -4,10 +4,11 @@
   width: 40%;
   padding: 30px;
 
-  border-radius: $border-radius;
-  border: 1px solid $color-grey-light;
-
-  box-shadow: 0px 5px 20px 0px rgba($color-black, 0.3);
+  &.form-auth {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
 
   &-title {
     font-size: $font-size-xl;
@@ -15,21 +16,57 @@
   }
 
   &-control {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 10px;
+    position: relative;
+    flex: 1;
 
-    padding-bottom: 25px;
+    min-width: 0;
 
-    .input-container {
-      flex: 1;
+    .form-icon {
+      max-width: 24px;
+      height: auto;
+      cursor: pointer;
+    }
+
+    .form-label {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+
+      font-size: 16px;
+      color: $color-grey-dark;
+
+      pointer-events: none;
+      transition: all 0.3s ease;
+      transform: translateY(-50%);
+
+      &.focused {
+        top: 5px;
+
+        font-size: 12px;
+        color: $color-primary;
+      }
+    }
+
+    .error-message {
+      position: absolute;
+      top: 100%;
+      left: 8px;
+
+      min-height: 20px;
+
+      font-size: $font-size-xs;
+      color: $color-danger;
+
+      transition: opacity 0.3s ease;
+      opacity: 0;
+
+      &.visible {
+        opacity: 1;
+      }
     }
   }
 
   &-link {
-    padding-bottom: 10px;
-
     text-align: center;
     span {
       color: $color-primary;
@@ -39,7 +76,7 @@
     width: 90%;
 
     &-control {
-      flex-direction: column;
+      flex-direction: row;
     }
   }
 
