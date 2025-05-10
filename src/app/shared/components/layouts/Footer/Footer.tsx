@@ -13,10 +13,10 @@ export const Footer = () => {
               <img src="/assets/images/logo.png" />
             </Link>
           </h2>
-          <ul className="list-legal">
+          <ul className="list list-legal">
             {footerList.map((item) => (
               <li className="list-item" key={item.id}>
-                <Link className="item" to={item.href}>
+                <Link className="list-link" to={item.href}>
                   {item.title}
                 </Link>
               </li>

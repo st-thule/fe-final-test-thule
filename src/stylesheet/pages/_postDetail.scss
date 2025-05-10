@@ -1,0 +1,107 @@
+@use '../base/' as *;
+
+.page-post-detail {
+  .wrapper {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 16px;
+
+    @media screen and (max-width: $md) {
+      padding: 0;
+    }
+  }
+  .section-post {
+    .section-tag {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      width: fit-content;
+      margin-bottom: 4px;
+      padding: 8px 20px;
+      border-radius: 6px;
+
+      background-color: $color-blue-light;
+
+      color: $color-primary;
+      font-size: $font-size-xs;
+      font-weight: $font-weight-semi;
+
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+
+      &:hover {
+        box-shadow: 0 4px 8px rgba($color-blue-light, 0.5);
+        transform: scale(1.05);
+      }
+
+      @media screen and (max-width: $sm) {
+        padding: 4px 10px;
+
+        font-size: $font-size-2xs;
+        font-weight: $font-weight-semi;
+      }
+    }
+    .section-title {
+      padding-bottom: 10px;
+
+      font-size: $font-size-4xl;
+      @media screen and (max-width: $md) {
+        font-size: $font-size-3xl;
+      }
+      @media screen and (max-width: $sm) {
+        font-size: $font-size-2xl;
+      }
+    }
+
+    .section-subtitle {
+      padding-bottom: 10px;
+
+      text-align: initial;
+      color: $color-black;
+      font-weight: $font-weight-base;
+
+      @media screen and (max-width: $sm) {
+        font-size: $font-size-xs;
+      }
+    }
+
+    .section-meta {
+      display: flex;
+      flex-direction: row;
+      justify-content: left;
+      align-items: center;
+      gap: 20px;
+
+      padding-bottom: 32px;
+      border-bottom: 1px solid $color-grey-light;
+
+      .meta-title {
+        color: $color-grey;
+        font-size: $font-size-xs;
+        font-weight: $font-weight-semi;
+
+        @media screen and (max-width: $sm) {
+          font-size: $font-size-2xs;
+        }
+      }
+      .meta-group {
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+        align-items: center;
+
+        gap: 10px;
+
+        .meta-img {
+          width: 15%;
+        }
+      }
+    }
+    .section-thumbnail {
+      padding: 40px 0 20px;
+    }
+  }
+}

@@ -1,28 +1,82 @@
 import React from 'react';
+import Skeleton from 'react-loading-skeleton';
 import { Link } from 'react-router-dom';
 
+import { Post } from '@shared/models/post';
+import { formatDate } from '@shared/utils/formatDate';
+
+import imagePost from '@assets/images/articles/article-travel.png';
+import author from '@assets/images/author.png';
+
 interface IPostProps {
+  post: Post;
   className: string;
   onClick?: (id: string) => void;
+  loading?: boolean;
 }
 
-export const Post: React.FC<IPostProps> = ({ onClick, className }) => {
+export const PostComponent: React.FC<IPostProps> = ({
+  post,
+  className,
+  onClick,
+  loading = false,
+}) => {
+  if (loading) {
+    return (
+      <li className={`list-item ${className}`}>
+        <div className="card">
+          <div className="card-img">
+            <Skeleton height={150} borderRadius={8} />
+          </div>
+          <div className="card-content">
+            <div className="skeleton-tag mb-2">
+              <Skeleton width={80} height={10} borderRadius={8} />
+            </div>
+            <Skeleton width="90%" height={10} />
+            <Skeleton width="60%" height={10} className="mt-1" />
+            <div className="card-detail detail">
+              <div className="detail-group">
+                <Skeleton circle width={32} height={32} />
+                <Skeleton width={100} height={10} />
+              </div>
+              <Skeleton width={80} height={10} />
+            </div>
+          </div>
+        </div>
+      </li>
+    );
+  }
   return (
     <li className={`list-item ${className}`}>
-      <Link className="card" to="" onClick={() => onClick}>
+      <Link className="card" to={`/posts/${post.id}`} onClick={() => onClick}>
         <div className="card-img">
-          <img src="" alt="card-img" />
+          <img
+            src={post.cover === 'cover' ? imagePost : post.cover}
+            alt="card-img"
+          />
         </div>
+        {post.tags && post.tags.length > 0 ? (
+          post.tags.map((tag) => (
+            <Link className="card-tag" to="" key={tag}>
+              {tag}
+            </Link>
+          ))
+        ) : (
+          <></>
+        )}
         <div className="card-content">
-          <Link className="card-tag" to=""></Link>
-          <h3 className="card-title"></h3>
+          <h3 className="card-title">{post.title}</h3>
           <div className="card-detail detail">
             <div className="detail-group">
-              <img className="detail-image" src="" alt="avatar" />
-              <p className="detail-value"></p>
+              <img
+                className="detail-image"
+                src={post.user.picture === null ? author : post.user.picture}
+                alt="avatar"
+              />
+              <p className="detail-value">{post.user.displayName}</p>
             </div>
             <div className="detail-group">
-              <p className="detail-value"></p>
+              <p className="detail-value">{formatDate(post.createdAt)}</p>
             </div>
           </div>
         </div>

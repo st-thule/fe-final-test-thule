@@ -20,17 +20,75 @@
     }
   }
 
+  &-posts {
+    padding-bottom: 56px;
+  }
   &-tags {
-    padding: 16px;
-    border-radius: $border-radius;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
 
-    box-shadow: 0px 4px 28px -2px rgba(0, 0, 0, 0.08);
+    @media screen and (max-width: $md) {
+      gap: 20px;
+    }
 
-    transition: transform 0.3s ease;
+    .list-item {
+      padding: 9px 16px;
+      border-radius: $border-radius;
 
-    cursor: pointer;
-    &:hover {
-      transform: scale(1.05);
+      box-shadow: 0px 2px 12px -2px rgba(0, 0, 0, 0.08);
+
+      transition: transform 0.3s ease, color 0.3s ease;
+
+      cursor: pointer;
+      &:hover {
+        color: $color-primary;
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  &-paginations {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    .list-item {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 20px;
+        cursor: pointer;
+        color: $color-black;
+        font-weight: $font-size-base;
+      }
+
+      &:hover {
+        background-color: $color-primary;
+        a {
+          color: $color-white;
+        }
+      }
+    }
+    .list-active {
+      background-color: $color-primary;
+      a {
+        color: $color-white;
+      }
+    }
+
+    .list-dots {
+      cursor: default;
+
+      a {
+        pointer-events: none;
+        cursor: default;
+      }
     }
   }
 }
