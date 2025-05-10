@@ -19,7 +19,6 @@ export const PostList = ({ currentPage, onPageChange }) => {
         setPublicPosts(response.data || []);
         setTotalItems(response.totalItems || 0);
         setTotalPages(response.totalPage || 0);
-        console.log('Response:', response);
       } catch (error) {
         console.log('Error:', error);
       } finally {

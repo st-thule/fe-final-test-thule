@@ -26,20 +26,20 @@ export const PostComponent: React.FC<IPostProps> = ({
       <li className={`list-item ${className}`}>
         <div className="card">
           <div className="card-img">
-            <Skeleton height={200} borderRadius={8} />
+            <Skeleton height={150} borderRadius={8} />
           </div>
           <div className="card-content">
             <div className="skeleton-tag mb-2">
-              <Skeleton width={80} height={16} borderRadius={8} />
+              <Skeleton width={80} height={10} borderRadius={8} />
             </div>
-            <Skeleton width={`90%`} height={20} />
-            <Skeleton width={`60%`} height={20} className="mt-1" />
+            <Skeleton width="90%" height={10} />
+            <Skeleton width="60%" height={10} className="mt-1" />
             <div className="card-detail detail">
               <div className="detail-group">
                 <Skeleton circle width={32} height={32} />
-                <Skeleton width={100} height={16} />
+                <Skeleton width={100} height={10} />
               </div>
-              <Skeleton width={80} height={16} />
+              <Skeleton width={80} height={10} />
             </div>
           </div>
         </div>
@@ -55,18 +55,16 @@ export const PostComponent: React.FC<IPostProps> = ({
             alt="card-img"
           />
         </div>
-        <div className="card-content">
-          {post.tags && post.tags.length > 0 ? (
-            post.tags.map((tag) => (
-              <Link className="card-tag" to="" key={tag}>
-                {tag}
-              </Link>
-            ))
-          ) : (
-            <Link className="card-tag" to="">
-              General
+        {post.tags && post.tags.length > 0 ? (
+          post.tags.map((tag) => (
+            <Link className="card-tag" to="" key={tag}>
+              {tag}
             </Link>
-          )}
+          ))
+        ) : (
+          <></>
+        )}
+        <div className="card-content">
           <h3 className="card-title">{post.title}</h3>
           <div className="card-detail detail">
             <div className="detail-group">
