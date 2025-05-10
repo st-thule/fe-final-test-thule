@@ -47,10 +47,10 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div className="section-pagination pagination">
-      <ul className="list-pages">
+      <ul className="list-paginations">
         <li className="list-item">
           <a
-            className="page page-border"
+            className="pagination pagination-border"
             href="#"
             onClick={(e) => {
               e.preventDefault();
@@ -80,7 +80,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         ))}
         <li className="list-item">
           <a
-            className="page page-border"
+            className="pagination pagination-border"
             href="#"
             onClick={(e) => {
               e.preventDefault();
