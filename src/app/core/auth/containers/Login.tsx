@@ -1,17 +1,17 @@
 import React, { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
+import { loginAccount } from '@app/core/services/auth.service';
+import { authStorage } from '@app/core/services/auth-storage.service';
 import { Button, Input } from '@shared/components/partials';
 import { validationRules } from '@shared/utils/validationRules';
+import { AuthContext } from '@shared/contexts/auth.context';
 
 import hideIcon from '@assets/icons/hide.svg';
 import showIcon from '@assets/icons/show.svg';
-import { AuthContext } from '@shared/contexts/auth.context';
-import { loginAccount } from '@app/core/services/auth.service';
-import { toast } from 'react-toastify';
-import { authStorage } from '@app/core/services/auth-storage.service';
 
 interface ILoginForm {
   email: string;
@@ -19,6 +19,7 @@ interface ILoginForm {
 }
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { setUserSession } = useContext(AuthContext);
@@ -45,13 +46,17 @@ const Login = () => {
         throw new Error('Invalid login response');
       }
 
-      setUserSession(userInfo);
+      setUserSession(userInfo, accessToken);
       authStorage.setToken(accessToken);
       toast.success('Login successfully');
-      navigate(AppRoutes.HOME);
+      setTimeout(() => {
+        navigate(location.state?.from || AppRoutes.HOME, { replace: true });
+      }, 1500);
     } catch (error) {
       const message =
-        error?.response?.data?.message || error.message || 'Login failed!';
+        error?.response?.data?.message ||
+        error.message ||
+        'Invalid email or password!';
       toast.error(message);
     } finally {
       setIsLoading(false);
