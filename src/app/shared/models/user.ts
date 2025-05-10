@@ -8,4 +8,5 @@ export interface User {
   dob: string;
   phone: string;
   displayName: string;
+  picture: string | null;
 }
