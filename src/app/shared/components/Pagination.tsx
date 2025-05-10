@@ -47,52 +47,54 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div className="section-pagination pagination">
-      <ul className="list-paginations">
-        <li className="list-item">
-          <a
-            className="pagination pagination-border"
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handlePageChange(currentPage > 1 ? currentPage - 1 : 1);
-            }}
-          >
-            <img src={leftArrow} alt="previous" />
-          </a>
-        </li>
-        {pages.map((item, index) => (
-          <li
-            className={`list-item ${item === currentPage ? 'list-active' : ''}${
-              item === '...' ? 'list-dots' : ''
-            }`}
-          >
+      <nav className="nav nav-pagination">
+        <ul className="list-paginations">
+          <li className="list-item">
             <a
-              className="page"
+              className="list-link"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                handlePageChange(item);
+                handlePageChange(currentPage > 1 ? currentPage - 1 : 1);
               }}
             >
-              {item}
+              <img src={leftArrow} alt="previous" />
             </a>
           </li>
-        ))}
-        <li className="list-item">
-          <a
-            className="pagination pagination-border"
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handlePageChange(
-                currentPage < totalPage ? currentPage + 1 : totalPage
-              );
-            }}
-          >
-            <img src={rightArrow} alt="next" />
-          </a>
-        </li>
-      </ul>
+          {pages.map((item, index) => (
+            <li
+              className={`list-item ${
+                item === currentPage ? 'list-active' : ''
+              }${item === '...' ? 'list-dots' : ''}`}
+            >
+              <a
+                className="list-link"
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageChange(item);
+                }}
+              >
+                {item}
+              </a>
+            </li>
+          ))}
+          <li className="list-item">
+            <a
+              className="list-link"
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(
+                  currentPage < totalPage ? currentPage + 1 : totalPage
+                );
+              }}
+            >
+              <img src={rightArrow} alt="next" />
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 };
