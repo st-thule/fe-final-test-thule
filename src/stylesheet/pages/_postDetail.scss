@@ -1,16 +1,6 @@
 @use '../base/' as *;
 
 .page-post-detail {
-  .wrapper {
-    max-width: 800px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 16px;
-
-    @media screen and (max-width: $md) {
-      padding: 0;
-    }
-  }
   .section-post {
     .section-tag {
       display: flex;

@@ -9,8 +9,23 @@
 }
 
 .wrapper {
-  display: flex;
-  flex-direction: row;
+  &.wrapper-padding {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 16px;
+
+    @media screen and (max-width: $md) {
+      padding: 0;
+    }
+  }
+
+  &.wrapper-flex {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 // Row, col
