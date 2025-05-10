@@ -32,7 +32,7 @@ const PostDetail = () => {
   return (
     <div className="page page-post-detail">
       <div className="container">
-        <div className="wrapper">
+        <div className="wrapper wrapper-padding">
           <section className="section section-post">
             {loading ? (
               <div className="space-y-4 animate-pulse">
