@@ -7,5 +7,5 @@ export const getPublicPost = (page, size): Promise<PostResponse> => {
 };
 
 export const getPostById = (id: string | number): Promise<Post> => {
-  return apiService.get([`posts/${id}`]);
+  return apiService.get([`${ENDPOINT.post.postDetail(id)}`]);
 };
