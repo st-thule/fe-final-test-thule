@@ -1,16 +1,20 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
+import { authStorage } from '@app/core/services/auth-storage.service';
 import { AuthContext } from '@shared/contexts/auth.context';
 import { Button } from '../partials/Button';
-import { authStorage } from '@app/core/services/auth-storage.service';
-import { toast } from 'react-toastify';
+import { openModal } from '@app/store/modal/action/modalAction';
+import { ModalTypes } from '@shared/utils/modalTypes';
 
 export const Header = () => {
   const { user, isAuthenticated, clearUserSession } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [hidden, setHidden] = useState(false);
   const lastScrollY = useRef(0);
@@ -81,7 +85,23 @@ export const Header = () => {
                           + Add post
                         </Link>
                       </li>
-                      <li className="list-item" onClick={handleLogout}>
+                      <li
+                        className="list-item"
+                        onClick={() =>
+                          dispatch(
+                            openModal({
+                              modalType: ModalTypes.CONFIRM,
+                              modalProps: {
+                                title: 'Confirm logout',
+                                message: 'Are you sure you want to logout ?',
+                                onConfirm: () => {
+                                  handleLogout();
+                                },
+                              },
+                            })
+                          )
+                        }
+                      >
                         <Link className="list-link" to="/">
                           Sign out
                         </Link>
