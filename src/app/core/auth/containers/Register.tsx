@@ -35,7 +35,6 @@ const Register = () => {
     control,
     handleSubmit,
     formState: { errors, isValid },
-    watch,
   } = useForm<IRegisterForm>({
     mode: 'onChange',
     defaultValues: {
@@ -73,7 +72,7 @@ const Register = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="row">
-          <div className="col-12 col-md-6">
+          <div className="col-12 col-sm-12 col-md-6">
             <Controller
               control={control}
               name="firstName"

@@ -9,6 +9,10 @@
 
   transition: transform 0.3s ease;
 
+  .wrapper {
+    padding: $spacing-lg-plus $spacing-none;
+  }
+
   &.header-hidden {
     transform: translateY((-100%));
   }
@@ -38,8 +42,8 @@
         z-index: 9999;
 
         width: max-content;
-        padding: 10px 16px;
-        border-radius: $border-radius;
+        padding: $spacing-sm-plus $spacing-md;
+        border-radius: $border-radius-md;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
         background-color: $color-white;

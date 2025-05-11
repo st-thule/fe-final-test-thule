@@ -2,7 +2,7 @@
 
 .form {
   width: 40%;
-  padding: 30px;
+  padding: $spacing-xl;
 
   &.form-auth {
     display: flex;
@@ -82,7 +82,7 @@
 
   &-login {
     .form-link {
-      padding-top: 15px;
+      padding-top: $spacing-md;
     }
   }
 }
