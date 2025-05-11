@@ -1,6 +1,7 @@
+import React from 'react';
+
 import { AppRoutes } from '@app/core/constants/app-routes';
 import { PageRoute } from '@app/core/modules/custom-router-dom/router.interface';
-import React from 'react';
 
 const User = React.lazy(() => import('./containers/User'));
 const AddPost = React.lazy(() => import('./containers/AddPost'));
