@@ -92,7 +92,10 @@
   padding-top: $spacing-sm-plus;
 
   &-image {
-    width: 17%;
+    max-width: 24px;
+    height: auto;
+
+    border-radius: $border-radius-circle;
   }
 
   &-group {
