@@ -3,5 +3,9 @@ export enum AppRoutes {
   AUTH = '/auth',
   REGISTER = '/auth/register',
   LOGIN = '/auth/login',
-  MY_TASKS = '/my-tasks',
+  POSTS = '/posts',
+  POSTSDETAIL = '/posts/:id',
+  USER = '/user',
+  PROFILE = '/user/profile',
+  ADDPOST = '/user/add-post',
 }

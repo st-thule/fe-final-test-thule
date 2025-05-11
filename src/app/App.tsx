@@ -28,8 +28,7 @@ const router = createBrowserRouter([
   { path: '/', Component: Root, children: renderChildren(appRoutes) },
 ]);
 
-const root = createRoot(document.getElementById('root') as HTMLElement);
-root.render(
+createRoot(document.getElementById('root')!).render(
   <AuthProvider>
     <Provider store={store}>
       <RouterProvider router={router} />
