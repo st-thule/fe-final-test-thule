@@ -23,25 +23,27 @@ export const ModalComponent = () => {
     >
       {modalType === ModalTypes.CONFIRM && (
         <div className="modal-confirm">
-          <div className="modal-content">
-            <h3 className="modal-title">{modalProps.title}</h3>
-            <p className="modal-message">{modalProps.message}</p>
-            <div className="modal-action">
-              <Button
-                className="btn btn-primary btn-agree"
-                label="Yes"
-                onClick={() => {
-                  if (modalProps?.onConfirm) {
-                    modalProps.onConfirm();
-                  }
-                  dispatch(closeModal());
-                }}
-              />
-              <Button
-                className="btn btn-primary btn-no"
-                label="No"
-                onClick={() => dispatch(closeModal())}
-              />
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <h3 className="modal-title">{modalProps.title}</h3>
+              <p className="modal-body">{modalProps.message}</p>
+              <div className="modal-action">
+                <Button
+                  className="btn btn-primary btn-agree"
+                  label="Yes"
+                  onClick={() => {
+                    if (modalProps?.onConfirm) {
+                      modalProps.onConfirm();
+                    }
+                    dispatch(closeModal());
+                  }}
+                />
+                <Button
+                  className="btn btn-primary btn-no"
+                  label="No"
+                  onClick={() => dispatch(closeModal())}
+                />
+              </div>
             </div>
           </div>
         </div>

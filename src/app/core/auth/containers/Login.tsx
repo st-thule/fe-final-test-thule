@@ -1,17 +1,17 @@
 import React, { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
+import { authStorage } from '@app/core/services/auth-storage.service';
+import { loginAccount } from '@app/core/services/auth.service';
 import { Button, Input } from '@shared/components/partials';
+import { AuthContext } from '@shared/contexts/auth.context';
 import { validationRules } from '@shared/utils/validationRules';
 
 import hideIcon from '@assets/icons/hide.svg';
 import showIcon from '@assets/icons/show.svg';
-import { AuthContext } from '@shared/contexts/auth.context';
-import { loginAccount } from '@app/core/services/auth.service';
-import { toast } from 'react-toastify';
-import { authStorage } from '@app/core/services/auth-storage.service';
 
 interface ILoginForm {
   email: string;
@@ -19,6 +19,7 @@ interface ILoginForm {
 }
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { setUserSession } = useContext(AuthContext);
@@ -45,13 +46,15 @@ const Login = () => {
         throw new Error('Invalid login response');
       }
 
-      setUserSession(userInfo);
+      setUserSession(userInfo, accessToken);
       authStorage.setToken(accessToken);
       toast.success('Login successfully');
-      navigate(AppRoutes.HOME);
+      navigate(location.state?.from || AppRoutes.HOME, { replace: true });
     } catch (error) {
       const message =
-        error?.response?.data?.message || error.message || 'Login failed!';
+        error?.response?.data?.message ||
+        error.message ||
+        'Invalid email or password!';
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -59,41 +62,39 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-wrapper">
-      <form className="form form-login" onSubmit={handleSubmit(onSubmit)}>
+    <div className="page page-auth page-login">
+      <form
+        className="form form-auth form-login"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <h1 className="form-title">Login</h1>
-        <div className="form-control">
-          <Controller
-            control={control}
-            name="email"
-            rules={validationRules.email}
-            render={({ field }) => (
-              <Input
-                {...field}
-                placeHolder="Enter email"
-                errorMessage={errors.email?.message}
-              />
-            )}
-          />
-        </div>
-
-        <div className="form-control">
-          <Controller
-            control={control}
-            name="password"
-            rules={validationRules.password}
-            render={({ field }) => (
-              <Input
-                {...field}
-                type={showPassword ? 'text' : 'password'}
-                placeHolder="Enter password"
-                icon={showPassword ? showIcon : hideIcon}
-                onIconClick={() => setShowPassword((prev) => !prev)}
-                errorMessage={errors.password?.message}
-              />
-            )}
-          />
-        </div>
+        <Controller
+          control={control}
+          name="email"
+          rules={validationRules.email}
+          render={({ field }) => (
+            <Input
+              {...field}
+              placeHolder="Enter email"
+              errorMessage={errors.email?.message}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="password"
+          rules={validationRules.password}
+          render={({ field }) => (
+            <Input
+              {...field}
+              type={showPassword ? 'text' : 'password'}
+              placeHolder="Enter password"
+              icon={showPassword ? showIcon : hideIcon}
+              onIconClick={() => setShowPassword((prev) => !prev)}
+              errorMessage={errors.password?.message}
+            />
+          )}
+        />
         <p className="form-link">
           Don't have an account?{' '}
           <Link to={AppRoutes.REGISTER}>

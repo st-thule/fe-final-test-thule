@@ -1,17 +1,23 @@
+export enum LabelGender {
+  MALE = 'male',
+  FEMALE = 'female',
+  OTHER = 'other',
+}
+
 export const optionGender = [
   {
     id: 1,
     label: 'Male',
-    value: 'male',
+    value: LabelGender.MALE,
   },
   {
     id: 2,
     label: 'Female',
-    value: 'female',
+    value: LabelGender.FEMALE,
   },
   {
     id: 3,
     label: 'Other',
-    value: 'other',
+    value: LabelGender.OTHER,
   },
 ];

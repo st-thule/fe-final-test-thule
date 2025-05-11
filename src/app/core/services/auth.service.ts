@@ -1,5 +1,6 @@
 import { User } from '@shared/models/user';
 import { apiService } from './api.service';
+import { ENDPOINT } from '@config/endpoint';
 
 interface RegisterPayload {
   email: string;
@@ -22,11 +23,15 @@ interface LoginResponse {
   userInfo: User;
 }
 export const registerAccount = (data: RegisterPayload) => {
-  return apiService.post(['/users/register'], data);
+  return apiService.post([ENDPOINT.auth.register], data);
 };
 
 export const loginAccount = async (
   data: LoginPayload
 ): Promise<LoginResponse> => {
-  return await apiService.post(['users/login'], data);
+  return await apiService.post([ENDPOINT.auth.login], data);
+};
+
+export const logoutAccount = async () => {
+  return apiService.delete([ENDPOINT.auth.logout]);
 };

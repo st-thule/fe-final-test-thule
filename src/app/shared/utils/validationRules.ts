@@ -1,4 +1,5 @@
 import { RegrexPattern } from '@app/core/constants/regrexPattern';
+import { isPastDate } from './checkDate';
 
 export const validationRules = {
   firstName: {
@@ -22,8 +23,7 @@ export const validationRules = {
     required: 'Password is required',
     pattern: {
       value: RegrexPattern.REGREX_PASSWORD,
-      message:
-        'Password must contain at least 8 characters, including one letter and one number',
+      message: 'Password must contain at least 8 characters',
     },
   },
   gender: {
@@ -31,6 +31,11 @@ export const validationRules = {
   },
   dob: {
     required: 'Date of birth is required',
+    pattern: {
+      value: /^\d{4}-\d{2}-\d{2}$/,
+      message: 'Date must be in YYYY-MM-DD format',
+    },
+    validate: isPastDate,
   },
   phone: {
     required: 'Phone is required',

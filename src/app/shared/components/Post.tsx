@@ -25,21 +25,17 @@ export const PostComponent: React.FC<IPostProps> = ({
     return (
       <li className={`list-item ${className}`}>
         <div className="card">
-          <div className="card-img">
-            <Skeleton height={150} borderRadius={8} />
-          </div>
+          <div className="card-img skeleton" />
           <div className="card-content">
-            <div className="skeleton-tag mb-2">
-              <Skeleton width={80} height={10} borderRadius={8} />
-            </div>
-            <Skeleton width="90%" height={10} />
-            <Skeleton width="60%" height={10} className="mt-1" />
+            <div className="skeleton-tag mb-2" />
+            <div className="skeleton-text" />
+            <div className="skeleton-text mt-1" />
             <div className="card-detail detail">
               <div className="detail-group">
-                <Skeleton circle width={32} height={32} />
-                <Skeleton width={100} height={10} />
+                <div className="skeleton-circle" />
+                <div className="skeleton-text" />
               </div>
-              <Skeleton width={80} height={10} />
+              <div className="skeleton-text" />
             </div>
           </div>
         </div>

@@ -1,15 +1,57 @@
 @use '../base/' as *;
 
 .header {
-  padding: 16px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  background-color: $color-white;
+
+  transition: transform 0.3s ease;
+
   .wrapper {
-    justify-content: space-between;
-    align-items: center;
+    padding: $spacing-lg-plus $spacing-none;
+  }
+
+  &.header-hidden {
+    transform: translateY((-100%));
   }
   .logo {
     img {
       width: 50%;
       height: auto;
+    }
+  }
+
+  .header-action {
+    .dropdown {
+      position: relative;
+      &-toggle {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+
+        cursor: pointer;
+      }
+
+      &-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 9999;
+
+        width: max-content;
+        padding: $spacing-sm-plus $spacing-md;
+        border-radius: $border-radius-md;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+        background-color: $color-white;
+
+        @media screen and (max-width: $md) {
+          left: -22px;
+        }
+      }
     }
   }
 }

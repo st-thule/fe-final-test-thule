@@ -8,6 +8,7 @@ interface SelectProps {
   options: { label: string; value: string }[];
   register?: UseFormRegisterReturn;
   value?: string;
+  placeHolder?: string;
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onBlur?: () => void;
 }
@@ -19,19 +20,20 @@ export const Select: React.FC<SelectProps> = ({
   options,
   register,
   value,
+  placeHolder,
   onChange,
   onBlur,
 }) => {
   const isShowError = !!errorMsg;
 
   return (
-    <div className="input-group">
-      <div className="input-wrapper">
-        {label && (
-          <label className="input-label" htmlFor={name}>
-            {label}
-          </label>
-        )}
+    <div className="form-control">
+      {label && (
+        <label className="form-label" htmlFor={name}>
+          {label}
+        </label>
+      )}
+      <div className="input-group">
         <select
           id={name}
           name={name}
@@ -41,7 +43,11 @@ export const Select: React.FC<SelectProps> = ({
           onBlur={onBlur}
           {...register}
         >
-          <option value="">Gender {label?.toLowerCase()}</option>
+          {placeHolder && (
+            <option value="" disabled hidden>
+              {placeHolder}
+            </option>
+          )}
           {options.map(({ value, label }) => (
             <option value={value} key={value}>
               {label}

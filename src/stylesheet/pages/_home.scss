@@ -1,7 +1,7 @@
 @use '../base/' as *;
 
 .page-home {
-  padding: 72px 0;
+  padding: $spacing-4xl $spacing-none;
 }
 
 .section-banner {
@@ -12,7 +12,7 @@
 
   height: 70vh;
   width: 100%;
-  border-radius: 10px;
+  border-radius: $border-radius-md;
 
   background-image: url('/assets/images/banner.png');
   background-size: cover;
@@ -25,7 +25,7 @@
     z-index: 1;
     inset: 0;
 
-    border-radius: 10px;
+    border-radius: $border-radius-md;
 
     background-color: rgba(0, 0, 0, 0.25);
   }
@@ -37,7 +37,7 @@
     z-index: 2;
 
     width: 70%;
-    padding: 30px;
+    padding: $spacing-lg-plus;
 
     color: $color-white;
     text-align: left;

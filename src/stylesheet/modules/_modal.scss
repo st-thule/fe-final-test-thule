@@ -5,7 +5,7 @@
   z-index: 1000;
 
   width: fit-content;
-  padding: 20px;
+  padding: $spacing-md-plus;
   border-radius: 6px;
 
   background-color: $color-white;
@@ -43,14 +43,14 @@
   }
 
   &-title {
-    padding-bottom: 20px;
+    padding-bottom: $spacing-md-plus;
 
     font-size: $font-size-md;
     font-weight: $font-weight-semi;
   }
 
   &-message {
-    padding-bottom: 10px;
+    padding-bottom: $spacing-sm-plus;
   }
 
   &-action {
@@ -59,6 +59,6 @@
     justify-content: space-between;
     gap: 30px;
 
-    padding-top: 34px;
+    padding-top: $spacing-lg-plus;
   }
 }

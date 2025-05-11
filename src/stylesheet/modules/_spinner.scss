@@ -34,8 +34,8 @@
   }
 
   &-lg > .bounce {
-    @include pxRem(width, 20);
-    @include pxRem(height, 20);
+    @include pxRem(width, 15);
+    @include pxRem(height, 15);
   }
 
   &-md > .bounce {

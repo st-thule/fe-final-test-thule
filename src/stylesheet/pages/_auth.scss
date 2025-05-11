@@ -1,8 +1,14 @@
-.auth-wrapper {
+@use '../base/' as *;
+
+.page-auth {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  padding: 20px 0;
+  padding: $spacing-md-plus $spacing-none;
+
+  .page-title {
+    font-size: $font-size-xl;
+  }
 }

@@ -1,18 +1,12 @@
 @use '../base/' as *;
 
 .page-post-detail {
-  .wrapper {
-    max-width: 800px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 16px;
-
-    @media screen and (max-width: $md) {
-      padding: 0;
+  .article {
+    &-header {
+      padding: $spacing-lg-plus $spacing-none;
+      border-bottom: 1px solid $color-grey-light;
     }
-  }
-  .section-post {
-    .section-tag {
+    &-tag {
       display: flex;
       flex-direction: row;
       justify-content: center;
@@ -20,8 +14,8 @@
 
       width: fit-content;
       margin-bottom: 4px;
-      padding: 8px 20px;
-      border-radius: 6px;
+      padding: $spacing-sm $spacing-md-plus;
+      border-radius: $border-radius-md;
 
       background-color: $color-blue-light;
 
@@ -38,14 +32,14 @@
       }
 
       @media screen and (max-width: $sm) {
-        padding: 4px 10px;
+        padding: $spacing-xs $spacing-sm-plus;
 
         font-size: $font-size-2xs;
         font-weight: $font-weight-semi;
       }
     }
-    .section-title {
-      padding-bottom: 10px;
+    &-title {
+      padding-bottom: $spacing-sm-plus;
 
       font-size: $font-size-4xl;
       @media screen and (max-width: $md) {
@@ -56,8 +50,8 @@
       }
     }
 
-    .section-subtitle {
-      padding-bottom: 10px;
+    &-subtitle {
+      padding-bottom: $spacing-sm-plus;
 
       text-align: initial;
       color: $color-black;
@@ -68,40 +62,45 @@
       }
     }
 
-    .section-meta {
-      display: flex;
-      flex-direction: row;
-      justify-content: left;
-      align-items: center;
-      gap: 20px;
-
-      padding-bottom: 32px;
-      border-bottom: 1px solid $color-grey-light;
-
-      .meta-title {
-        color: $color-grey;
-        font-size: $font-size-xs;
-        font-weight: $font-weight-semi;
-
-        @media screen and (max-width: $sm) {
-          font-size: $font-size-2xs;
-        }
-      }
-      .meta-group {
+    &-meta {
+      &.meta {
         display: flex;
         flex-direction: row;
-        justify-content: start;
+        justify-content: left;
         align-items: center;
+        gap: 20px;
 
-        gap: 10px;
+        .meta-title {
+          color: $color-grey;
+          font-size: $font-size-xs;
+          font-weight: $font-weight-semi;
 
-        .meta-img {
-          width: 15%;
+          @media screen and (max-width: $sm) {
+            font-size: $font-size-2xs;
+          }
+        }
+        .meta-group {
+          display: flex;
+          flex-direction: row;
+          justify-content: start;
+          align-items: center;
+
+          gap: 10px;
+
+          .meta-img {
+            max-width: 24px;
+            height: auto;
+
+            border-radius: $border-radius-circle;
+          }
         }
       }
     }
-    .section-thumbnail {
-      padding: 40px 0 20px;
+    &-body {
+      padding: $spacing-lg-plus $spacing-none;
+    }
+    &-content {
+      padding: $spacing-lg-plus $spacing-none;
     }
   }
 }

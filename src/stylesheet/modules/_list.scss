@@ -1,6 +1,18 @@
 @use '../base/' as *;
 
 .list {
+  &-dropdown {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .list-item {
+      cursor: pointer;
+      &:hover {
+        color: $color-primary;
+      }
+    }
+  }
   &-legal {
     display: flex;
     flex-wrap: wrap;
@@ -9,7 +21,15 @@
     align-items: center;
     gap: 24px;
 
-    .item {
+    @media screen and (max-width: $md) {
+      flex-direction: column;
+
+      font-size: $font-size-xs;
+    }
+
+    .list-link {
+      cursor: pointer;
+
       color: $color-black-light;
       font-size: $font-size-xs;
       font-weight: $font-weight-base;
@@ -21,7 +41,7 @@
   }
 
   &-posts {
-    padding-bottom: 56px;
+    padding-bottom: $spacing-3xl;
   }
   &-tags {
     display: flex;
@@ -35,14 +55,15 @@
     }
 
     .list-item {
-      padding: 9px 16px;
-      border-radius: $border-radius;
+      padding: $spacing-sm-plus $spacing-md;
+      border-radius: $border-radius-md;
 
       box-shadow: 0px 2px 12px -2px rgba(0, 0, 0, 0.08);
 
+      cursor: pointer;
+
       transition: transform 0.3s ease, color 0.3s ease;
 
-      cursor: pointer;
       &:hover {
         color: $color-primary;
         transform: scale(1.05);
@@ -52,32 +73,51 @@
 
   &-paginations {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    flex-direction: row;
+    gap: 20px;
+
+    padding: $spacing-md-plus $spacing-none;
     .list-item {
       width: 40px;
       height: 40px;
-      border-radius: 6px;
-      a {
+      border-radius: $border-radius-md;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      transition: background-color 0.3s ease;
+
+      .list-link {
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 6px 20px;
-        cursor: pointer;
+
+        width: 100%;
+        height: 100%;
+
         color: $color-black;
         font-weight: $font-size-base;
       }
 
+      img {
+        width: 14px;
+        height: 14px;
+      }
+
       &:hover {
         background-color: $color-primary;
-        a {
+        .list-link {
           color: $color-white;
         }
       }
     }
+
     .list-active {
       background-color: $color-primary;
-      a {
+
+      .list-link {
         color: $color-white;
       }
     }
@@ -85,10 +125,14 @@
     .list-dots {
       cursor: default;
 
-      a {
+      .list-link {
         pointer-events: none;
         cursor: default;
       }
     }
+  }
+  .pagination-icon {
+    width: 12px;
+    height: 12px;
   }
 }

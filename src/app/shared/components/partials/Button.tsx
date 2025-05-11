@@ -9,6 +9,7 @@ interface IButtonProps {
   type?: 'button' | 'submit';
   label?: string | '';
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  children?: React.ReactNode;
 }
 export const Button: React.FC<IButtonProps> = ({
   className = '',
@@ -17,6 +18,7 @@ export const Button: React.FC<IButtonProps> = ({
   type = 'button',
   label,
   onClick,
+  children,
 }) => {
   return (
     <button
@@ -25,7 +27,8 @@ export const Button: React.FC<IButtonProps> = ({
       onClick={onClick}
       disabled={isDisabled}
     >
-      {isLoading ? <Spinner className="spinner-sm" /> : label}
+      {children}
+      {isLoading ? <Spinner className="spinner-lg" /> : label}
     </button>
   );
 };
