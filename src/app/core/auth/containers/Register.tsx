@@ -8,7 +8,7 @@ import { registerAccount } from '@app/core/services/auth.service';
 import { Button } from '@shared/components/partials/Button';
 import { Input } from '@shared/components/partials/Input';
 import { Select } from '@shared/components/partials/Select';
-import { LabelGender, optionGender } from '@shared/constants/optionGender';
+import { LabelGender, optionGender } from '@shared/constants/options';
 import { formatDate } from '@shared/utils/formatDate';
 import { validationRules } from '@shared/utils/validationRules';
 

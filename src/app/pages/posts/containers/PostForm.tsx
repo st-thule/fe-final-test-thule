@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 
 import { Button, Input } from '@shared/components/partials';
 import CkEditor from '@shared/components/CkEditor';
+import { MultiSelect } from '@shared/components/MultiSelect';
+import { optionTags } from '@shared/constants/options';
 
 const PostForm = () => {
   const params = useParams();
@@ -13,8 +15,11 @@ const PostForm = () => {
       <div className="container">
         <div className="wrapper wrapper-padding">
           <h1 className="page-title">{isEdit ? 'Edit Post' : 'Create Post'}</h1>
-          <form className="form">
-            <Button className="btn btn-primary" label="Create Post" />
+          <form className="form form-xl">
+            <Button
+              className="btn btn-primary"
+              label={isEdit ? 'Save' : 'Create'}
+            />
             <div className="form-upload upload">
               <Input className="img img-upload" />
               <div className="upload-action">
@@ -24,7 +29,7 @@ const PostForm = () => {
             </div>
             <div className="row">
               <div className="col-12 col-md-6 col-sm-6">
-                {/* Multiple Select */}
+                <MultiSelect options={optionTags} />
               </div>
               <div className="col-12 col-md-6 col-sm-6">{/* Status */}</div>
             </div>
