@@ -1,7 +1,7 @@
 import React from 'react';
 
-const AddPost = () => {
+const PostForm = () => {
   return <>This is add post page</>;
 };
 
-export default AddPost;
+export default PostForm;
