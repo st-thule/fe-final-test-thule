@@ -23,7 +23,7 @@ export const UploadImage = () => {
     <div className="form form-upload form-xl gap-4">
       <img src={imagePreview} alt="Preview" className="" />
       <Input
-        className="hidden"
+        className="input-hidden"
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}

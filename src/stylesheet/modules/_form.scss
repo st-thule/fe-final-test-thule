@@ -8,6 +8,15 @@
     width: 100%;
   }
 
+  &.form-upload {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed $color-primary;
+    height: auto;
+  }
+
   &.form-auth {
     display: flex;
     flex-direction: column;

@@ -10,6 +10,11 @@
   border: 1px solid $color-grey-light;
   border-radius: $border-radius-md;
 
+  .input {
+    &.input-hidden {
+      display: none;
+    }
+  }
   &:focus-within {
     border-color: $color-primary;
   }
