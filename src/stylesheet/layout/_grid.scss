@@ -26,6 +26,12 @@
     justify-content: space-between;
     align-items: center;
   }
+
+  &.wrapper-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
 }
 
 // Row, col

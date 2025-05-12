@@ -135,4 +135,52 @@
     width: 12px;
     height: 12px;
   }
+
+  &.list-filter,
+  &.list-selected {
+    position: absolute;
+    z-index: 100000;
+
+    width: 100%;
+    padding: 9px 10px;
+
+    background-color: $color-white;
+
+    .list-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+
+      padding: 5px;
+      width: fit-content;
+      border-radius: 6px;
+
+      background-color: $color-blue-light;
+      &:hover {
+        background-color: $color-primary;
+
+        color: $color-white;
+      }
+    }
+  }
+
+  &.list-selected {
+    bottom: 100%;
+
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+
+    max-height: 64px;
+    overflow-y: auto;
+
+    line-height: 1.2;
+    font-size: $font-size-base;
+  }
+  &.list-filter {
+    top: 100%;
+  }
 }
