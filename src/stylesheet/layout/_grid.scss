@@ -18,6 +18,10 @@
     @media screen and (max-width: $md) {
       padding: 0;
     }
+
+    &.wrapper-padding-lg {
+      max-width: 891px;
+    }
   }
 
   &.wrapper-flex {

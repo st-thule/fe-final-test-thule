@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "^9.5.0",
     "@reduxjs/toolkit": "^2.8.0",
     "axios": "^1.9.0",
+    "ckeditor5": "^45.0.0",
     "jwt-decode": "^4.0.0",
     "react": "^19.1.0",
     "react-content-loader": "^7.0.2",

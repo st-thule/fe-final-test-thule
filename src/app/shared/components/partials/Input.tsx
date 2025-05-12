@@ -16,6 +16,8 @@ interface IInputProps {
   errorMessage?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   icon?: string;
   onIconClick?: () => void;
 }
@@ -32,8 +34,10 @@ export const Input = forwardRef<HTMLInputElement, IInputProps>(
       minLength,
       isReadOnly = false,
       isDisabled = false,
+      onKeyDown,
       onBlur,
       onChange,
+      onFocus,
       value,
       errorMessage,
       icon,
@@ -85,6 +89,7 @@ export const Input = forwardRef<HTMLInputElement, IInputProps>(
               if (onChange) onChange(e);
               setHasValue(!!e.target.value);
             }}
+            onKeyDown={onKeyDown}
           />
           {icon && (
             <img className="form-icon" src={icon} onClick={onIconClick} />

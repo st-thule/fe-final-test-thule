@@ -68,7 +68,7 @@ const Register = () => {
     <div className="page page-auth page-register">
       <h1 className="page-title">Register</h1>
       <form
-        className="form form-auth form-register"
+        className="form form-auth form-register form-sm"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="row">

@@ -64,7 +64,7 @@ const Login = () => {
   return (
     <div className="page page-auth page-login">
       <form
-        className="form form-auth form-login"
+        className="form form-auth form-login form-sm"
         onSubmit={handleSubmit(onSubmit)}
       >
         <h1 className="form-title">Login</h1>

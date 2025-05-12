@@ -1,8 +1,23 @@
 @use '../base/' as *;
 
 .form {
-  width: 40%;
+  width: 100%;
   padding: $spacing-xl;
+
+  &.form-sm {
+    width: 40%;
+  }
+
+  &-header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+
+    padding-bottom: $spacing-lg-plus;
+  }
 
   &.form-auth {
     display: flex;
