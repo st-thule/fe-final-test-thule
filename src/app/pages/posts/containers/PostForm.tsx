@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Button, Input } from '@shared/components/partials';
+import CkEditor from '@shared/components/CkEditor';
 
 const PostForm = () => {
   const params = useParams();
@@ -29,7 +30,7 @@ const PostForm = () => {
             </div>
             <Input />
             <textarea />
-            {/* Ckeditor */}
+            <CkEditor />
           </form>
         </div>
       </div>
