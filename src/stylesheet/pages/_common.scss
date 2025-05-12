@@ -1,6 +1,8 @@
 @use 'sass:map';
 @use '../base/' as *;
-
+.page {
+  height: calc(100vh - 204px);
+}
 .pages-container {
   display: flex;
   flex-direction: column;
