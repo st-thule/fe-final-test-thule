@@ -3,11 +3,10 @@
  * https://ckeditor.com/ckeditor-5/builder/#installation/NoJgNARCB0Cs0AYKQIwIBywCwgMwK1hBAQNxFnSwDZqVqFcBOPdakglkdJSAUwB2yBGGAowIkePEIAupACG9DCQiygA=
  */
 
-import { useState, useEffect, useRef, useMemo } from 'react';
 import { CKEditor, useCKEditorCloud } from '@ckeditor/ckeditor5-react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import '../../../index.css';
-import React from 'react';
 
 /**
  * This is a 24-hour evaluation key. Create a free account to use CDN: https://portal.ckeditor.com/checkout?plan=free
