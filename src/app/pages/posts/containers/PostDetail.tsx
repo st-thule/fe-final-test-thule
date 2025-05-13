@@ -53,15 +53,19 @@ const PostDetail = () => {
             ) : post ? (
               <>
                 <div className="article-header">
-                  {post.tags && post.tags.length > 0 ? (
-                    post.tags.map((tag) => (
-                      <Link className="article-tag" to="" key={tag}>
-                        {tag}
-                      </Link>
-                    ))
-                  ) : (
-                    <></>
-                  )}
+                  <ul className="list list-tags">
+                    {post.tags && post.tags.length > 0 ? (
+                      post.tags.map((tag) => (
+                        <li className="list-item">
+                          <Link className="tag" to="" key={tag}>
+                            {tag}
+                          </Link>
+                        </li>
+                      ))
+                    ) : (
+                      <></>
+                    )}
+                  </ul>
                   <h1 className="article-title">{post.title}</h1>
                   <p className="article-subtitle">{post.description}</p>
                   <div className="article-meta meta">
@@ -89,7 +93,10 @@ const PostDetail = () => {
                     src={post.cover === 'cover' ? imagePost : post.cover}
                     alt="Post"
                   />
-                  <p className="article-content">{post.content}</p>
+                  <div
+                    className="article-content"
+                    dangerouslySetInnerHTML={{ __html: post.content }}
+                  ></div>
                 </div>
               </>
             ) : (
