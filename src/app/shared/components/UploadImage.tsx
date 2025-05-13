@@ -21,7 +21,7 @@ export const UploadImage = () => {
   };
 
   return (
-    <div className="form form-upload form-xl gap-4">
+    <div className="form-upload form-xl gap-4">
       <div className="form-preview form-dashed">
         <img src={imagePreview} alt="Preview" className="" />
       </div>
