@@ -1,74 +1,41 @@
 /**
  * This configuration was generated using the CKEditor 5 Builder. You can modify it anytime using this link:
- * https://ckeditor.com/ckeditor-5/builder/#installation/NoJgNARCB0Cs0AYKQIwIBywCwgMwK1hBAQNxFnSwDZqVqFcBOPdakglkdJSAUwB2yBGGAowIkePEIAupACG9DCQiygA=
+ * https://ckeditor.com/ckeditor-5/builder/#installation/NoJgNARCB0Cs0AYKQIwICwgBxYOy9gQDYUBmEAThQpuyJFNhthS1NKI9yPQS2QgBTAHbIEYYCjDjxUqQgC6kLCyIBDAEawICoA==
  */
 
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { CKEditor, useCKEditorCloud } from '@ckeditor/ckeditor5-react';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-/**
- * This is a 24-hour evaluation key. Create a free account to use CDN: https://portal.ckeditor.com/checkout?plan=free
- */
+import React from 'react';
 
-// Cloudinary upload adapter
 const LICENSE_KEY =
-  'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDcwOTQzOTksImp0aSI6ImQ0MTY4MjUzLWIyNTEtNDE0Yi05OTBhLTliZWQ1MGE3Nzc1YiIsImxpY2Vuc2VkSG9zdHMiOlsiKi53ZWJjb250YWluZXIuaW8iLCIqLmpzaGVsbC5uZXQiLCIqLmNzcC5hcHAiLCJjZHBuLmlvIiwiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIiwic2giXSwibGljZW5zZVR5cGUiOiJldmFsdWF0aW9uIiwidmMiOiJlY2Q1ZTNkMCJ9.XlKsJ3n8NvtcCAhNk40lmXqIn1cnCB3ac2FKK94MwFvEbFmwWoZBNlxg9IwAZqnnvq3XNqg49IGe0esBFka3Ug';
-// Cloudinary upload adapter
-class CloudinaryUploadAdapter {
-  private loader: any;
-  private url: string;
-  private uploadPreset: string;
+  'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDcyNjcxOTksImp0aSI6IjE2ZTdjYjA1LTBkZGEtNGNhMC05YTdiLTY3MzdhZGVkYzM2NiIsImxpY2Vuc2VkSG9zdHMiOlsiKi53ZWJjb250YWluZXIuaW8iLCIqLmpzaGVsbC5uZXQiLCIqLmNzcC5hcHAiLCJjZHBuLmlvIiwiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIiwic2giXSwibGljZW5zZVR5cGUiOiJldmFsdWF0aW9uIiwidmMiOiJlZTEyMjkzOCJ9.dBPyylD96w_ApitJ1joFeabAedU_ECPMLffVa1NrhUHCptJi0y_yHu42fEQRbpmsKnLUpH43zPX6cTIUYhC6RQ';
 
-  constructor(loader) {
-    this.loader = loader;
-    this.url = `https://api.cloudinary.com/v1_1/dtcx3i2qo/image/upload`;
-    this.uploadPreset = 'upload_local_preset';
-  }
+const CLOUDINARY_UPLOAD_URL =
+  'https://api.cloudinary.com/v1_1/dtcx3i2qo/image/upload';
+const CLOUDINARY_UPLOAD_PRESET = 'upload_local_preset';
 
-  upload() {
-    return this.loader.file.then((file) => {
-      const data = new FormData();
-      data.append('file', file);
-      data.append('upload_preset', this.uploadPreset);
+type CkeditorProps = {
+  onChange?: (data: string) => void;
+};
 
-      return fetch(this.url, {
-        method: 'POST',
-        body: data,
-      })
-        .then((response) => response.json())
-        .then((result) => ({
-          default: result.secure_url,
-        }));
-    });
-  }
-
-  abort() {}
-}
-
-function MyCustomUploadAdapterPlugin(editor) {
-  editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-    return new CloudinaryUploadAdapter(loader); // Tạo upload adapter mới cho mỗi loader
-  };
-}
-export default function CkEditor() {
-  const editorContainerRef = useRef(null);
+export default function Ckeditor({ onChange }: CkeditorProps) {
+  const editorContainerRef = useRef<HTMLDivElement | null>(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
   const cloud = useCKEditorCloud({ version: '45.0.0' });
 
   useEffect(() => {
     setIsLayoutReady(true);
-
     return () => setIsLayoutReady(false);
   }, []);
 
   const { ClassicEditor, editorConfig } = useMemo(() => {
-    if (cloud.status !== 'success' || !isLayoutReady) {
-      return {};
-    }
+    if (cloud.status !== 'success' || !isLayoutReady) return {};
 
     const {
       ClassicEditor,
+      // All required plugins
       Alignment,
       Autoformat,
       AutoImage,
@@ -79,9 +46,8 @@ export default function CkEditor() {
       Bookmark,
       CloudServices,
       Code,
-      CodeBlock,
-      Emoji,
       Essentials,
+      FindAndReplace,
       FontBackgroundColor,
       FontColor,
       FontFamily,
@@ -90,10 +56,12 @@ export default function CkEditor() {
       Heading,
       Highlight,
       HorizontalLine,
+      Image,
       ImageBlock,
       ImageCaption,
       ImageEditing,
       ImageInline,
+      ImageInsert,
       ImageInsertViaUrl,
       ImageResize,
       ImageStyle,
@@ -108,10 +76,17 @@ export default function CkEditor() {
       LinkImage,
       List,
       ListProperties,
-      Mention,
       PageBreak,
       Paragraph,
       RemoveFormat,
+      ShowBlocks,
+      SpecialCharacters,
+      SpecialCharactersArrows,
+      SpecialCharactersCurrency,
+      SpecialCharactersEssentials,
+      SpecialCharactersLatin,
+      SpecialCharactersMathematical,
+      SpecialCharactersText,
       Strikethrough,
       Style,
       Subscript,
@@ -132,6 +107,8 @@ export default function CkEditor() {
       editorConfig: {
         toolbar: {
           items: [
+            'showBlocks',
+            '|',
             'heading',
             'style',
             '|',
@@ -145,10 +122,10 @@ export default function CkEditor() {
             'underline',
             '|',
             'link',
+            'insertImage',
             'insertTable',
             'highlight',
             'blockQuote',
-            'codeBlock',
             '|',
             'alignment',
             '|',
@@ -157,6 +134,9 @@ export default function CkEditor() {
             'todoList',
             'outdent',
             'indent',
+            '|',
+            'undo',
+            'redo',
           ],
           shouldNotGroupWhenFull: false,
         },
@@ -171,9 +151,8 @@ export default function CkEditor() {
           Bookmark,
           CloudServices,
           Code,
-          CodeBlock,
-          Emoji,
           Essentials,
+          FindAndReplace,
           FontBackgroundColor,
           FontColor,
           FontFamily,
@@ -182,10 +161,12 @@ export default function CkEditor() {
           Heading,
           Highlight,
           HorizontalLine,
+          Image,
           ImageBlock,
           ImageCaption,
           ImageEditing,
           ImageInline,
+          ImageInsert,
           ImageInsertViaUrl,
           ImageResize,
           ImageStyle,
@@ -200,10 +181,17 @@ export default function CkEditor() {
           LinkImage,
           List,
           ListProperties,
-          Mention,
           PageBreak,
           Paragraph,
           RemoveFormat,
+          ShowBlocks,
+          SpecialCharacters,
+          SpecialCharactersArrows,
+          SpecialCharactersCurrency,
+          SpecialCharactersEssentials,
+          SpecialCharactersLatin,
+          SpecialCharactersMathematical,
+          SpecialCharactersText,
           Strikethrough,
           Style,
           Subscript,
@@ -218,68 +206,6 @@ export default function CkEditor() {
           TodoList,
           Underline,
         ],
-        fontFamily: {
-          supportAllValues: true,
-        },
-        fontSize: {
-          options: [10, 12, 14, 'default', 18, 20, 22],
-          supportAllValues: true,
-        },
-        heading: {
-          options: [
-            {
-              model: 'paragraph',
-              title: 'Paragraph',
-              class: 'ck-heading_paragraph',
-            },
-            {
-              model: 'heading1',
-              view: 'h1',
-              title: 'Heading 1',
-              class: 'ck-heading_heading1',
-            },
-            {
-              model: 'heading2',
-              view: 'h2',
-              title: 'Heading 2',
-              class: 'ck-heading_heading2',
-            },
-            {
-              model: 'heading3',
-              view: 'h3',
-              title: 'Heading 3',
-              class: 'ck-heading_heading3',
-            },
-            {
-              model: 'heading4',
-              view: 'h4',
-              title: 'Heading 4',
-              class: 'ck-heading_heading4',
-            },
-            {
-              model: 'heading5',
-              view: 'h5',
-              title: 'Heading 5',
-              class: 'ck-heading_heading5',
-            },
-            {
-              model: 'heading6',
-              view: 'h6',
-              title: 'Heading 6',
-              class: 'ck-heading_heading6',
-            },
-          ],
-        },
-        htmlSupport: {
-          allow: [
-            {
-              name: /^.*$/,
-              styles: true,
-              attributes: true,
-              classes: true,
-            },
-          ],
-        },
         image: {
           toolbar: [
             'toggleImageCaption',
@@ -292,43 +218,6 @@ export default function CkEditor() {
             'resizeImage',
           ],
         },
-        extraPlugins: [MyCustomUploadAdapterPlugin],
-        initialData: '',
-        licenseKey: LICENSE_KEY,
-        link: {
-          addTargetToExternalLinks: true,
-          defaultProtocol: 'https://',
-          decorators: {
-            toggleDownloadable: {
-              mode: 'manual',
-              label: 'Downloadable',
-              attributes: {
-                download: 'file',
-              },
-            },
-          },
-        },
-        list: {
-          properties: {
-            styles: true,
-            startIndex: true,
-            reversed: true,
-          },
-        },
-        mention: {
-          feeds: [
-            {
-              marker: '@',
-              feed: [
-                /* See: https://ckeditor.com/docs/ckeditor5/latest/features/mentions.html */
-              ],
-            },
-          ],
-        },
-        menuBar: {
-          isVisible: true,
-        },
-        placeholder: 'Type or paste your content here!',
         style: {
           definitions: [
             {
@@ -373,6 +262,50 @@ export default function CkEditor() {
             },
           ],
         },
+        licenseKey: LICENSE_KEY,
+        fontSize: {
+          options: [10, 12, 14, 'default', 18, 20, 22],
+        },
+        fontFamily: {
+          supportAllValues: true,
+        },
+        heading: {
+          options: [
+            {
+              model: 'paragraph',
+              title: 'Paragraph',
+              class: 'ck-heading_paragraph',
+            },
+            {
+              model: 'heading1',
+              view: 'h1',
+              title: 'Heading 1',
+              class: 'ck-heading_heading1',
+            },
+            {
+              model: 'heading2',
+              view: 'h2',
+              title: 'Heading 2',
+              class: 'ck-heading_heading2',
+            },
+            {
+              model: 'heading3',
+              view: 'h3',
+              title: 'Heading 3',
+              class: 'ck-heading_heading3',
+            },
+            {
+              model: 'heading4',
+              view: 'h4',
+              title: 'Heading 4',
+              class: 'ck-heading_heading4',
+            },
+          ],
+        },
+        link: {
+          addTargetToExternalLinks: true,
+          defaultProtocol: 'https://',
+        },
         table: {
           contentToolbar: [
             'tableColumn',
@@ -382,24 +315,97 @@ export default function CkEditor() {
             'tableCellProperties',
           ],
         },
+        initialData:
+          '<h2 class="document-title">Title</h2>\n<h3 class="document-subtitle">Subtitle</h3>\n<p>Upload cover photo here</p>',
+        extraPlugins: [
+          function CustomUploadAdapterPlugin(editor: any) {
+            editor.plugins.get('FileRepository').createUploadAdapter = (
+              loader: any
+            ) => {
+              return new CloudinaryUploadAdapter(loader);
+            };
+          },
+        ],
       },
     };
   }, [cloud, isLayoutReady]);
 
   return (
-    <div className="main-container">
-      <div
-        className="editor-container editor-container_classic-editor editor-container_include-style"
-        ref={editorContainerRef}
-      >
-        <div className="editor-container__editor">
-          <div ref={editorRef}>
-            {ClassicEditor && editorConfig && (
-              <CKEditor editor={ClassicEditor} config={editorConfig} />
-            )}
-          </div>
+    <div
+      className="editor-container editor-container_classic-editor editor-container_include-style"
+      ref={editorContainerRef}
+    >
+      <div className="editor-container__editor">
+        <div ref={editorRef}>
+          {ClassicEditor && editorConfig && (
+            <CKEditor
+              editor={ClassicEditor}
+              config={editorConfig}
+              onChange={(_, editor) => {
+                const data = editor.getData();
+                onChange?.(data);
+              }}
+            />
+          )}
         </div>
       </div>
     </div>
   );
+}
+
+// --------------------
+// Custom Upload Adapter
+// --------------------
+
+class CloudinaryUploadAdapter {
+  loader: any;
+  xhr: XMLHttpRequest;
+
+  constructor(loader: any) {
+    this.loader = loader;
+    this.xhr = new XMLHttpRequest();
+  }
+
+  upload() {
+    return this.loader.file.then((file: File) => {
+      return new Promise((resolve, reject) => {
+        this._initRequest();
+        this._initListeners(resolve, reject, file);
+        this._sendRequest(file);
+      });
+    });
+  }
+
+  abort() {
+    this.xhr?.abort();
+  }
+
+  _initRequest() {
+    this.xhr.open('POST', CLOUDINARY_UPLOAD_URL, true);
+    this.xhr.responseType = 'json';
+  }
+
+  _initListeners(resolve: any, reject: any, file: File) {
+    const genericErrorText = `Couldn't upload file: ${file.name}.`;
+
+    this.xhr.addEventListener('error', () => reject(genericErrorText));
+    this.xhr.addEventListener('abort', () => reject());
+    this.xhr.addEventListener('load', () => {
+      const response = this.xhr.response;
+      if (!response || response.error) {
+        return reject(response?.error?.message || genericErrorText);
+      }
+
+      resolve({
+        default: response.secure_url,
+      });
+    });
+  }
+
+  _sendRequest(file: File) {
+    const data = new FormData();
+    data.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+    data.append('file', file);
+    this.xhr.send(data);
+  }
 }
