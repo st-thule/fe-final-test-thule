@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Button, Input } from '@shared/components/partials';
@@ -11,6 +11,7 @@ import { Textarea } from '@shared/components/partials/TextArea';
 const PostForm = () => {
   const params = useParams();
   const isEdit = Boolean(params.id);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   return (
     <div className="page page-post-form">
@@ -25,7 +26,11 @@ const PostForm = () => {
             <UploadImage />
             <div className="row">
               <div className="col-12 col-md-6 col-sm-6">
-                <MultiSelect options={optionTags} />
+                <MultiSelect
+                  options={optionTags}
+                  value={selectedTags}
+                  onChange={setSelectedTags}
+                />
               </div>
               <div className="col-12 col-md-6 col-sm-6">{/* Status */}</div>
             </div>
