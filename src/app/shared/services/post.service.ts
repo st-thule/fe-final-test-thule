@@ -2,7 +2,6 @@ import { apiService } from '@app/core/services/api.service';
 import { ENDPOINT } from '@config/endpoint';
 import { StatusPost } from '@shared/constants/options';
 import { Post, PostResponse } from '@shared/models/post';
-import { User } from '@shared/models/user';
 
 interface IPostPayLoad {
   title: string;
@@ -24,10 +23,5 @@ export const createPost = (
   data: IPostPayLoad,
   token: string
 ): Promise<Post> => {
-  console.log(`${ENDPOINT.post}`);
-  return apiService.post([`${ENDPOINT.post.postCreate}`], data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  return apiService.post([`${ENDPOINT.post.postCreate}`], data);
 };

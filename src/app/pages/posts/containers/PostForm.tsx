@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { Button, Input } from '@shared/components/partials';
+import { authStorage } from '@app/core/services/auth-storage.service';
 import CkEditor from '@shared/components/CkEditor';
 import { MultiSelect } from '@shared/components/MultiSelect';
+import { UploadImage } from '@shared/components/UploadImage';
+import { Button, Input } from '@shared/components/partials';
+import { Select } from '@shared/components/partials/Select';
+import { Textarea } from '@shared/components/partials/TextArea';
 import {
   optionStatusPost,
   optionTags,
   StatusPost,
 } from '@shared/constants/options';
-import { UploadImage } from '@shared/components/UploadImage';
-import { Textarea } from '@shared/components/partials/TextArea';
-import { Select } from '@shared/components/partials/Select';
-import { authStorage } from '@app/core/services/auth-storage.service';
+import { TypeUpload } from '@shared/constants/type-image';
 import { createPost } from '@shared/services/post.service';
 
 interface IPostForm {
@@ -35,6 +36,7 @@ const PostForm = () => {
     control,
     handleSubmit,
     formState: { errors, isValid },
+    setValue,
   } = useForm<IPostForm>({
     mode: 'onChange',
     defaultValues: {
@@ -83,7 +85,10 @@ const PostForm = () => {
               />
             </div>
             <div className="form-body">
-              <UploadImage />
+              <UploadImage
+                typeUpload={TypeUpload.COVER_POST}
+                onUploaded={(url) => setValue('cover', url)}
+              />
 
               <div className="row">
                 <div className="col-12 col-md-6 col-sm-6">
