@@ -8,7 +8,7 @@ import { authStorage } from '@app/core/services/auth-storage.service';
 import { loginAccount } from '@app/core/services/auth.service';
 import { Button, Input } from '@shared/components/partials';
 import { AuthContext } from '@shared/contexts/auth.context';
-import { validationRules } from '@shared/utils/validationRules';
+import { validationRulesAuth } from '@shared/utils/validationRules';
 
 import hideIcon from '@assets/icons/hide.svg';
 import showIcon from '@assets/icons/show.svg';
@@ -71,7 +71,7 @@ const Login = () => {
         <Controller
           control={control}
           name="email"
-          rules={validationRules.email}
+          rules={validationRulesAuth.email}
           render={({ field }) => (
             <Input
               {...field}
@@ -83,7 +83,7 @@ const Login = () => {
         <Controller
           control={control}
           name="password"
-          rules={validationRules.password}
+          rules={validationRulesAuth.password}
           render={({ field }) => (
             <Input
               {...field}
