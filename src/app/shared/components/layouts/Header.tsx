@@ -81,7 +81,10 @@ export const Header = () => {
                         </Link>
                       </li>
                       <li className="list-item">
-                        <Link className="list-link" to={AppRoutes.ADDPOST}>
+                        <Link
+                          className="list-link"
+                          to={`${AppRoutes.POSTS}/${AppRoutes.POSTADD}`}
+                        >
                           + Add post
                         </Link>
                       </li>

@@ -6,8 +6,32 @@
 
   &.form-xl {
     width: 100%;
+    padding: inherit;
   }
 
+  &.form-upload {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+
+    height: auto;
+
+    .input-group {
+      display: none;
+    }
+  }
+
+  &-dashed {
+    height: 400px;
+    padding: 10px;
+    border: 2px dashed $color-primary;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    img {
+      height: 100%;
+    }
+  }
   &.form-auth {
     display: flex;
     flex-direction: column;

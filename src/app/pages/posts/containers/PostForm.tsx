@@ -5,6 +5,7 @@ import { Button, Input } from '@shared/components/partials';
 import CkEditor from '@shared/components/CkEditor';
 import { MultiSelect } from '@shared/components/MultiSelect';
 import { optionTags } from '@shared/constants/options';
+import { UploadImage } from '@shared/components/UploadImage';
 
 const PostForm = () => {
   const params = useParams();
@@ -20,13 +21,7 @@ const PostForm = () => {
               className="btn btn-primary"
               label={isEdit ? 'Save' : 'Create'}
             />
-            <div className="form-upload upload">
-              <Input className="img img-upload" />
-              <div className="upload-action">
-                <Button className="btn btn-primary" label="Upload" />
-                <Button className="btn btn-no" label="Delete" />
-              </div>
-            </div>
+            <UploadImage />
             <div className="row">
               <div className="col-12 col-md-6 col-sm-6">
                 <MultiSelect options={optionTags} />
