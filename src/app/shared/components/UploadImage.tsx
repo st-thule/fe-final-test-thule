@@ -23,7 +23,7 @@ export const UploadImage = () => {
   return (
     <div className="form form-upload form-xl gap-4">
       <div className="form-preview form-dashed">
-        <img src={'/assets/images/banner.png'} alt="Preview" />
+        <img src={imagePreview} alt="Preview" className="" />
       </div>
       <Input type="file" ref={fileInputRef} onChange={handleFileChange} />
 
