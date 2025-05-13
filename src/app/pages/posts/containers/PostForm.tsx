@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { AppRoutes } from '@app/core/constants/app-routes';
 import { authStorage } from '@app/core/services/auth-storage.service';
 import CkEditor from '@shared/components/CkEditor';
 import { MultiSelect } from '@shared/components/MultiSelect';
@@ -31,6 +32,7 @@ const PostForm = () => {
   const params = useParams();
   const isEdit = Boolean(params.id);
   const [rawContent, setRawContent] = useState('');
+  const navigate = useNavigate();
 
   const {
     control,
@@ -60,8 +62,8 @@ const PostForm = () => {
       const token = authStorage.getToken();
       if (token) {
         const response = await createPost(finalData, token);
-        console.log(response);
         toast.success('Create post successfully');
+        navigate(`${AppRoutes.POSTSDETAIL.replace(':id', response.id)}`);
       }
     } catch (error) {
       toast.error(error);
