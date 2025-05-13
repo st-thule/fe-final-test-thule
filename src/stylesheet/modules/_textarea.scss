@@ -1,0 +1,16 @@
+@use '../base/' as *;
+
+.textarea {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: $spacing-sm $spacing-md;
+  border: 1px solid $color-grey-light;
+  border-radius: $border-radius-md;
+
+  &:focus-within {
+    border-color: $color-primary;
+  }
+}

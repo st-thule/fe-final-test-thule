@@ -6,6 +6,7 @@ import CkEditor from '@shared/components/CkEditor';
 import { MultiSelect } from '@shared/components/MultiSelect';
 import { optionTags } from '@shared/constants/options';
 import { UploadImage } from '@shared/components/UploadImage';
+import { Textarea } from '@shared/components/partials/TextArea';
 
 const PostForm = () => {
   const params = useParams();
@@ -29,7 +30,7 @@ const PostForm = () => {
               <div className="col-12 col-md-6 col-sm-6">{/* Status */}</div>
             </div>
             <Input />
-            <textarea />
+            <Textarea />
             <CkEditor />
           </form>
         </div>
