@@ -40,22 +40,24 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="form-control">
         {label && <label className="form-label">{label}</label>}
-        <textarea
-          ref={ref}
-          id={name}
-          name={name}
-          placeholder={placeholder}
-          className={`textarea ${className}`}
-          rows={rows}
-          maxLength={maxLength}
-          minLength={minLength}
-          readOnly={isReadOnly}
-          disabled={isDisabled}
-          onBlur={onBlur}
-          onChange={onChange}
-          value={value}
-        />
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <div className="input-group">
+          <textarea
+            ref={ref}
+            id={name}
+            name={name}
+            placeholder={placeholder}
+            className={`textarea ${className}`}
+            rows={rows}
+            maxLength={maxLength}
+            minLength={minLength}
+            readOnly={isReadOnly}
+            disabled={isDisabled}
+            onBlur={onBlur}
+            onChange={onChange}
+            value={value}
+          />
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+        </div>
       </div>
     );
   }
