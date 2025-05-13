@@ -1,9 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import Select, { IndicatorSeparatorProps, MultiValue } from 'react-select';
 
-import { IOption, OptionTag } from '@shared/constants/options';
-import { Input } from './partials';
+import { IOption } from '@shared/constants/options';
 
-import searchIcon from '@assets/icons/search-icon.svg';
+const indicatorSeparatorStyle = {
+  alignSelf: 'stretch',
+  marginBottom: 8,
+  marginTop: 8,
+  width: 1,
+};
+
+const IndicatorSeparator = ({
+  innerProps,
+}: IndicatorSeparatorProps<IOption, true>) => {
+  return <span style={indicatorSeparatorStyle} {...innerProps} />;
+};
 
 interface IMultiSelect {
   options: IOption[];
@@ -18,87 +29,26 @@ export const MultiSelect: React.FC<IMultiSelect> = ({
   value = [],
   onChange,
 }) => {
-  const [query, setQuery] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedValues, setSelectedValue] = useState<string[]>([]);
+  const selectedOptions = options.filter((opt) => value.includes(opt.value));
 
-  useEffect(() => {
-    if (query.length > 0) {
-      setIsOpen(true);
-    }
-  }, [query]);
-
-  const filteredOptions = options?.filter(
-    (option) =>
-      option?.label
-        .toLocaleLowerCase()
-        .includes(query.toLocaleLowerCase().trim()) &&
-      !selectedValues.includes(option.value)
-  );
-
-  const handleSelect = (value: string) => {
-    const newSelected = [...selectedValues, value];
-    setSelectedValue(newSelected);
-    onChange?.(newSelected);
-    setQuery('');
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && filteredOptions.length > 0) {
-      e.preventDefault();
-      handleSelect(filteredOptions[0].value);
-    }
-  };
-
-  const handleRemove = (value: string) => {
-    const updated = selectedValues.filter((val) => val !== value);
-    setSelectedValue(updated);
-    onChange?.(updated);
+  const handleChange = (selected: MultiValue<IOption>) => {
+    const values = selected.map((item) => item.value);
+    onChange?.(values);
   };
 
   return (
-    <>
-      <div className="form-control">
-        <label className="form-label">{label}</label>
-        <div className="wrapper wrapper-scroll">
-          {selectedValues?.length > 0 && (
-            <ul className="list list-selected">
-              {selectedValues.map((selected) => (
-                <li className="list-item" key={selected}>
-                  {selected}
-                  <p onClick={() => handleRemove(selected)}>X</p>
-                </li>
-              ))}
-            </ul>
-          )}
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            icon={searchIcon}
-            onIconClick={() => setIsOpen(true)}
-            onKeyDown={handleKeyDown}
-          />
-        </div>
-        {isOpen && (
-          <div className="dropdown">
-            <ul className="list list-filter">
-              {filteredOptions?.length ? (
-                filteredOptions.map((option) => (
-                  <li
-                    className="list-item"
-                    key={option.id}
-                    onClick={() => handleSelect(option.value)}
-                  >
-                    {option.label}
-                  </li>
-                ))
-              ) : (
-                <li className="list-item">No option available</li>
-              )}
-            </ul>
-          </div>
-        )}
-      </div>
-    </>
+    <div className="form-control">
+      {label && <label className="form-label">{label}</label>}
+      <Select
+        isMulti
+        closeMenuOnSelect={false}
+        options={options}
+        value={selectedOptions}
+        onChange={handleChange}
+        components={{ IndicatorSeparator }}
+        classNamePrefix="form-select"
+        placeholder="Search and select..."
+      />
+    </div>
   );
 };
