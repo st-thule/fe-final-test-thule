@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react';
 
 import { Button, Input } from './partials';
-import defaultImage from '@assets/images/banner.png';
 
 export const UploadImage = () => {
-  const [imagePreview, setImagePreview] = useState<string>(defaultImage);
+  const [imagePreview, setImagePreview] = useState<string>(
+    '/assets/images/banner.png'
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,13 +22,10 @@ export const UploadImage = () => {
 
   return (
     <div className="form form-upload form-xl gap-4">
-      <img src={imagePreview} alt="Preview" className="" />
-      <Input
-        className="input-hidden"
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-      />
+      <div className="form-preview form-dashed">
+        <img src={'/assets/images/banner.png'} alt="Preview" />
+      </div>
+      <Input type="file" ref={fileInputRef} onChange={handleFileChange} />
 
       <div className="form-action">
         <Button
