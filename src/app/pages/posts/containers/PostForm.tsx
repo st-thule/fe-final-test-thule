@@ -56,8 +56,6 @@ const PostForm = () => {
       ...data,
       content: rawContent,
     };
-
-    console.log('content', finalData.content);
     try {
       const token = authStorage.getToken();
       if (token) {
