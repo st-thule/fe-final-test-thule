@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { TypeUpload } from '@shared/constants/type-image';
 import { getSignedUrl, uploadImageToS3 } from '@shared/services/image.service';
 import { Button } from './partials';
-import { TypeUpload } from '@shared/constants/type-image';
 
 interface UploadImageProps {
   typeUpload: TypeUpload;
@@ -55,7 +55,7 @@ export const UploadImage = ({
           onUploaded(url);
         }
       } catch (error) {
-        console.log(error);
+        toast.error(error);
       }
     }
   };

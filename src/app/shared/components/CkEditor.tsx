@@ -3,17 +3,15 @@
  * https://ckeditor.com/ckeditor-5/builder/#installation/NoJgNARCB0Cs0AYKQIwICwgBxYOy9gQDYUBmEAThQpuyJFNhthS1NKI9yPQS2QgBTAHbIEYYCjDjxUqQgC6kLCyIBDAEawICoA==
  */
 
+import React from 'react';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { CKEditor, useCKEditorCloud } from '@ckeditor/ckeditor5-react';
 
-import React from 'react';
+import { getSignedUrl, uploadImageToS3 } from '@shared/services/image.service';
+import { TypeUpload } from '@shared/constants/type-image';
 
 const LICENSE_KEY =
   'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDcyNjcxOTksImp0aSI6IjE2ZTdjYjA1LTBkZGEtNGNhMC05YTdiLTY3MzdhZGVkYzM2NiIsImxpY2Vuc2VkSG9zdHMiOlsiKi53ZWJjb250YWluZXIuaW8iLCIqLmpzaGVsbC5uZXQiLCIqLmNzcC5hcHAiLCJjZHBuLmlvIiwiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIiwic2giXSwibGljZW5zZVR5cGUiOiJldmFsdWF0aW9uIiwidmMiOiJlZTEyMjkzOCJ9.dBPyylD96w_ApitJ1joFeabAedU_ECPMLffVa1NrhUHCptJi0y_yHu42fEQRbpmsKnLUpH43zPX6cTIUYhC6RQ';
-
-const CLOUDINARY_UPLOAD_URL =
-  'https://api.cloudinary.com/v1_1/dtcx3i2qo/image/upload';
-const CLOUDINARY_UPLOAD_PRESET = 'upload_local_preset';
 
 type CkeditorProps = {
   value?: string;
@@ -322,7 +320,7 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
             editor.plugins.get('FileRepository').createUploadAdapter = (
               loader: any
             ) => {
-              return new CloudinaryUploadAdapter(loader);
+              return new S3UploadAdapter(loader, TypeUpload.CONTENT_POST);
             };
           },
         ],
@@ -357,56 +355,37 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
 // --------------------
 // Custom Upload Adapter
 // --------------------
-
-class CloudinaryUploadAdapter {
+class S3UploadAdapter {
   loader: any;
-  xhr: XMLHttpRequest;
+  typeUpload: TypeUpload;
 
-  constructor(loader: any) {
+  constructor(loader: any, typeUpload: TypeUpload) {
     this.loader = loader;
-    this.xhr = new XMLHttpRequest();
+    this.typeUpload = typeUpload;
   }
 
   upload() {
-    return this.loader.file.then((file: File) => {
-      return new Promise((resolve, reject) => {
-        this._initRequest();
-        this._initListeners(resolve, reject, file);
-        this._sendRequest(file);
-      });
-    });
+    return this.loader.file.then(
+      (file: File) =>
+        new Promise((resolve, reject) => {
+          getSignedUrl(this.typeUpload, file.name, file.type)
+            .then(({ signedRequest, url }) => {
+              uploadImageToS3(signedRequest, file)
+                .then(() => {
+                  resolve({
+                    default: url,
+                  });
+                })
+                .catch((error) => {
+                  reject(`${error.message}`);
+                });
+            })
+            .catch((error) => {
+              reject(`${error.message}`);
+            });
+        })
+    );
   }
 
-  abort() {
-    this.xhr?.abort();
-  }
-
-  _initRequest() {
-    this.xhr.open('POST', CLOUDINARY_UPLOAD_URL, true);
-    this.xhr.responseType = 'json';
-  }
-
-  _initListeners(resolve: any, reject: any, file: File) {
-    const genericErrorText = `Couldn't upload file: ${file.name}.`;
-
-    this.xhr.addEventListener('error', () => reject(genericErrorText));
-    this.xhr.addEventListener('abort', () => reject());
-    this.xhr.addEventListener('load', () => {
-      const response = this.xhr.response;
-      if (!response || response.error) {
-        return reject(response?.error?.message || genericErrorText);
-      }
-
-      resolve({
-        default: response.secure_url,
-      });
-    });
-  }
-
-  _sendRequest(file: File) {
-    const data = new FormData();
-    data.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-    data.append('file', file);
-    this.xhr.send(data);
-  }
+  abort() {}
 }

@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
 import { authStorage } from '@app/core/services/auth-storage.service';
+import { closeModal, openModal } from '@app/store/modal/action/modalAction';
 import CkEditor from '@shared/components/CkEditor';
 import { MultiSelect } from '@shared/components/MultiSelect';
 import { UploadImage } from '@shared/components/UploadImage';
@@ -17,8 +19,13 @@ import {
   StatusPost,
 } from '@shared/constants/options';
 import { TypeUpload } from '@shared/constants/type-image';
-import { createPost, getPostDetailUpdate } from '@shared/services/post.service';
 import { AuthContext } from '@shared/contexts/auth.context';
+import {
+  createPost,
+  getPostDetailUpdate,
+  updatePost,
+} from '@shared/services/post.service';
+import { ModalTypes } from '@shared/utils/modalTypes';
 import { validationRulesPost } from '@shared/utils/validationRules';
 
 interface IPostForm {
@@ -36,6 +43,7 @@ const PostForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rawContent, setRawContent] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { user } = useContext(AuthContext);
 
@@ -88,7 +96,7 @@ const PostForm = () => {
       });
   }, [id, isEdit, navigate, setValue, user.id]);
 
-  // add post
+  // handle for add and edit
   const onSubmit = async (data: IPostForm) => {
     const finalData = {
       ...data,
@@ -97,10 +105,43 @@ const PostForm = () => {
     try {
       setIsLoading(true);
       const token = authStorage.getToken();
-      if (token) {
-        const response = await createPost(finalData);
+
+      let response;
+
+      if (isEdit) {
+        dispatch(
+          openModal({
+            modalType: ModalTypes.CONFIRM,
+            modalProps: {
+              title: 'Confirm Edit',
+              message: 'Are you sure ?',
+              onConfirm: async () => {
+                try {
+                  const response = await updatePost(id!, data);
+                  toast.success('Update post successfully');
+                  navigate(
+                    `${AppRoutes.POSTSDETAIL.replace(':id', response.id)}`
+                  );
+                } catch (error) {
+                  toast.error(error);
+                } finally {
+                  dispatch(closeModal());
+                  setIsLoading(false);
+                }
+              },
+              onCancel: () => {
+                dispatch(closeModal());
+                setIsLoading(false);
+              },
+            },
+          })
+        );
+      } else {
+        // Create new post
+        const response = await createPost(data);
         toast.success('Create post successfully');
         navigate(`${AppRoutes.POSTSDETAIL.replace(':id', response.id)}`);
+        setIsLoading(false);
       }
     } catch (error) {
       toast.error(error);
@@ -205,6 +246,7 @@ const PostForm = () => {
                       value={field.value}
                       onChange={(data: string) => {
                         field.onChange(data);
+                        setRawContent(data);
                       }}
                     />
                     {errors.content && (
