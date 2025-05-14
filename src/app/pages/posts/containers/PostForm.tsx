@@ -31,6 +31,7 @@ interface IPostForm {
 const PostForm = () => {
   const params = useParams();
   const isEdit = Boolean(params.id);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rawContent, setRawContent] = useState('');
   const navigate = useNavigate();
 
@@ -57,6 +58,7 @@ const PostForm = () => {
       content: rawContent,
     };
     try {
+      setIsLoading(true);
       const token = authStorage.getToken();
       if (token) {
         const response = await createPost(finalData, token);
@@ -66,6 +68,7 @@ const PostForm = () => {
     } catch (error) {
       toast.error(error);
     } finally {
+      setIsLoading(false);
     }
   };
 
@@ -82,6 +85,8 @@ const PostForm = () => {
                 type="submit"
                 className="btn btn-primary"
                 label={isEdit ? 'Save' : 'Create'}
+                isDisabled={!isValid || isLoading}
+                isLoading={isLoading}
               />
             </div>
             <div className="form-body">
