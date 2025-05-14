@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { getSignedUrl, uploadImageToS3 } from '@shared/services/image.service';
@@ -7,15 +7,26 @@ import { TypeUpload } from '@shared/constants/type-image';
 
 interface UploadImageProps {
   typeUpload: TypeUpload;
+  cover?: string;
   onUploaded?: (url: string) => void;
 }
 
-export const UploadImage = ({ typeUpload, onUploaded }: UploadImageProps) => {
+export const UploadImage = ({
+  typeUpload,
+  cover,
+  onUploaded,
+}: UploadImageProps) => {
   const [imagePreview, setImagePreview] = useState<string>(
-    '/assets/images/banner.png'
+    cover || '/assets/images/banner.png'
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUpload, setIsUpload] = useState(false);
+
+  useEffect(() => {
+    if (cover && cover !== 'cover') {
+      setImagePreview(cover);
+    }
+  }, [cover]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -38,7 +49,8 @@ export const UploadImage = ({ typeUpload, onUploaded }: UploadImageProps) => {
         );
         await uploadImageToS3(signedRequest, file);
         toast.success('Upload successfully');
-
+        // Update preview with uploaded image URL
+        setImagePreview(url);
         if (onUploaded) {
           onUploaded(url);
         }
