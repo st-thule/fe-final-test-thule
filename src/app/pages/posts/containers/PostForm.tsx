@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -26,7 +27,6 @@ import {
 } from '@shared/services/post.service';
 import { ModalTypes } from '@shared/utils/modalTypes';
 import { validationRulesPost } from '@shared/utils/validationRules';
-import { useDispatch } from 'react-redux';
 
 interface IPostForm {
   title: string;

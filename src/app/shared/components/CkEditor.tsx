@@ -3,10 +3,10 @@
  * https://ckeditor.com/ckeditor-5/builder/#installation/NoJgNARCB0Cs0AYKQIwICwgBxYOy9gQDYUBmEAThQpuyJFNhthS1NKI9yPQS2QgBTAHbIEYYCjDjxUqQgC6kLCyIBDAEawICoA==
  */
 
+import React from 'react';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { CKEditor, useCKEditorCloud } from '@ckeditor/ckeditor5-react';
 
-import React from 'react';
 import { getSignedUrl, uploadImageToS3 } from '@shared/services/image.service';
 import { TypeUpload } from '@shared/constants/type-image';
 
