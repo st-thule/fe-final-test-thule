@@ -90,6 +90,7 @@ const PostForm = () => {
 
   // add post
   const onSubmit = async (data: IPostForm) => {
+    console.log('ckeditor', rawContent);
     const finalData = {
       ...data,
       content: rawContent,
@@ -204,7 +205,9 @@ const PostForm = () => {
                     <CkEditor
                       value={field.value}
                       onChange={(data: string) => {
+                        console.log('Editor content:', data);
                         field.onChange(data);
+                        setRawContent(data);
                       }}
                     />
                     {errors.content && (
