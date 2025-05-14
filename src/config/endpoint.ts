@@ -1,6 +1,7 @@
 const RESOURCES = {
   auth: 'users',
   post: 'posts',
+  signatures: 'signatures',
 };
 
 export const ENDPOINT = {
@@ -13,5 +14,10 @@ export const ENDPOINT = {
   post: {
     postList: `${RESOURCES.post}`,
     postDetail: (id: number | string) => `${RESOURCES.post}/${id}`,
+    postCreate: `${RESOURCES.post}`,
+  },
+
+  signatures: {
+    uploadImage: `${RESOURCES.signatures}`,
   },
 };

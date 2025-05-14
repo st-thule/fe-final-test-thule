@@ -116,7 +116,7 @@ export const Header = () => {
             ) : (
               <Link
                 to={{
-                  pathname: AppRoutes.LOGIN,
+                  pathname: `${AppRoutes.AUTH}/${AppRoutes.LOGIN}`,
                 }}
                 state={{ from: location.pathname }}
               >
