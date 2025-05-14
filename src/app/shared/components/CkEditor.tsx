@@ -16,10 +16,11 @@ const CLOUDINARY_UPLOAD_URL =
 const CLOUDINARY_UPLOAD_PRESET = 'upload_local_preset';
 
 type CkeditorProps = {
+  value?: string;
   onChange?: (data: string) => void;
 };
 
-export default function Ckeditor({ onChange }: CkeditorProps) {
+export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
   const editorContainerRef = useRef<HTMLDivElement | null>(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
@@ -340,6 +341,7 @@ export default function Ckeditor({ onChange }: CkeditorProps) {
             <CKEditor
               editor={ClassicEditor}
               config={editorConfig}
+              data={value}
               onChange={(_, editor) => {
                 const data = editor.getData();
                 onChange?.(data);
