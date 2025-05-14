@@ -18,6 +18,7 @@ import {
 } from '@shared/constants/options';
 import { TypeUpload } from '@shared/constants/type-image';
 import { createPost } from '@shared/services/post.service';
+import { validationRulesPost } from '@shared/utils/validationRules';
 
 interface IPostForm {
   title: string;
@@ -114,7 +115,7 @@ const PostForm = () => {
                   <Controller
                     control={control}
                     name="status"
-                    rules={{ required: 'Status is required' }}
+                    rules={validationRulesPost.status}
                     render={({ field }) => (
                       <Select
                         label="Status"
@@ -132,10 +133,7 @@ const PostForm = () => {
               <Controller
                 control={control}
                 name="title"
-                rules={{
-                  required: 'Title is required',
-                  minLength: { value: 20, message: 'Minimum 20 characters' },
-                }}
+                rules={validationRulesPost.title}
                 render={({ field }) => (
                   <Input
                     {...field}
@@ -148,13 +146,7 @@ const PostForm = () => {
               <Controller
                 control={control}
                 name="description"
-                rules={{
-                  required: 'Description is required',
-                  minLength: {
-                    value: 50,
-                    message: 'Minimum 50 characters',
-                  },
-                }}
+                rules={validationRulesPost.description}
                 render={({ field }) => (
                   <Textarea
                     {...field}
