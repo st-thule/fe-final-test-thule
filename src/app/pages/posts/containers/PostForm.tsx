@@ -68,7 +68,6 @@ const PostForm = () => {
     setIsLoading(true);
     getPostDetailUpdate(id!)
       .then((post) => {
-        console.log(post.status as StatusPost);
         if (post.userId === user.id) {
           setValue('title', post.title);
           setValue('content', post.content);
