@@ -49,7 +49,7 @@ export const Select: React.FC<SelectProps> = ({
             </option>
           )}
           {options.map(({ value, label }) => (
-            <option value={value} key={value}>
+            <option className="" value={value} key={value}>
               {label}
             </option>
           ))}

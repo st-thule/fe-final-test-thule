@@ -8,9 +8,9 @@ import { registerAccount } from '@app/core/services/auth.service';
 import { Button } from '@shared/components/partials/Button';
 import { Input } from '@shared/components/partials/Input';
 import { Select } from '@shared/components/partials/Select';
-import { LabelGender, optionGender } from '@shared/constants/optionGender';
+import { LabelGender, optionGender } from '@shared/constants/options';
 import { formatDate } from '@shared/utils/formatDate';
-import { validationRules } from '@shared/utils/validationRules';
+import { validationRulesAuth } from '@shared/utils/validationRules';
 
 import hideIcon from '@assets/icons/hide.svg';
 import showIcon from '@assets/icons/show.svg';
@@ -76,7 +76,7 @@ const Register = () => {
             <Controller
               control={control}
               name="firstName"
-              rules={validationRules.firstName}
+              rules={validationRulesAuth.firstName}
               render={({ field }) => (
                 <Input
                   {...field}
@@ -90,7 +90,7 @@ const Register = () => {
             <Controller
               control={control}
               name="lastName"
-              rules={validationRules.lastName}
+              rules={validationRulesAuth.lastName}
               render={({ field }) => (
                 <Input
                   {...field}
@@ -104,7 +104,7 @@ const Register = () => {
         <Controller
           control={control}
           name="displayName"
-          rules={validationRules.displayName}
+          rules={validationRulesAuth.displayName}
           render={({ field }) => (
             <Input
               {...field}
@@ -117,7 +117,7 @@ const Register = () => {
         <Controller
           control={control}
           name="email"
-          rules={validationRules.email}
+          rules={validationRulesAuth.email}
           render={({ field }) => (
             <Input
               {...field}
@@ -130,7 +130,7 @@ const Register = () => {
         <Controller
           control={control}
           name="password"
-          rules={validationRules.password}
+          rules={validationRulesAuth.password}
           render={({ field }) => (
             <Input
               {...field}
@@ -148,7 +148,7 @@ const Register = () => {
             <Controller
               control={control}
               name="gender"
-              rules={validationRules.gender}
+              rules={validationRulesAuth.gender}
               render={({ field }) => (
                 <Select
                   {...field}
@@ -163,7 +163,7 @@ const Register = () => {
             <Controller
               control={control}
               name="dob"
-              rules={validationRules.dob}
+              rules={validationRulesAuth.dob}
               render={({ field }) => (
                 <Input
                   {...field}
@@ -179,7 +179,7 @@ const Register = () => {
         <Controller
           control={control}
           name="phone"
-          rules={validationRules.phone}
+          rules={validationRulesAuth.phone}
           render={({ field }) => (
             <Input
               {...field}

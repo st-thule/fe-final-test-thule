@@ -76,12 +76,15 @@ export const Header = () => {
                   <nav className="dropdown-menu">
                     <ul className="list list-dropdown">
                       <li className="list-item">
-                        <Link className="list-link" to="/">
+                        <Link className="list-link" to={AppRoutes.PROFILE}>
                           Profile
                         </Link>
                       </li>
                       <li className="list-item">
-                        <Link className="list-link" to="/">
+                        <Link
+                          className="list-link"
+                          to={`${AppRoutes.POSTS}/${AppRoutes.POSTADD}`}
+                        >
                           + Add post
                         </Link>
                       </li>
@@ -113,7 +116,7 @@ export const Header = () => {
             ) : (
               <Link
                 to={{
-                  pathname: AppRoutes.LOGIN,
+                  pathname: `${AppRoutes.AUTH}/${AppRoutes.LOGIN}`,
                 }}
                 state={{ from: location.pathname }}
               >

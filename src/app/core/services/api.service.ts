@@ -101,9 +101,18 @@ export class ApiService {
   }
 
   private _setInterceptors() {
-    this.axiosInstance.interceptors.request.use((request) =>
-      this.authHelper.setAuthHeader(request)
-    );
+    this.axiosInstance.interceptors.request.use((request) => {
+      const isS3Request =
+        request.method?.toLowerCase() === 'put' &&
+        request.url?.includes('s3.ap-southeast-1.amazonaws.com');
+
+      if (!isS3Request) {
+        return this.authHelper.setAuthHeader(request);
+      }
+
+      delete request.headers['Authorization'];
+      return request;
+    });
     this.axiosInstance.interceptors.response.use(
       (response: AxiosResponse) => response,
       (error: AxiosError) => this._handleError(error)

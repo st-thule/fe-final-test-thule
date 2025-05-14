@@ -4,6 +4,34 @@
   width: 40%;
   padding: $spacing-xl;
 
+  &.form-xl {
+    width: 100%;
+    padding: inherit;
+  }
+
+  &-upload {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+
+    height: auto;
+
+    .input-group {
+      display: none;
+    }
+  }
+
+  &-dashed {
+    height: 400px;
+    padding: 10px;
+    border: 2px dashed $color-primary;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    img {
+      height: 100%;
+    }
+  }
   &.form-auth {
     display: flex;
     flex-direction: column;
@@ -17,6 +45,9 @@
 
   &-control {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm-plus;
     flex: 1;
 
     min-width: 0;
@@ -28,23 +59,8 @@
     }
 
     .form-label {
-      position: absolute;
-      top: 50%;
-      left: 10px;
-
-      font-size: 16px;
+      font-size: $font-size-base;
       color: $color-grey-dark;
-
-      pointer-events: none;
-      transition: all 0.3s ease;
-      transform: translateY(-50%);
-
-      &.focused {
-        top: 5px;
-
-        font-size: 12px;
-        color: $color-primary;
-      }
     }
 
     .error-message {
@@ -64,6 +80,10 @@
         opacity: 1;
       }
     }
+    @media screen and (max-width: $md) {
+      display: flex;
+      flex-direction: column;
+    }
   }
 
   &-link {
@@ -74,15 +94,24 @@
   }
   @media screen and (max-width: $sm) {
     width: 90%;
-
-    &-control {
-      flex-direction: row;
-    }
   }
 
   &-login {
     .form-link {
       padding-top: $spacing-md;
     }
+  }
+  &-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: $spacing-md-plus;
+  }
+
+  &-body {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm-plus;
   }
 }

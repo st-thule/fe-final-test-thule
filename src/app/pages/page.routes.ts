@@ -5,6 +5,7 @@ import errorRoutes from './error/error.routes';
 import { AppRoutes } from '@app/core/constants/app-routes';
 import homeRoutes from './homepage/home.routes';
 import postRoutes from './posts/post.routes';
+import userRoutes from './user/user.routes';
 
 const Page = React.lazy(() => import('./Page'));
 
@@ -12,7 +13,7 @@ const pageRoutes: PageRoute[] = [
   {
     path: AppRoutes.HOME,
     element: Page,
-    children: [...homeRoutes, ...postRoutes, ...errorRoutes],
+    children: [...homeRoutes, ...postRoutes, ...errorRoutes, ...userRoutes],
   },
 ];
 export default pageRoutes;

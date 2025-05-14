@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "^9.5.0",
     "@reduxjs/toolkit": "^2.8.0",
     "axios": "^1.9.0",
+    "cloudinary": "^2.6.1",
     "jwt-decode": "^4.0.0",
     "react": "^19.1.0",
     "react-content-loader": "^7.0.2",
@@ -22,6 +24,7 @@
     "react-modal": "^3.16.3",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.0",
+    "react-select": "^5.10.1",
     "react-toastify": "^11.0.5",
     "redux": "^5.0.1",
     "reset-css": "^5.0.2",
