@@ -27,6 +27,6 @@ export const getPostDetailUpdate = (id: string): Promise<Post> => {
   return apiService.get([`${ENDPOINT.post.postDetail(id)}`]);
 };
 
-// export const editPost = (data: IPostPayLoad): Promise<Post> => {
-//   // return apiService.put
-// };
+export const updatePost = (id: string, data: IPostPayLoad): Promise<Post> => {
+  return apiService.put([`${ENDPOINT.post.postEdit(id)}`], data);
+};
