@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
+import { AuthContext } from '@shared/contexts/auth.context';
 import { Post } from '@shared/models/post';
 import { formatDate } from '@shared/utils/formatDate';
 
-import imagePost from '@assets/images/articles/article-travel.png';
-import author from '@assets/images/author.png';
 import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
+import imagePost from '@assets/images/articles/article-travel.png';
+import author from '@assets/images/author.png';
 
 interface IPostProps {
   post: Post;
@@ -23,6 +24,8 @@ export const PostComponent: React.FC<IPostProps> = ({
   onClick,
   loading = false,
 }) => {
+  const { user } = useContext(AuthContext);
+
   if (loading) {
     return (
       <li className={`list-item ${className}`}>
@@ -52,14 +55,16 @@ export const PostComponent: React.FC<IPostProps> = ({
             src={post.cover === 'cover' ? imagePost : post.cover}
             alt="card-img"
           />
-          <div className="card-action">
-            <Link className="action" to={''}>
-              <img className="action-icon" src={editIcon} alt="edit" />
-            </Link>
-            <Link className="action" to={''}>
-              <img className="action-icon" src={deleteIcon} alt="delete" />
-            </Link>
-          </div>
+          {user?.id === post?.userId && (
+            <div className="card-action">
+              <Link className="action" to={''}>
+                <img className="action-icon" src={editIcon} alt="edit" />
+              </Link>
+              <Link className="action" to={''}>
+                <img className="action-icon" src={deleteIcon} alt="delete" />
+              </Link>
+            </div>
+          )}
         </div>
         {post.tags && post.tags.length > 0 ? (
           post.tags.map((tag) => (
@@ -78,10 +83,12 @@ export const PostComponent: React.FC<IPostProps> = ({
             <div className="detail-group">
               <img
                 className="detail-image"
-                src={post.user.picture === null ? author : post.user.picture}
+                src={post.user?.picture ?? author}
                 alt="avatar"
               />
-              <p className="detail-value">{post.user.displayName}</p>
+              <p className="detail-value">
+                {post.user?.displayName ?? user.displayName}
+              </p>
             </div>
             <div className="detail-group">
               <p className="detail-value">{formatDate(post.createdAt)}</p>

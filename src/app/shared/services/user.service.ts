@@ -1,7 +1,7 @@
 import { apiService } from '@app/core/services/api.service';
 import { ENDPOINT } from '@config/endpoint';
-import { User } from '@shared/models/user';
+import { UserWithPost } from '@shared/models/user';
 
-export const getUserInfo = (id: string | number): Promise<User> => {
+export const getUserInfo = (id: string | number): Promise<UserWithPost> => {
   return apiService.get([`${ENDPOINT.users.userInfoWithPost(id)}`]);
 };

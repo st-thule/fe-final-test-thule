@@ -1,16 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import { Button } from '@shared/components/partials';
+import { PostComponent } from '@shared/components/Post';
+import { AuthContext } from '@shared/contexts/auth.context';
+import { UserWithPost } from '@shared/models/user';
+import { getUserInfo } from '@shared/services/user.service';
 
 import avatar from '@assets/icons/avatar.svg';
-import { AuthContext } from '@shared/contexts/auth.context';
-import { User } from '@shared/models/user';
-import { getUserInfo } from '@shared/services/user.service';
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user } = useContext(AuthContext);
-  const [userInfo, setUserInfo] = useState<User>(null);
+  const [userInfo, setUserInfo] = useState<UserWithPost | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -33,7 +34,7 @@ const Profile = () => {
         <div className="wrapper wrapper-padding">
           <section className="section section-info">
             <div className="section-image">
-              <img className="img avatar" src={avatar} />
+              <img className="img avatar" src={userInfo?.picture || avatar} />
             </div>
             <div className="section-content">
               {userInfo && (
@@ -51,7 +52,19 @@ const Profile = () => {
           <section className="section section-list section-post">
             <div className="section-header">
               <h2 className="section-title">My Article</h2>
-              <ul className="list list-posts"></ul>
+              {userInfo?.Posts?.length > 0 ? (
+                <ul className="list list-posts row">
+                  {userInfo.Posts.map((post) => (
+                    <PostComponent
+                      key={post.id}
+                      post={post}
+                      className={'col-12 col-sm-6 com-md-3'}
+                    />
+                  ))}
+                </ul>
+              ) : (
+                <p>No post here</p>
+              )}
             </div>
           </section>
         </div>
