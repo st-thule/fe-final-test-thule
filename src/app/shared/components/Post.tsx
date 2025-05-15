@@ -7,6 +7,7 @@ import { formatDate } from '@shared/utils/formatDate';
 
 import imagePost from '@assets/images/articles/article-travel.png';
 import author from '@assets/images/author.png';
+import { AppRoutes } from '@app/core/constants/app-routes';
 
 interface IPostProps {
   post: Post;
@@ -44,7 +45,11 @@ export const PostComponent: React.FC<IPostProps> = ({
   }
   return (
     <li className={`list-item ${className}`}>
-      <Link className="card" to={`/posts/${post.id}`} onClick={() => onClick}>
+      <Link
+        className="card"
+        to={`${AppRoutes.POSTS}/${post.id}`}
+        onClick={() => onClick}
+      >
         <div className="card-img">
           <img
             src={post.cover === 'cover' ? imagePost : post.cover}

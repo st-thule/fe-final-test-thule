@@ -1,11 +1,12 @@
 export enum AppRoutes {
   HOME = '/',
+
   AUTH = '/auth',
   REGISTER = 'register',
   LOGIN = 'login',
 
   POSTS = '/posts',
-  POSTSDETAIL = '/posts/:id',
+  POSTSDETAIL = ':id',
   POSTADD = 'create',
   POSTEDIT = 'edit/:id',
 
