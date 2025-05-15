@@ -20,7 +20,7 @@ export const PostList = ({ currentPage, onPageChange }) => {
         setTotalItems(response.totalItems || 0);
         setTotalPages(response.totalPage || 0);
       } catch (error) {
-        console.log('Error:', error);
+        throw error;
       } finally {
         setLoading(false);
       }
