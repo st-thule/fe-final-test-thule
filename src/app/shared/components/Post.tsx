@@ -57,7 +57,10 @@ export const PostComponent: React.FC<IPostProps> = ({
           />
           {user?.id === post?.userId && (
             <div className="card-action">
-              <Link className="action" to={''}>
+              <Link
+                className="action"
+                to={`${AppRoutes.POSTS}/edit/${post.id}`}
+              >
                 <img className="action-icon" src={editIcon} alt="edit" />
               </Link>
               <Link className="action" to={''}>
