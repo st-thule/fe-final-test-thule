@@ -1,10 +1,32 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { Button } from '@shared/components/partials';
 
 import avatar from '@assets/icons/avatar.svg';
+import { AuthContext } from '@shared/contexts/auth.context';
+import { User } from '@shared/models/user';
+import { getUserInfo } from '@shared/services/user.service';
 
 const Profile = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { user } = useContext(AuthContext);
+  const [userInfo, setUserInfo] = useState<User>(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getUserInfo(user.id);
+        setUserInfo(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchUserData();
+  }, [user.id]);
+
   return (
     <div className="page page-profile">
       <div className="container">
@@ -14,10 +36,14 @@ const Profile = () => {
               <img className="img avatar" src={avatar} />
             </div>
             <div className="section-content">
-              <div className="section-text">
-                <h1 className="section-title">Lê Anh Thư</h1>
-                <p className="section-subtitle">thule210903@gmail.com</p>
-              </div>
+              {userInfo && (
+                <div className="section-text">
+                  <h1 className="section-title">
+                    {userInfo.firstName} {userInfo.lastName}
+                  </h1>
+                  <p className="section-subtitle">{userInfo.email}</p>
+                </div>
+              )}
               <Button label="Edit" className="btn btn-primary" />
             </div>
           </section>
