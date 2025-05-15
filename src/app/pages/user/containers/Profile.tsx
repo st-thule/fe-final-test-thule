@@ -3,9 +3,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Button } from '@shared/components/partials';
 
 import avatar from '@assets/icons/avatar.svg';
-import { getUserInfo } from '@shared/services/user.service';
 import { AuthContext } from '@shared/contexts/auth.context';
 import { User } from '@shared/models/user';
+import { getUserInfo } from '@shared/services/user.service';
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -18,7 +18,6 @@ const Profile = () => {
         setIsLoading(true);
         const data = await getUserInfo(user.id);
         setUserInfo(data);
-        console.log(userInfo);
       } catch (error) {
         console.error(error);
       } finally {
