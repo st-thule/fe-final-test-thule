@@ -1,13 +1,14 @@
 import React from 'react';
-import Skeleton from 'react-loading-skeleton';
 import { Link } from 'react-router-dom';
 
+import { AppRoutes } from '@app/core/constants/app-routes';
 import { Post } from '@shared/models/post';
 import { formatDate } from '@shared/utils/formatDate';
 
 import imagePost from '@assets/images/articles/article-travel.png';
 import author from '@assets/images/author.png';
-import { AppRoutes } from '@app/core/constants/app-routes';
+import deleteIcon from '@assets/icons/delete.svg';
+import editIcon from '@assets/icons/edit.svg';
 
 interface IPostProps {
   post: Post;
@@ -45,16 +46,20 @@ export const PostComponent: React.FC<IPostProps> = ({
   }
   return (
     <li className={`list-item ${className}`}>
-      <Link
-        className="card"
-        to={`${AppRoutes.POSTS}/${post.id}`}
-        onClick={() => onClick}
-      >
+      <div>
         <div className="card-img">
           <img
             src={post.cover === 'cover' ? imagePost : post.cover}
             alt="card-img"
           />
+          <div className="card-action">
+            <Link className="action" to={''}>
+              <img className="action-icon" src={editIcon} alt="edit" />
+            </Link>
+            <Link className="action" to={''}>
+              <img className="action-icon" src={deleteIcon} alt="delete" />
+            </Link>
+          </div>
         </div>
         {post.tags && post.tags.length > 0 ? (
           post.tags.map((tag) => (
@@ -66,7 +71,9 @@ export const PostComponent: React.FC<IPostProps> = ({
           <></>
         )}
         <div className="card-content">
-          <h3 className="card-title">{post.title}</h3>
+          <Link to={`${AppRoutes.POSTS}/${post.id}`} onClick={() => onClick}>
+            <h3 className="card-title">{post.title}</h3>
+          </Link>
           <div className="card-detail detail">
             <div className="detail-group">
               <img
@@ -81,7 +88,7 @@ export const PostComponent: React.FC<IPostProps> = ({
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     </li>
   );
 };
