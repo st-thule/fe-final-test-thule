@@ -7,6 +7,7 @@ import { UserWithPost } from '@shared/models/user';
 import { getUserInfo } from '@shared/services/user.service';
 
 import avatar from '@assets/icons/avatar.svg';
+import { PostListLoadMore } from '@shared/components/PostListLoadMore';
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -17,7 +18,8 @@ const Profile = () => {
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
-        const data = await getUserInfo(user.id);
+        const data = await getUserInfo();
+        console.log(data);
         setUserInfo(data);
       } catch (error) {
         console.error(error);
@@ -52,19 +54,7 @@ const Profile = () => {
           <section className="section section-list section-post">
             <div className="section-header">
               <h2 className="section-title">My Article</h2>
-              {userInfo?.Posts?.length > 0 ? (
-                <ul className="list list-posts row">
-                  {userInfo.Posts.map((post) => (
-                    <PostComponent
-                      key={post.id}
-                      post={post}
-                      className={'col-12 col-sm-6 com-md-3'}
-                    />
-                  ))}
-                </ul>
-              ) : (
-                <p>No post here</p>
-              )}
+              {userInfo && <PostListLoadMore posts={userInfo.Posts || []} />}
             </div>
           </section>
         </div>

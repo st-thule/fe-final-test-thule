@@ -119,9 +119,7 @@ const PostForm = () => {
                 try {
                   const response = await updatePost(id!, data);
                   toast.success('Update post successfully');
-                  navigate(
-                    `${AppRoutes.POSTSDETAIL.replace(':id', response.id)}`
-                  );
+                  navigate(`${AppRoutes.POSTS}/${id}`);
                 } catch (error) {
                   toast.error(error);
                 } finally {
