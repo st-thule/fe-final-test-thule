@@ -24,6 +24,9 @@ export const ENDPOINT = {
   },
 
   users: {
-    userInfoWithPost: `${RESOURCES.users}/me/${RESOURCES.post}`,
+    userInfoWithPost: (id: number | string) =>
+      id === 'me'
+        ? `${RESOURCES.users}/me/${RESOURCES.post}`
+        : `${RESOURCES.users}/${id}/${RESOURCES.post}`,
   },
 };
