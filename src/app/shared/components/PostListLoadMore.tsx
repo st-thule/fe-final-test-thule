@@ -1,5 +1,6 @@
-import { Post } from '@shared/models/post';
 import React, { useState } from 'react';
+
+import { Post } from '@shared/models/post';
 import { PostComponent } from './Post';
 import { Button } from './partials';
 
