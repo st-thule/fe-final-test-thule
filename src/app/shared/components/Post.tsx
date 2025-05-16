@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
 import { closeModal, openModal } from '@app/store/modal/action/modalAction';
@@ -14,7 +15,6 @@ import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 import author from '@assets/images/author.png';
 import { deletePost } from '@shared/services/post.service';
-import { toast } from 'react-toastify';
 
 interface IPostProps {
   post: Post;
