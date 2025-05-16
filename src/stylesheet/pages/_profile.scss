@@ -1,0 +1,77 @@
+@use '../base/' as *;
+
+.page-profile {
+  .section {
+    &-image {
+      width: 15%;
+    }
+
+    &.section-info {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 30px;
+
+      padding-bottom: $spacing-lg-plus;
+
+      border-radius: $border-radius-md;
+
+      @media screen and (max-width: $md) {
+        gap: 10px;
+      }
+    }
+
+    &-text {
+      padding-bottom: $spacing-md-plus;
+    }
+    &-title {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      padding-bottom: $spacing-sm-plus;
+
+      @media screen and (max-width: $md) {
+        padding: 0;
+
+        font-size: $font-size-md;
+        line-height: 1.2;
+      }
+    }
+
+    &-subtitle {
+      text-align: left;
+      @media screen and (max-width: $md) {
+        display: none;
+      }
+    }
+
+    &-content {
+      flex: 1;
+
+      padding: $spacing-md-plus;
+      border-radius: $border-radius-md;
+
+      background-color: $color-grey-light;
+
+      @media screen and (max-width: $md) {
+        padding: 0;
+        background-color: transparent;
+
+        .btn {
+          display: none;
+        }
+      }
+    }
+
+    .list {
+      padding-top: $spacing-lg-plus;
+    }
+  }
+}
+
+.line {
+  height: 1px;
+
+  border: 1px solid $color-grey-light;
+}

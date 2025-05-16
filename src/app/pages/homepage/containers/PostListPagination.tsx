@@ -5,7 +5,7 @@ import { getPublicPost } from '@shared/services/post.service';
 
 const SIZE_PAGE = 8;
 
-export const PostList = ({ currentPage, onPageChange }) => {
+export const PostListPagination = ({ currentPage, onPageChange }) => {
   const [publicPosts, setPublicPosts] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -20,7 +20,7 @@ export const PostList = ({ currentPage, onPageChange }) => {
         setTotalItems(response.totalItems || 0);
         setTotalPages(response.totalPage || 0);
       } catch (error) {
-        console.log('Error:', error);
+        throw error;
       } finally {
         setLoading(false);
       }

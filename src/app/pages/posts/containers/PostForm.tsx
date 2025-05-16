@@ -106,8 +106,6 @@ const PostForm = () => {
       setIsLoading(true);
       const token = authStorage.getToken();
 
-      let response;
-
       if (isEdit) {
         dispatch(
           openModal({
@@ -119,9 +117,7 @@ const PostForm = () => {
                 try {
                   const response = await updatePost(id!, data);
                   toast.success('Update post successfully');
-                  navigate(
-                    `${AppRoutes.POSTSDETAIL.replace(':id', response.id)}`
-                  );
+                  navigate(`${AppRoutes.POSTS}/${id}`);
                 } catch (error) {
                   toast.error(error);
                 } finally {
@@ -140,7 +136,7 @@ const PostForm = () => {
         // Create new post
         const response = await createPost(data);
         toast.success('Create post successfully');
-        navigate(`${AppRoutes.POSTSDETAIL.replace(':id', response.id)}`);
+        navigate(`${AppRoutes.POSTS}/${response.id}`);
         setIsLoading(false);
       }
     } catch (error) {

@@ -1,12 +1,18 @@
-import React from 'react';
-import Skeleton from 'react-loading-skeleton';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
+import { AppRoutes } from '@app/core/constants/app-routes';
+import { AuthContext } from '@shared/contexts/auth.context';
 import { Post } from '@shared/models/post';
 import { formatDate } from '@shared/utils/formatDate';
 
+import deleteIcon from '@assets/icons/delete.svg';
+import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 import author from '@assets/images/author.png';
+import { useDispatch } from 'react-redux';
+import { closeModal, openModal } from '@app/store/modal/action/modalAction';
+import { ModalTypes } from '@shared/utils/modalTypes';
 
 interface IPostProps {
   post: Post;
@@ -21,6 +27,9 @@ export const PostComponent: React.FC<IPostProps> = ({
   onClick,
   loading = false,
 }) => {
+  const { user } = useContext(AuthContext);
+  const dispatch = useDispatch();
+
   if (loading) {
     return (
       <li className={`list-item ${className}`}>
@@ -44,12 +53,48 @@ export const PostComponent: React.FC<IPostProps> = ({
   }
   return (
     <li className={`list-item ${className}`}>
-      <Link className="card" to={`/posts/${post.id}`} onClick={() => onClick}>
+      <div>
         <div className="card-img">
           <img
             src={post.cover === 'cover' ? imagePost : post.cover}
             alt="card-img"
           />
+          {user?.id === post?.userId && (
+            <div className="card-action">
+              <Link
+                className="action"
+                to={`${AppRoutes.POSTS}/edit/${post.id}`}
+              >
+                <img className="action-icon" src={editIcon} alt="edit" />
+              </Link>
+              <button
+                className="action"
+                onClick={() => {
+                  dispatch(
+                    openModal({
+                      modalType: ModalTypes.CONFIRM,
+                      modalProps: {
+                        title: 'Confirm delete',
+                        message: 'Are you sure ?',
+                        onConfirm: async () => {
+                          try {
+                          } catch (error) {
+                          } finally {
+                            dispatch(closeModal());
+                          }
+                        },
+                        onCancel: () => {
+                          dispatch(closeModal());
+                        },
+                      },
+                    })
+                  );
+                }}
+              >
+                <img className="action-icon" src={deleteIcon} alt="delete" />
+              </button>
+            </div>
+          )}
         </div>
         {post.tags && post.tags.length > 0 ? (
           post.tags.map((tag) => (
@@ -61,22 +106,26 @@ export const PostComponent: React.FC<IPostProps> = ({
           <></>
         )}
         <div className="card-content">
-          <h3 className="card-title">{post.title}</h3>
+          <Link to={`${AppRoutes.POSTS}/${post.id}`} onClick={() => onClick}>
+            <h3 className="card-title">{post.title}</h3>
+          </Link>
           <div className="card-detail detail">
             <div className="detail-group">
               <img
                 className="detail-image"
-                src={post.user.picture === null ? author : post.user.picture}
+                src={post.user?.picture ?? author}
                 alt="avatar"
               />
-              <p className="detail-value">{post.user.displayName}</p>
+              <p className="detail-value">
+                {post.user?.displayName ?? user.displayName}
+              </p>
             </div>
             <div className="detail-group">
               <p className="detail-value">{formatDate(post.createdAt)}</p>
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     </li>
   );
 };

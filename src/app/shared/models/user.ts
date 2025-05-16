@@ -1,3 +1,5 @@
+import { Post } from './post';
+
 export interface User {
   id: string;
   email: string;
@@ -8,5 +10,9 @@ export interface User {
   dob: string;
   phone: string;
   displayName: string;
-  picture: string | null;
+  picture?: string | null;
+}
+
+export interface UserWithPost extends User {
+  Posts: Post[];
 }
