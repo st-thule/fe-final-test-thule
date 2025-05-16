@@ -58,7 +58,7 @@ const Profile = () => {
           <div className=""></div>
           <section className="section section-list section-post">
             <div className="section-header">
-              <h2 className="section-title">My Article</h2>
+              <h2 className="section-title">Articles</h2>
               {userInfo && (
                 <PostListLoadMore
                   posts={userInfo.Posts || []}
