@@ -1,24 +1,28 @@
 import React, { useContext } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
+import { closeModal, openModal } from '@app/store/modal/action/modalAction';
 import { AuthContext } from '@shared/contexts/auth.context';
 import { Post } from '@shared/models/post';
 import { formatDate } from '@shared/utils/formatDate';
+import { ModalTypes } from '@shared/utils/modalTypes';
 
 import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 import author from '@assets/images/author.png';
-import { useDispatch } from 'react-redux';
-import { closeModal, openModal } from '@app/store/modal/action/modalAction';
-import { ModalTypes } from '@shared/utils/modalTypes';
 
 interface IPostProps {
   post: Post;
   className: string;
   onClick?: (id: string) => void;
   loading?: boolean;
+  fallbackUser?: {
+    displayName: string;
+    picture?: string;
+  };
 }
 
 export const PostComponent: React.FC<IPostProps> = ({
@@ -26,6 +30,7 @@ export const PostComponent: React.FC<IPostProps> = ({
   className,
   onClick,
   loading = false,
+  fallbackUser,
 }) => {
   const { user } = useContext(AuthContext);
   const dispatch = useDispatch();
@@ -111,14 +116,18 @@ export const PostComponent: React.FC<IPostProps> = ({
           </Link>
           <div className="card-detail detail">
             <div className="detail-group">
-              <img
-                className="detail-image"
-                src={post.user?.picture ?? author}
-                alt="avatar"
-              />
-              <p className="detail-value">
-                {post.user?.displayName ?? user.displayName}
-              </p>
+              <Link to={`${AppRoutes.USER}/${post.userId}`}>
+                <img
+                  className="detail-image"
+                  src={post.user?.picture ?? fallbackUser?.picture ?? author}
+                  alt="avatar"
+                />
+                <p className="detail-value">
+                  {post.user?.displayName ??
+                    fallbackUser?.displayName ??
+                    user?.displayName}
+                </p>
+              </Link>
             </div>
             <div className="detail-group">
               <p className="detail-value">{formatDate(post.createdAt)}</p>

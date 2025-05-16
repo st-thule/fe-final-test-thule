@@ -11,5 +11,6 @@ export enum AppRoutes {
   POSTEDIT = 'edit/:id',
 
   USER = '/user',
-  PROFILE = 'profile',
+  PROFILE = 'me',
+  USER_WALL = ':id',
 }

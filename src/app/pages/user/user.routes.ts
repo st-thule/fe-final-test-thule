@@ -8,13 +8,17 @@ const Profile = React.lazy(() => import('./containers/Profile'));
 
 export const userRoutes: PageRoute[] = [
   {
-    path: AppRoutes.USER,
+    path: AppRoutes.USER, //users
     element: User,
     children: [
       {
-        path: AppRoutes.PROFILE,
+        path: AppRoutes.PROFILE, //:me
         element: Profile,
         isProtected: true,
+      },
+      {
+        path: AppRoutes.USER_WALL, //:id
+        element: Profile,
       },
     ],
   },

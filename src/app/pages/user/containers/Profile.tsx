@@ -1,34 +1,39 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { Button } from '@shared/components/partials';
-import { PostComponent } from '@shared/components/Post';
+import { PostListLoadMore } from '@shared/components/PostListLoadMore';
 import { AuthContext } from '@shared/contexts/auth.context';
 import { UserWithPost } from '@shared/models/user';
-import { getUserInfo } from '@shared/services/user.service';
+import { getPersonalInfo } from '@shared/services/user.service';
 
 import avatar from '@assets/icons/avatar.svg';
-import { PostListLoadMore } from '@shared/components/PostListLoadMore';
 
 const Profile = () => {
+  const { id } = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState<UserWithPost | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
+      setIsLoading(true);
       try {
-        setIsLoading(true);
-        const data = await getUserInfo();
+        const targetId = id || user?.id || 'me';
+        const data = await getPersonalInfo(targetId);
         console.log(data);
         setUserInfo(data);
       } catch (error) {
-        console.error(error);
+        console.error('Failed to fetch user info:', error);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchUserData();
-  }, [user.id]);
+
+    if (id || user?.id) {
+      fetchUserData();
+    }
+  }, [id, user?.id]);
 
   return (
     <div className="page page-profile">
@@ -47,6 +52,7 @@ const Profile = () => {
                   <p className="section-subtitle">{userInfo.email}</p>
                 </div>
               )}
+
               <Button label="Edit" className="btn btn-primary" />
             </div>
           </section>
@@ -54,7 +60,15 @@ const Profile = () => {
           <section className="section section-list section-post">
             <div className="section-header">
               <h2 className="section-title">My Article</h2>
-              {userInfo && <PostListLoadMore posts={userInfo.Posts || []} />}
+              {userInfo && (
+                <PostListLoadMore
+                  posts={userInfo.Posts || []}
+                  userInfo={{
+                    displayName: userInfo.displayName,
+                    picture: userInfo.picture,
+                  }}
+                />
+              )}
             </div>
           </section>
         </div>
