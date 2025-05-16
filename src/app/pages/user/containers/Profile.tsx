@@ -21,10 +21,9 @@ const Profile = () => {
       try {
         const targetId = id || user?.id || 'me';
         const data = await getPersonalInfo(targetId);
-        console.log(data);
         setUserInfo(data);
       } catch (error) {
-        console.error('Failed to fetch user info:', error);
+        throw error;
       } finally {
         setIsLoading(false);
       }
