@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { Tag } from '@shared/components/TagComponent';
-import { PostList } from './PostList';
-import { useSearchParams } from 'react-router-dom';
+import { PostListPagination } from './PostListPagination';
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -62,7 +62,10 @@ const Home = () => {
               Discover how innovation and creativity drive meaningful change
             </p>
           </div>
-          <PostList currentPage={currentPage} onPageChange={handlePageChange} />
+          <PostListPagination
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </section>
       </div>
     </div>
