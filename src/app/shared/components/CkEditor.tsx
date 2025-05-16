@@ -58,13 +58,11 @@ import {
   TodoList,
   Underline,
 } from 'ckeditor5';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import 'ckeditor5/ckeditor5.css';
-
 import { TypeUpload } from '@shared/constants/type-image';
 import { getSignedUrl, uploadImageToS3 } from '@shared/services/image.service';
-import React from 'react';
 
 /**
  * Create a free account with a trial: https://portal.ckeditor.com/checkout?plan=free
