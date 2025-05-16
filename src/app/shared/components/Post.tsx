@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
 import { closeModal, openModal } from '@app/store/modal/action/modalAction';
@@ -13,6 +14,7 @@ import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 import author from '@assets/images/author.png';
+import { deletePost } from '@shared/services/post.service';
 
 interface IPostProps {
   post: Post;
@@ -34,6 +36,14 @@ export const PostComponent: React.FC<IPostProps> = ({
 }) => {
   const { user } = useContext(AuthContext);
   const dispatch = useDispatch();
+
+  const handleDeletePost = async (id: string | number) => {
+    try {
+      await deletePost(id);
+    } catch (error) {
+      throw error;
+    }
+  };
 
   if (loading) {
     return (
@@ -83,6 +93,8 @@ export const PostComponent: React.FC<IPostProps> = ({
                         message: 'Are you sure ?',
                         onConfirm: async () => {
                           try {
+                            handleDeletePost(post.id);
+                            toast.success('Delete successfully');
                           } catch (error) {
                           } finally {
                             dispatch(closeModal());
