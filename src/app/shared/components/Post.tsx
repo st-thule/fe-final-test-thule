@@ -116,7 +116,13 @@ export const PostComponent: React.FC<IPostProps> = ({
           </Link>
           <div className="card-detail detail">
             <div className="detail-group">
-              <Link to={`${AppRoutes.USER}/${post.userId}`}>
+              <Link
+                to={
+                  user?.id === post.userId
+                    ? `${AppRoutes.USER}/me`
+                    : `${AppRoutes.USER}/${post.userId}`
+                }
+              >
                 <img
                   className="detail-image"
                   src={post.user?.picture ?? fallbackUser?.picture ?? author}
