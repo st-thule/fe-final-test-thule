@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
@@ -93,8 +93,9 @@ export const PostComponent: React.FC<IPostProps> = ({
                         message: 'Are you sure ?',
                         onConfirm: async () => {
                           try {
-                            handleDeletePost(post.id);
+                            await handleDeletePost(post.id);
                             toast.success('Delete successfully');
+                            window.location.reload();
                           } catch (error) {
                           } finally {
                             dispatch(closeModal());
