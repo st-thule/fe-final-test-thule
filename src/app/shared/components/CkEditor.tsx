@@ -1,17 +1,75 @@
 /**
  * This configuration was generated using the CKEditor 5 Builder. You can modify it anytime using this link:
- * https://ckeditor.com/ckeditor-5/builder/#installation/NoJgNARCB0Cs0AYKQIwICwgBxYOy9gQDYUBmEAThQpuyJFNhthS1NKI9yPQS2QgBTAHbIEYYCjDjxUqQgC6kLCyIBDAEawICoA==
+ * https://ckeditor.com/ckeditor-5/builder/#installation/NoJgNARCB0Bs0AYKQIwICwgBy1gTgHYBWBPLFEAgZisJCoNgLxQYKxHyatiy2QgBTAHbIEYYCjDjxUqQgC6kBAGMqKwQXQQFQA==
  */
 
-import React from 'react';
-import { useState, useEffect, useRef, useMemo } from 'react';
-import { CKEditor, useCKEditorCloud } from '@ckeditor/ckeditor5-react';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import {
+  Alignment,
+  AutoImage,
+  AutoLink,
+  Autosave,
+  BlockQuote,
+  Bold,
+  Bookmark,
+  ClassicEditor,
+  CloudServices,
+  Code,
+  Essentials,
+  FontBackgroundColor,
+  FontColor,
+  FontFamily,
+  FontSize,
+  GeneralHtmlSupport,
+  Heading,
+  Highlight,
+  HorizontalLine,
+  ImageBlock,
+  ImageCaption,
+  ImageEditing,
+  ImageInline,
+  ImageInsert,
+  ImageInsertViaUrl,
+  ImageResize,
+  ImageStyle,
+  ImageTextAlternative,
+  ImageToolbar,
+  ImageUpload,
+  ImageUtils,
+  Indent,
+  IndentBlock,
+  Italic,
+  Link,
+  LinkImage,
+  List,
+  ListProperties,
+  Paragraph,
+  RemoveFormat,
+  SimpleUploadAdapter,
+  Strikethrough,
+  Subscript,
+  Superscript,
+  Table,
+  TableCaption,
+  TableCellProperties,
+  TableColumnResize,
+  TableProperties,
+  TableToolbar,
+  TodoList,
+  Underline,
+} from 'ckeditor5';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { getSignedUrl, uploadImageToS3 } from '@shared/services/image.service';
+import 'ckeditor5/ckeditor5.css';
+
 import { TypeUpload } from '@shared/constants/type-image';
+import { getSignedUrl, uploadImageToS3 } from '@shared/services/image.service';
+import React from 'react';
 
-const LICENSE_KEY =
-  'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDcyNjcxOTksImp0aSI6IjE2ZTdjYjA1LTBkZGEtNGNhMC05YTdiLTY3MzdhZGVkYzM2NiIsImxpY2Vuc2VkSG9zdHMiOlsiKi53ZWJjb250YWluZXIuaW8iLCIqLmpzaGVsbC5uZXQiLCIqLmNzcC5hcHAiLCJjZHBuLmlvIiwiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIiwic2giXSwibGljZW5zZVR5cGUiOiJldmFsdWF0aW9uIiwidmMiOiJlZTEyMjkzOCJ9.dBPyylD96w_ApitJ1joFeabAedU_ECPMLffVa1NrhUHCptJi0y_yHu42fEQRbpmsKnLUpH43zPX6cTIUYhC6RQ';
+/**
+ * Create a free account with a trial: https://portal.ckeditor.com/checkout?plan=free
+ */
+const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
 
 type CkeditorProps = {
   value?: string;
@@ -19,97 +77,29 @@ type CkeditorProps = {
 };
 
 export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
-  const editorContainerRef = useRef<HTMLDivElement | null>(null);
+  const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
-  const cloud = useCKEditorCloud({ version: '45.0.0' });
 
   useEffect(() => {
     setIsLayoutReady(true);
+
     return () => setIsLayoutReady(false);
   }, []);
 
-  const { ClassicEditor, editorConfig } = useMemo(() => {
-    if (cloud.status !== 'success' || !isLayoutReady) return {};
-
-    const {
-      ClassicEditor,
-      // All required plugins
-      Alignment,
-      Autoformat,
-      AutoImage,
-      AutoLink,
-      Autosave,
-      BlockQuote,
-      Bold,
-      Bookmark,
-      CloudServices,
-      Code,
-      Essentials,
-      FindAndReplace,
-      FontBackgroundColor,
-      FontColor,
-      FontFamily,
-      FontSize,
-      GeneralHtmlSupport,
-      Heading,
-      Highlight,
-      HorizontalLine,
-      Image,
-      ImageBlock,
-      ImageCaption,
-      ImageEditing,
-      ImageInline,
-      ImageInsert,
-      ImageInsertViaUrl,
-      ImageResize,
-      ImageStyle,
-      ImageTextAlternative,
-      ImageToolbar,
-      ImageUpload,
-      ImageUtils,
-      Indent,
-      IndentBlock,
-      Italic,
-      Link,
-      LinkImage,
-      List,
-      ListProperties,
-      PageBreak,
-      Paragraph,
-      RemoveFormat,
-      ShowBlocks,
-      SpecialCharacters,
-      SpecialCharactersArrows,
-      SpecialCharactersCurrency,
-      SpecialCharactersEssentials,
-      SpecialCharactersLatin,
-      SpecialCharactersMathematical,
-      SpecialCharactersText,
-      Strikethrough,
-      Style,
-      Subscript,
-      Superscript,
-      Table,
-      TableCaption,
-      TableCellProperties,
-      TableColumnResize,
-      TableProperties,
-      TableToolbar,
-      TextTransformation,
-      TodoList,
-      Underline,
-    } = cloud.CKEditor;
+  const { editorConfig } = useMemo(() => {
+    if (!isLayoutReady) {
+      return {};
+    }
 
     return {
-      ClassicEditor,
       editorConfig: {
         toolbar: {
           items: [
-            'showBlocks',
+            'undo',
+            'redo',
             '|',
             'heading',
-            'style',
             '|',
             'fontSize',
             'fontFamily',
@@ -133,15 +123,11 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
             'todoList',
             'outdent',
             'indent',
-            '|',
-            'undo',
-            'redo',
           ],
           shouldNotGroupWhenFull: false,
         },
         plugins: [
           Alignment,
-          Autoformat,
           AutoImage,
           AutoLink,
           Autosave,
@@ -151,7 +137,6 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
           CloudServices,
           Code,
           Essentials,
-          FindAndReplace,
           FontBackgroundColor,
           FontColor,
           FontFamily,
@@ -160,7 +145,6 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
           Heading,
           Highlight,
           HorizontalLine,
-          Image,
           ImageBlock,
           ImageCaption,
           ImageEditing,
@@ -180,19 +164,10 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
           LinkImage,
           List,
           ListProperties,
-          PageBreak,
           Paragraph,
           RemoveFormat,
-          ShowBlocks,
-          SpecialCharacters,
-          SpecialCharactersArrows,
-          SpecialCharactersCurrency,
-          SpecialCharactersEssentials,
-          SpecialCharactersLatin,
-          SpecialCharactersMathematical,
-          SpecialCharactersText,
+          SimpleUploadAdapter,
           Strikethrough,
-          Style,
           Subscript,
           Superscript,
           Table,
@@ -201,71 +176,14 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
           TableColumnResize,
           TableProperties,
           TableToolbar,
-          TextTransformation,
           TodoList,
           Underline,
         ],
-        image: {
-          toolbar: [
-            'toggleImageCaption',
-            'imageTextAlternative',
-            '|',
-            'imageStyle:inline',
-            'imageStyle:wrapText',
-            'imageStyle:breakText',
-            '|',
-            'resizeImage',
-          ],
+        fontFamily: {
+          supportAllValues: true,
         },
-        style: {
-          definitions: [
-            {
-              name: 'Article category',
-              element: 'h3',
-              classes: ['category'],
-            },
-            {
-              name: 'Title',
-              element: 'h2',
-              classes: ['document-title'],
-            },
-            {
-              name: 'Subtitle',
-              element: 'h3',
-              classes: ['document-subtitle'],
-            },
-            {
-              name: 'Info box',
-              element: 'p',
-              classes: ['info-box'],
-            },
-            {
-              name: 'CTA Link Primary',
-              element: 'a',
-              classes: ['button', 'button--green'],
-            },
-            {
-              name: 'CTA Link Secondary',
-              element: 'a',
-              classes: ['button', 'button--black'],
-            },
-            {
-              name: 'Marker',
-              element: 'span',
-              classes: ['marker'],
-            },
-            {
-              name: 'Spoiler',
-              element: 'span',
-              classes: ['spoiler'],
-            },
-          ],
-        },
-        licenseKey: LICENSE_KEY,
         fontSize: {
           options: [10, 12, 14, 'default', 18, 20, 22],
-        },
-        fontFamily: {
           supportAllValues: true,
         },
         heading: {
@@ -299,22 +217,45 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
               title: 'Heading 4',
               class: 'ck-heading_heading4',
             },
+            {
+              model: 'heading5',
+              view: 'h5',
+              title: 'Heading 5',
+              class: 'ck-heading_heading5',
+            },
+            {
+              model: 'heading6',
+              view: 'h6',
+              title: 'Heading 6',
+              class: 'ck-heading_heading6',
+            },
           ],
         },
-        link: {
-          addTargetToExternalLinks: true,
-          defaultProtocol: 'https://',
-        },
-        table: {
-          contentToolbar: [
-            'tableColumn',
-            'tableRow',
-            'mergeTableCells',
-            'tableProperties',
-            'tableCellProperties',
+        htmlSupport: {
+          allow: [
+            {
+              name: /^.*$/,
+              styles: true,
+              attributes: true,
+              classes: true,
+            },
           ],
         },
-        initialData: '<p>Type content here</p>',
+        image: {
+          toolbar: [
+            'toggleImageCaption',
+            'imageTextAlternative',
+            '|',
+            'imageStyle:inline',
+            'imageStyle:wrapText',
+            'imageStyle:breakText',
+            '|',
+            'resizeImage',
+          ],
+        },
+        initialData:
+          '<h2>Congratulations on setting up CKEditor 5! 🎉</h2>\n<p>\n\tYou\'ve successfully created a CKEditor 5 project. This powerful text editor\n\twill enhance your application, enabling rich text editing capabilities that\n\tare customizable and easy to use.\n</p>\n<h3>What\'s next?</h3>\n<ol>\n\t<li>\n\t\t<strong>Integrate into your app</strong>: time to bring the editing into\n\t\tyour application. Take the code you created and add to your application.\n\t</li>\n\t<li>\n\t\t<strong>Explore features:</strong> Experiment with different plugins and\n\t\ttoolbar options to discover what works best for your needs.\n\t</li>\n\t<li>\n\t\t<strong>Customize your editor:</strong> Tailor the editor\'s\n\t\tconfiguration to match your application\'s style and requirements. Or\n\t\teven write your plugin!\n\t</li>\n</ol>\n<p>\n\tKeep experimenting, and don\'t hesitate to push the boundaries of what you\n\tcan achieve with CKEditor 5. Your feedback is invaluable to us as we strive\n\tto improve and evolve. Happy editing!\n</p>\n<h3>Helpful resources</h3>\n<ul>\n\t<li>📝 <a href="https://portal.ckeditor.com/checkout?plan=free">Trial sign up</a>,</li>\n\t<li>📕 <a href="https://ckeditor.com/docs/ckeditor5/latest/installation/index.html">Documentation</a>,</li>\n\t<li>⭐️ <a href="https://github.com/ckeditor/ckeditor5">GitHub</a> (star us if you can!),</li>\n\t<li>🏠 <a href="https://ckeditor.com">CKEditor Homepage</a>,</li>\n\t<li>🧑‍💻 <a href="https://ckeditor.com/ckeditor-5/demo/">CKEditor 5 Demos</a>,</li>\n</ul>\n<h3>Need help?</h3>\n<p>\n\tSee this text, but the editor is not starting up? Check the browser\'s\n\tconsole for clues and guidance. It may be related to an incorrect license\n\tkey if you use premium features or another feature-related requirement. If\n\tyou cannot make it work, file a GitHub issue, and we will help as soon as\n\tpossible!\n</p>\n',
+        licenseKey: LICENSE_KEY,
         extraPlugins: [
           function CustomUploadAdapterPlugin(editor: any) {
             editor.plugins.get('FileRepository').createUploadAdapter = (
@@ -324,28 +265,63 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
             };
           },
         ],
+        link: {
+          addTargetToExternalLinks: true,
+          defaultProtocol: 'https://',
+          decorators: {
+            toggleDownloadable: {
+              mode: 'manual',
+              label: 'Downloadable',
+              attributes: {
+                download: 'file',
+              },
+            },
+          },
+        },
+        list: {
+          properties: {
+            styles: true,
+            startIndex: true,
+            reversed: true,
+          },
+        },
+        menuBar: {
+          isVisible: true,
+        },
+        placeholder: 'Type or paste your content here!',
+        table: {
+          contentToolbar: [
+            'tableColumn',
+            'tableRow',
+            'mergeTableCells',
+            'tableProperties',
+            'tableCellProperties',
+          ],
+        },
       },
     };
-  }, [cloud, isLayoutReady]);
+  }, [isLayoutReady]);
 
   return (
-    <div
-      className="editor-container editor-container_classic-editor editor-container_include-style"
-      ref={editorContainerRef}
-    >
-      <div className="editor-container__editor">
-        <div ref={editorRef}>
-          {ClassicEditor && editorConfig && (
-            <CKEditor
-              editor={ClassicEditor}
-              config={editorConfig}
-              data={value}
-              onChange={(_, editor) => {
-                const data = editor.getData();
-                onChange?.(data);
-              }}
-            />
-          )}
+    <div className="main-container">
+      <div
+        className="editor-container editor-container_classic-editor"
+        ref={editorContainerRef}
+      >
+        <div className="editor-container__editor">
+          <div ref={editorRef}>
+            {editorConfig && (
+              <CKEditor
+                editor={ClassicEditor}
+                config={editorConfig}
+                data={value}
+                onChange={(_, editor) => {
+                  const data = editor.getData();
+                  onChange?.(data);
+                }}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>
