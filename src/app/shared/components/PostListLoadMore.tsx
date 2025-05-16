@@ -6,11 +6,16 @@ import { Button } from './partials';
 
 interface IPostListLoadMoreProps {
   posts: Post[];
+  userInfo?: {
+    displayName: string;
+    picture?: string;
+  };
 }
 
 const SIZE_PAGE = 8;
 export const PostListLoadMore: React.FC<IPostListLoadMoreProps> = ({
   posts,
+  userInfo,
 }) => {
   const [visibleCount, setVisibleCount] = useState(SIZE_PAGE);
 
@@ -30,6 +35,7 @@ export const PostListLoadMore: React.FC<IPostListLoadMoreProps> = ({
             key={post.id}
             post={post}
             className={'col-12 col-sm-6 com-md-3'}
+            fallbackUser={userInfo}
           />
         ))}
       </ul>
