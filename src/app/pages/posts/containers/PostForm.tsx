@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
 import { authStorage } from '@app/core/services/auth-storage.service';
+import { closeModal, openModal } from '@app/store/modal/action/modalAction';
 import CkEditor from '@shared/components/CkEditor';
 import { MultiSelect } from '@shared/components/MultiSelect';
 import { UploadImage } from '@shared/components/UploadImage';
@@ -17,7 +19,13 @@ import {
   StatusPost,
 } from '@shared/constants/options';
 import { TypeUpload } from '@shared/constants/type-image';
-import { createPost } from '@shared/services/post.service';
+import { AuthContext } from '@shared/contexts/auth.context';
+import {
+  createPost,
+  getPostDetailUpdate,
+  updatePost,
+} from '@shared/services/post.service';
+import { ModalTypes } from '@shared/utils/modalTypes';
 import { validationRulesPost } from '@shared/utils/validationRules';
 
 interface IPostForm {
@@ -30,17 +38,21 @@ interface IPostForm {
 }
 
 const PostForm = () => {
-  const params = useParams();
-  const isEdit = Boolean(params.id);
+  const { id } = useParams();
+  const isEdit = Boolean(id);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rawContent, setRawContent] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { user } = useContext(AuthContext);
 
   const {
     control,
     handleSubmit,
     formState: { errors, isValid },
     setValue,
+    watch,
   } = useForm<IPostForm>({
     mode: 'onChange',
     defaultValues: {
@@ -53,6 +65,38 @@ const PostForm = () => {
     },
   });
 
+  const cover = watch('cover');
+
+  // render post data to post form
+  useEffect(() => {
+    if (!isEdit) {
+      setIsLoading(false);
+      return;
+    }
+    setIsLoading(true);
+    getPostDetailUpdate(id!)
+      .then((post) => {
+        if (post.userId === user.id) {
+          setValue('title', post.title);
+          setValue('content', post.content);
+          setValue('description', post.description);
+          setValue('cover', post.cover);
+          setValue('status', post.status as StatusPost);
+          setValue('tags', post.tags || []);
+        } else {
+          toast.error("You mustn't edit this post");
+          navigate(AppRoutes.POSTS, { replace: true });
+        }
+      })
+      .catch(() => {
+        toast.error('No post');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [id, isEdit, navigate, setValue, user.id]);
+
+  // handle for add and edit
   const onSubmit = async (data: IPostForm) => {
     const finalData = {
       ...data,
@@ -61,10 +105,39 @@ const PostForm = () => {
     try {
       setIsLoading(true);
       const token = authStorage.getToken();
-      if (token) {
-        const response = await createPost(finalData, token);
+
+      if (isEdit) {
+        dispatch(
+          openModal({
+            modalType: ModalTypes.CONFIRM,
+            modalProps: {
+              title: 'Confirm Edit',
+              message: 'Are you sure ?',
+              onConfirm: async () => {
+                try {
+                  const response = await updatePost(id!, data);
+                  toast.success('Update post successfully');
+                  navigate(`${AppRoutes.POSTS}/${id}`);
+                } catch (error) {
+                  toast.error(error);
+                } finally {
+                  dispatch(closeModal());
+                  setIsLoading(false);
+                }
+              },
+              onCancel: () => {
+                dispatch(closeModal());
+                setIsLoading(false);
+              },
+            },
+          })
+        );
+      } else {
+        // Create new post
+        const response = await createPost(data);
         toast.success('Create post successfully');
-        navigate(`${AppRoutes.POSTSDETAIL.replace(':id', response.id)}`);
+        navigate(`${AppRoutes.POSTS}/${response.id}`);
+        setIsLoading(false);
       }
     } catch (error) {
       toast.error(error);
@@ -93,6 +166,7 @@ const PostForm = () => {
             <div className="form-body">
               <UploadImage
                 typeUpload={TypeUpload.COVER_POST}
+                cover={cover}
                 onUploaded={(url) => setValue('cover', url)}
               />
 
@@ -121,6 +195,7 @@ const PostForm = () => {
                         label="Status"
                         placeHolder="Status"
                         options={optionStatusPost}
+                        value={field.value}
                         name={field.name}
                         onChange={field.onChange}
                         errorMsg={errors.status?.message}
@@ -156,13 +231,26 @@ const PostForm = () => {
                 )}
               />
 
-              <div className="form-control">
-                <label className="form-label">Content</label>
-                <CkEditor onChange={(data) => setRawContent(data)} />
-                {errors.content && (
-                  <p className="form-error">{errors.content.message}</p>
+              <Controller
+                control={control}
+                name="content"
+                rules={validationRulesPost.content}
+                render={({ field }) => (
+                  <div className="form-control">
+                    <label className="form-label">Content</label>
+                    <CkEditor
+                      value={field.value}
+                      onChange={(data: string) => {
+                        field.onChange(data);
+                        setRawContent(data);
+                      }}
+                    />
+                    {errors.content && (
+                      <p className="form-error">{errors.content.message}</p>
+                    )}
+                  </div>
                 )}
-              </div>
+              />
             </div>
           </form>
         </div>

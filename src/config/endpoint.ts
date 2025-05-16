@@ -16,6 +16,7 @@ export const ENDPOINT = {
     postList: `${RESOURCES.post}`,
     postDetail: (id: number | string) => `${RESOURCES.post}/${id}`,
     postCreate: `${RESOURCES.post}`,
+    postEdit: (id: number | string) => `${RESOURCES.post}/${id}`,
   },
 
   signatures: {
@@ -23,7 +24,6 @@ export const ENDPOINT = {
   },
 
   users: {
-    userInfoWithPost: (id: number | string) =>
-      `${RESOURCES.users}/${id}/${RESOURCES.post}`,
+    userInfoWithPost: `${RESOURCES.users}/me/${RESOURCES.post}`,
   },
 };

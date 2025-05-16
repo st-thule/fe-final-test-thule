@@ -10,6 +10,9 @@ import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 import author from '@assets/images/author.png';
+import { useDispatch } from 'react-redux';
+import { closeModal, openModal } from '@app/store/modal/action/modalAction';
+import { ModalTypes } from '@shared/utils/modalTypes';
 
 interface IPostProps {
   post: Post;
@@ -25,6 +28,7 @@ export const PostComponent: React.FC<IPostProps> = ({
   loading = false,
 }) => {
   const { user } = useContext(AuthContext);
+  const dispatch = useDispatch();
 
   if (loading) {
     return (
@@ -57,12 +61,38 @@ export const PostComponent: React.FC<IPostProps> = ({
           />
           {user?.id === post?.userId && (
             <div className="card-action">
-              <Link className="action" to={''}>
+              <Link
+                className="action"
+                to={`${AppRoutes.POSTS}/edit/${post.id}`}
+              >
                 <img className="action-icon" src={editIcon} alt="edit" />
               </Link>
-              <Link className="action" to={''}>
+              <button
+                className="action"
+                onClick={() => {
+                  dispatch(
+                    openModal({
+                      modalType: ModalTypes.CONFIRM,
+                      modalProps: {
+                        title: 'Confirm delete',
+                        message: 'Are you sure ?',
+                        onConfirm: async () => {
+                          try {
+                          } catch (error) {
+                          } finally {
+                            dispatch(closeModal());
+                          }
+                        },
+                        onCancel: () => {
+                          dispatch(closeModal());
+                        },
+                      },
+                    })
+                  );
+                }}
+              >
                 <img className="action-icon" src={deleteIcon} alt="delete" />
-              </Link>
+              </button>
             </div>
           )}
         </div>
