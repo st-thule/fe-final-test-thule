@@ -23,10 +23,17 @@ export const createPost = (data: IPostPayLoad): Promise<Post> => {
   return apiService.post([`${ENDPOINT.post.postCreate}`], data);
 };
 
-export const getPostDetailUpdate = (id: string): Promise<Post> => {
+export const getPostDetailUpdate = (id: string | number): Promise<Post> => {
   return apiService.get([`${ENDPOINT.post.postDetail(id)}`]);
 };
 
-export const updatePost = (id: string, data: IPostPayLoad): Promise<Post> => {
+export const updatePost = (
+  id: string | number,
+  data: IPostPayLoad
+): Promise<Post> => {
   return apiService.put([`${ENDPOINT.post.postEdit(id)}`], data);
+};
+
+export const deletePost = (id: string | number) => {
+  return apiService.delete([`${ENDPOINT.post.postDelete(id)}`]);
 };
