@@ -73,6 +73,21 @@ export const optionTags: IOption[] = [
     label: 'CSS',
     value: 'CSS',
   },
+  {
+    id: 8,
+    label: 'Self Improvement',
+    value: 'Self Improvement',
+  },
+  {
+    id: 9,
+    label: 'Writing',
+    value: 'Writing',
+  },
+  {
+    id: 10,
+    label: 'ReactJS',
+    value: 'ReactJS',
+  },
 ];
 
 export const optionStatusPost: IOption[] = [
