@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { Tag } from '@shared/components/TagComponent';
 import { PostListPagination } from './PostListPagination';
+import { optionTags } from '@shared/constants/options';
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,11 +46,9 @@ const Home = () => {
             </p>
           </div>
           <ul className="list-tags">
-            <Tag />
-            <Tag />
-            <Tag />
-            <Tag />
-            <Tag />
+            {optionTags.map((tag) => (
+              <Tag key={tag.id} label={tag.label} />
+            ))}
           </ul>
         </section>
         <section
