@@ -30,7 +30,7 @@ export const PostListPagination = ({ currentPage, onPageChange }) => {
 
   return (
     <>
-      <ul className="list-posts row">
+      <ul className="list list-posts row">
         {loading ? (
           Array.from({ length: SIZE_PAGE }).map((_, index) => (
             <PostComponent
