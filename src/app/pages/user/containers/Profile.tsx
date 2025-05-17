@@ -66,6 +66,7 @@ const Profile = () => {
                     displayName: userInfo.displayName,
                     picture: userInfo.picture,
                   }}
+                  className="col-12 col-sm-6 com-md-3"
                 />
               )}
             </div>

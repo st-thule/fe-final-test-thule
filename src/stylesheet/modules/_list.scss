@@ -41,7 +41,16 @@
   }
 
   &-posts {
-    padding-bottom: $spacing-3xl;
+    padding: $spacing-3xl $spacing-none;
+
+    .loading-status {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      text-align: center;
+    }
   }
   &-tags {
     display: flex;
