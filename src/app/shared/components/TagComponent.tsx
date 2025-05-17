@@ -1,7 +1,7 @@
-import { AppRoutes } from '@app/core/constants/app-routes';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { AppRoutes } from '@app/core/constants/app-routes';
 interface ITagProps {
   className?: string;
   label: string;
