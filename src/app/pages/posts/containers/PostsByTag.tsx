@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Post, PostResponse } from '@shared/models/post';
-import { getPostsByTag } from '@shared/services/post.service';
 import { PostListLoadMore } from '@shared/components/PostListLoadMore';
+import { Post } from '@shared/models/post';
+import { PostService } from '@shared/services/post.service';
 
 const PostsByTag = () => {
+  const postService = new PostService();
   const { tag } = useParams<{ tag: string }>();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +15,7 @@ const PostsByTag = () => {
     const fetchPostsByTag = async () => {
       try {
         setIsLoading(true);
-        const response = await getPostsByTag(tag);
+        const response = await postService.getPostsByTag(tag);
         setPosts(response.data);
       } catch (error) {
         throw error;

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
@@ -14,7 +14,7 @@ import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 import author from '@assets/images/author.png';
-import { deletePost } from '@shared/services/post.service';
+import { PostService } from '@shared/services/post.service';
 
 interface IPostProps {
   post: Post;
@@ -34,12 +34,13 @@ export const PostComponent: React.FC<IPostProps> = ({
   loading = false,
   fallbackUser,
 }) => {
+  const postService = new PostService();
   const { user } = useContext(AuthContext);
   const dispatch = useDispatch();
 
   const handleDeletePost = async (id: string | number) => {
     try {
-      await deletePost(id);
+      await postService.deletePost(id);
     } catch (error) {
       throw error;
     }

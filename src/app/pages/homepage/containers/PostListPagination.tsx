@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
+
 import { Pagination } from '@shared/components/Pagination';
 import { PostComponent } from '@shared/components/Post';
-import { getPublicPost } from '@shared/services/post.service';
+import { PostService } from '@shared/services/post.service';
 
 const SIZE_PAGE = 8;
 
 export const PostListPagination = ({ currentPage, onPageChange }) => {
+  const postService = new PostService();
   const [publicPosts, setPublicPosts] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -15,7 +17,10 @@ export const PostListPagination = ({ currentPage, onPageChange }) => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const response = await getPublicPost(currentPage, SIZE_PAGE);
+        const response = await postService.getPublicPost(
+          currentPage,
+          SIZE_PAGE
+        );
         setPublicPosts(response.data || []);
         setTotalItems(response.totalItems || 0);
         setTotalPages(response.totalPage || 0);

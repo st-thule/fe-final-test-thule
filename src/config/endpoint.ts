@@ -12,6 +12,7 @@ export const ENDPOINT = {
     login: `${RESOURCES.auth}/login`,
     logout: `${RESOURCES.auth}/logout`,
   },
+
   post: {
     postList: `${RESOURCES.post}`,
     postDetail: (id: number | string) => `${RESOURCES.post}/${id}`,

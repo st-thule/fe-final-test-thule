@@ -20,11 +20,7 @@ import {
 } from '@shared/constants/options';
 import { TypeUpload } from '@shared/constants/type-image';
 import { AuthContext } from '@shared/contexts/auth.context';
-import {
-  createPost,
-  getPostDetailUpdate,
-  updatePost,
-} from '@shared/services/post.service';
+import { PostService } from '@shared/services/post.service';
 import { ModalTypes } from '@shared/utils/modalTypes';
 import { validationRulesPost } from '@shared/utils/validationRules';
 
@@ -38,6 +34,7 @@ interface IPostForm {
 }
 
 const PostForm = () => {
+  const postService = new PostService();
   const { id } = useParams();
   const isEdit = Boolean(id);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -74,7 +71,8 @@ const PostForm = () => {
       return;
     }
     setIsLoading(true);
-    getPostDetailUpdate(id!)
+    postService
+      .getPostDetailUpdate(id!)
       .then((post) => {
         if (post.userId === user.id) {
           setValue('title', post.title);
@@ -115,7 +113,7 @@ const PostForm = () => {
               message: 'Are you sure ?',
               onConfirm: async () => {
                 try {
-                  const response = await updatePost(id!, data);
+                  const response = await postService.updatePost(id!, data);
                   toast.success('Update post successfully');
                   navigate(`${AppRoutes.POSTS}/${id}`);
                 } catch (error) {
@@ -134,7 +132,7 @@ const PostForm = () => {
         );
       } else {
         // Create new post
-        const response = await createPost(data);
+        const response = await postService.createPost(data);
         toast.success('Create post successfully');
         navigate(`${AppRoutes.POSTS}/${response.id}`);
         setIsLoading(false);

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
 import { authStorage } from '@app/core/services/auth-storage.service';
-import { loginAccount } from '@app/core/services/auth.service';
+import { AuthService } from '@app/core/services/auth.service';
 import { Button, Input } from '@shared/components/partials';
 import { AuthContext } from '@shared/contexts/auth.context';
 import { validationRulesAuth } from '@shared/utils/validationRules';
@@ -18,6 +18,8 @@ interface ILoginForm {
   password: string;
 }
 const Login = () => {
+  const authService = new AuthService();
+
   const navigate = useNavigate();
   const location = useLocation();
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -35,7 +37,7 @@ const Login = () => {
   const onSubmit = async (data: ILoginForm) => {
     try {
       setIsLoading(true);
-      const response = await loginAccount({
+      const response = await authService.loginAccount({
         email: data.email,
         password: data.password,
       });

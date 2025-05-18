@@ -3,13 +3,14 @@ import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Post } from '@shared/models/post';
-import { getPostById } from '@shared/services/post.service';
+import { PostService } from '@shared/services/post.service';
 import { formatDate } from '@shared/utils/formatDate';
 
 import calendarIcon from '@assets/icons/calendar.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 
 const PostDetail = () => {
+  const postService = new PostService();
   const { id } = useParams();
   const [post, setPost] = useState<Post>(null);
   const [loading, setLoading] = useState(false);
@@ -18,7 +19,7 @@ const PostDetail = () => {
     const fetchPostById = async () => {
       try {
         setLoading(true);
-        const data = await getPostById(id);
+        const data = await postService.getPostById(id);
         setPost(data);
       } catch (error) {
         toast.error(error);
