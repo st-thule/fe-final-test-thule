@@ -2,20 +2,24 @@ import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { TypeUpload } from '@shared/constants/type-image';
-import { getSignedUrl, uploadImageToS3 } from '@shared/services/image.service';
+import { ImageService } from '@shared/services/image.service';
 import { Button } from './partials';
 
 interface UploadImageProps {
+  className?: string;
   typeUpload: TypeUpload;
   cover?: string;
   onUploaded?: (url: string) => void;
 }
 
 export const UploadImage = ({
+  className,
   typeUpload,
   cover,
   onUploaded,
 }: UploadImageProps) => {
+  const imageService = new ImageService();
+
   const [imagePreview, setImagePreview] = useState<string>(
     cover || '/assets/images/banner.png'
   );
@@ -42,14 +46,13 @@ export const UploadImage = ({
       setIsUpload(true);
 
       try {
-        const { signedRequest, url } = await getSignedUrl(
+        const { signedRequest, url } = await imageService.getSignedUrl(
           typeUpload,
           file.name,
           file.type
         );
-        await uploadImageToS3(signedRequest, file);
+        await imageService.uploadImageToS3(signedRequest, file);
         toast.success('Upload successfully');
-        // Update preview with uploaded image URL
         setImagePreview(url);
         if (onUploaded) {
           onUploaded(url);
