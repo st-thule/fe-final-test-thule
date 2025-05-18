@@ -128,27 +128,27 @@ export const PostComponent: React.FC<IPostProps> = ({
           <Link to={`${AppRoutes.POSTS}/${post.id}`} onClick={() => onClick}>
             <h3 className="card-title">{post.title}</h3>
           </Link>
+          <p className="card-desc">{post.description}</p>
           <div className="card-detail detail">
-            <div className="detail-group">
-              <Link
-                to={
-                  user?.id === post.userId
-                    ? `${AppRoutes.USER}/me`
-                    : `${AppRoutes.USER}/${post.userId}`
-                }
-              >
-                <img
-                  className="detail-image"
-                  src={post.user?.picture ?? fallbackUser?.picture ?? author}
-                  alt="avatar"
-                />
-                <p className="detail-value">
-                  {post.user?.displayName ??
-                    fallbackUser?.displayName ??
-                    user?.displayName}
-                </p>
-              </Link>
-            </div>
+            <Link
+              to={
+                user?.id === post.userId
+                  ? `${AppRoutes.USER}/me`
+                  : `${AppRoutes.USER}/${post.userId}`
+              }
+              className="detail-group"
+            >
+              <img
+                className="detail-image"
+                src={post.user?.picture ?? fallbackUser?.picture ?? author}
+                alt="avatar"
+              />
+              <p className="detail-value">
+                {post.user?.displayName ??
+                  fallbackUser?.displayName ??
+                  user?.displayName}
+              </p>
+            </Link>
             <div className="detail-group">
               <p className="detail-value">{formatDate(post.createdAt)}</p>
             </div>
