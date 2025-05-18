@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { AuthRoute } from './AuthRoute';
 import { PrivateRoute } from './PrivateRoute';
 
 export const renderChildren = (routes) => {
@@ -8,6 +9,8 @@ export const renderChildren = (routes) => {
       ...route,
       element: route.isProtected ? (
         <PrivateRoute component={route.element} />
+      ) : route.isPublic ? (
+        <AuthRoute component={route.element} />
       ) : (
         <route.element />
       ),
