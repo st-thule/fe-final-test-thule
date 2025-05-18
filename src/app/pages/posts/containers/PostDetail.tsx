@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { AppRoutes } from '@app/core/constants/app-routes';
+import { closeModal, openModal } from '@app/store/modal/action/modalAction';
+import { AuthContext } from '@shared/contexts/auth.context';
 import { Post } from '@shared/models/post';
 import { PostService } from '@shared/services/post.service';
 import { formatDate } from '@shared/utils/formatDate';
+import { ModalTypes } from '@shared/utils/modalTypes';
 
 import calendarIcon from '@assets/icons/calendar.svg';
+import deleteIcon from '@assets/icons/delete.svg';
+import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 
 const PostDetail = () => {
@@ -14,6 +21,16 @@ const PostDetail = () => {
   const { id } = useParams();
   const [post, setPost] = useState<Post>(null);
   const [loading, setLoading] = useState(false);
+  const { user } = useContext(AuthContext);
+  const dispatch = useDispatch();
+
+  const handleDeletePost = async (id: string | number) => {
+    try {
+      await postService.deletePost(id);
+    } catch (error) {
+      throw error;
+    }
+  };
 
   useEffect(() => {
     const fetchPostById = async () => {
@@ -69,23 +86,76 @@ const PostDetail = () => {
                   </ul>
                   <h1 className="article-title">{post.title}</h1>
                   <p className="article-subtitle">{post.description}</p>
-                  <div className="article-meta meta">
-                    <div className="meta-group">
-                      <img
-                        className="img meta-img"
-                        src={post.user?.picture ?? '/assets/images/author.png'}
-                        alt="Author"
-                      />
-                      <p className="meta-title">{post.user?.displayName}</p>
+                  <div className="article-info">
+                    <div className="article-meta">
+                      <div className="meta-group">
+                        <img
+                          className="img meta-img"
+                          src={
+                            post.user?.picture ?? '/assets/images/author.png'
+                          }
+                          alt="Author"
+                        />
+                        <p className="meta-title">{post.user?.displayName}</p>
+                      </div>
+                      <div className="meta-group">
+                        <img
+                          className="img meta-img"
+                          src={calendarIcon}
+                          alt="Calendar"
+                        />
+                        <p className="meta-title">
+                          {formatDate(post.createdAt)}
+                        </p>
+                      </div>
                     </div>
-                    <div className="meta-group">
-                      <img
-                        className="img meta-img"
-                        src={calendarIcon}
-                        alt="Calendar"
-                      />
-                      <p className="meta-title">{formatDate(post.createdAt)}</p>
-                    </div>
+                    {user.id === post.userId && (
+                      <div className="article-action">
+                        <Link
+                          className="action"
+                          to={`${AppRoutes.POSTS}/edit/${post.id}`}
+                        >
+                          <img
+                            className="action-icon"
+                            src={editIcon}
+                            alt="edit"
+                          />
+                        </Link>
+                        <button
+                          className="action"
+                          onClick={() => {
+                            dispatch(
+                              openModal({
+                                modalType: ModalTypes.CONFIRM,
+                                modalProps: {
+                                  title: 'Confirm delete',
+                                  message: 'Are you sure ?',
+                                  onConfirm: async () => {
+                                    try {
+                                      await handleDeletePost(post.id);
+                                      toast.success('Delete successfully');
+                                      window.location.reload();
+                                    } catch (error) {
+                                    } finally {
+                                      dispatch(closeModal());
+                                    }
+                                  },
+                                  onCancel: () => {
+                                    dispatch(closeModal());
+                                  },
+                                },
+                              })
+                            );
+                          }}
+                        >
+                          <img
+                            className="action-icon"
+                            src={deleteIcon}
+                            alt="delete"
+                          />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="article-body">
