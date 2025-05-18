@@ -35,6 +35,9 @@ export const updatePost = (
 };
 
 export const deletePost = (id: string | number) => {
-  console.log('Deleting:', ENDPOINT.post.postDelete(id));
   return apiService.delete([`${ENDPOINT.post.postDelete(id)}`]);
+};
+
+export const getPostsByTag = (tagName: string): Promise<PostResponse> => {
+  return apiService.get([`${ENDPOINT.post.postByTag(tagName)}`]);
 };

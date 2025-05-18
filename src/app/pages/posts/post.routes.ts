@@ -6,6 +6,7 @@ import { AppRoutes } from '@app/core/constants/app-routes';
 const PostDetail = React.lazy(() => import('./containers/PostDetail'));
 const Post = React.lazy(() => import('./containers/Posts'));
 const PostForm = React.lazy(() => import('./containers/PostForm'));
+const PostsByTag = React.lazy(() => import('./containers/PostsByTag'));
 
 const postRoutes: PageRoute[] = [
   {
@@ -25,6 +26,10 @@ const postRoutes: PageRoute[] = [
         path: AppRoutes.POSTEDIT,
         element: PostForm,
         isProtected: true,
+      },
+      {
+        path: AppRoutes.POSTAGS,
+        element: PostsByTag,
       },
     ],
   },

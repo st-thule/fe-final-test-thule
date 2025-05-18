@@ -41,14 +41,23 @@
   }
 
   &-posts {
-    padding-bottom: $spacing-3xl;
+    padding: $spacing-3xl $spacing-none;
+
+    .loading-status {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      text-align: center;
+    }
   }
   &-tags {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 40px;
+    gap: 35px;
 
     @media screen and (max-width: $md) {
       gap: 20px;

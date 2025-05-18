@@ -1,0 +1,15 @@
+@use '../base/' as *;
+
+.page {
+  &.page-tags {
+    .section {
+      &-header {
+        justify-content: flex-start;
+        align-items: flex-start;
+      }
+      &-title {
+        padding-bottom: $spacing-md;
+      }
+    }
+  }
+}

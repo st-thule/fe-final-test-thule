@@ -9,6 +9,7 @@ export enum AppRoutes {
   POSTSDETAIL = ':id',
   POSTADD = 'create',
   POSTEDIT = 'edit/:id',
+  POSTAGS = 'tags/:tag',
 
   USER = '/user',
   PROFILE = 'me',
