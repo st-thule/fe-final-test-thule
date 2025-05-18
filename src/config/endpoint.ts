@@ -18,6 +18,7 @@ export const ENDPOINT = {
     postCreate: `${RESOURCES.post}`,
     postEdit: (id: number | string) => `${RESOURCES.post}/${id}`,
     postDelete: (id: number | string) => `${RESOURCES.post}/${id}`,
+    postByTag: (tagName: string) => `${RESOURCES.post}/public?${tagName}`,
   },
 
   signatures: {
