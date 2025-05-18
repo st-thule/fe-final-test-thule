@@ -49,18 +49,20 @@ export const Pagination: React.FC<PaginationProps> = ({
     <div className="section-pagination pagination">
       <nav className="nav nav-pagination">
         <ul className="list-paginations">
-          <li className="list-item">
-            <a
-              className="list-link"
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                handlePageChange(currentPage > 1 ? currentPage - 1 : 1);
-              }}
-            >
-              <img src={leftArrow} alt="previous" />
-            </a>
-          </li>
+          {currentPage > 1 && (
+            <li className="list-item">
+              <a
+                className="list-link"
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageChange(currentPage > 1 ? currentPage - 1 : 1);
+                }}
+              >
+                <img src={leftArrow} alt="previous" />
+              </a>
+            </li>
+          )}
           {pages.map((item, index) => (
             <li
               className={`list-item ${
@@ -79,20 +81,22 @@ export const Pagination: React.FC<PaginationProps> = ({
               </a>
             </li>
           ))}
-          <li className="list-item">
-            <a
-              className="list-link"
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                handlePageChange(
-                  currentPage < totalPage ? currentPage + 1 : totalPage
-                );
-              }}
-            >
-              <img src={rightArrow} alt="next" />
-            </a>
-          </li>
+          {currentPage < totalPage && (
+            <li className="list-item">
+              <a
+                className="list-link"
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageChange(
+                    currentPage < totalPage ? currentPage + 1 : totalPage
+                  );
+                }}
+              >
+                <img src={rightArrow} alt="next" />
+              </a>
+            </li>
+          )}
         </ul>
       </nav>
     </div>
