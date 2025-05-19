@@ -42,7 +42,10 @@ export class PostService {
     return this.apiService.delete([`${ENDPOINT.post.postDelete(id)}`]);
   };
 
-  getPostsByTag = (tagName: string): Promise<PostResponse> => {
-    return this.apiService.get([`${ENDPOINT.post.postByTag(tagName)}`]);
+  getPostsByTag = (tagName: string, page, size): Promise<PostResponse> => {
+    return this.apiService.get([`${ENDPOINT.post.postByTag(tagName)}`], {
+      page,
+      size,
+    });
   };
 }
