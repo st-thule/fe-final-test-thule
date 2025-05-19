@@ -168,6 +168,7 @@ const PostDetail = () => {
                     )}
                   </div>
                 </div>
+                <div className="line"></div>
                 <div className="article-body">
                   <img
                     className="img article-thumbnail"
