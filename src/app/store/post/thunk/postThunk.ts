@@ -94,13 +94,16 @@ export const getPostDetailUpdateThunk = createAsyncThunk<
 // get posts by tag
 export const getPostsByTagThunk = createAsyncThunk<
   PostResponse,
-  string,
+  { tagName: string; page: number; size: number },
   { rejectValue: string }
->('posts/getPostsByTag', async (tagName, { rejectWithValue }) => {
-  try {
-    const response = await postService.getPostsByTag(tagName);
-    return response;
-  } catch (error: any) {
-    return rejectWithValue(error.message || 'Failed to fetch posts by tag');
+>(
+  'posts/getPostsByTag',
+  async ({ tagName, page, size }, { rejectWithValue }) => {
+    try {
+      const response = await postService.getPostsByTag(tagName, page, size);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Failed to fetch posts by tag');
+    }
   }
-});
+);

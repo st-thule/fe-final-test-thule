@@ -6,7 +6,14 @@ import { toast } from 'react-toastify';
 import { AppRoutes } from '@app/core/constants/app-routes';
 import { authStorage } from '@app/core/services/auth-storage.service';
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
+import { useAppSelector } from '@app/store/hook/useAppSelector';
+import { uploadImageThunk } from '@app/store/image/thunk/imageThunk';
 import { closeModal, openModal } from '@app/store/modal/action/modalAction';
+import {
+  createPostThunk,
+  getPostDetailUpdateThunk,
+  updatePostThunk,
+} from '@app/store/post/thunk/postThunk';
 import CkEditor from '@shared/components/CkEditor';
 import { MultiSelect } from '@shared/components/MultiSelect';
 import { UploadImage } from '@shared/components/UploadImage';
@@ -18,31 +25,21 @@ import {
   optionTags,
   StatusPost,
 } from '@shared/constants/options';
-import { TypeUpload } from '@shared/constants/type-image';
 import { AuthContext } from '@shared/contexts/auth.context';
-import { PostService } from '@shared/services/post.service';
 import { ModalTypes } from '@shared/utils/modalTypes';
 import { validationRulesPost } from '@shared/utils/validationRules';
-import {
-  createPostThunk,
-  getPostDetailUpdateThunk,
-  updatePostThunk,
-} from '@app/store/post/thunk/postThunk';
-import { updatePostSuccess } from '@app/store/post/action/postAction';
-import { error } from 'console';
-import { useAppSelector } from '@app/store/hook/useAppSelector';
+import { TypeUpload } from '@shared/constants/type-image';
 
 interface IPostForm {
   title: string;
   description: string;
   content: string;
   status: StatusPost;
-  tags?: string[] | [];
-  cover?: string | 'cover';
+  tags?: string[];
+  cover?: string; // CHỈ nhận string URL
 }
 
 const PostForm = () => {
-  const postService = new PostService();
   const { id } = useParams();
   const isEdit = Boolean(id);
   const [rawContent, setRawContent] = useState('');
@@ -75,11 +72,10 @@ const PostForm = () => {
 
   const cover = watch('cover');
 
-  // render post data to post form
+  // Load data when update
   useEffect(() => {
-    if (!isEdit) {
-      return;
-    }
+    if (!isEdit) return;
+
     dispatch(getPostDetailUpdateThunk(id!))
       .then((action) => {
         if (getPostDetailUpdateThunk.fulfilled.match(action)) {
@@ -88,7 +84,7 @@ const PostForm = () => {
             setValue('title', post.title);
             setValue('content', post.content);
             setValue('description', post.description);
-            setValue('cover', post.cover);
+            setValue('cover', post.cover || '');
             setValue('status', post.status as StatusPost);
             setValue('tags', post.tags || []);
           } else {
@@ -102,21 +98,47 @@ const PostForm = () => {
       });
   }, [dispatch, id, isEdit, navigate, setValue, user.id]);
 
-  // handle for add and edit
+  const handleUploadImage = async (file: File) => {
+    try {
+      const uploadResult = await dispatch(
+        uploadImageThunk({ file, typeUpload: TypeUpload.COVER_POST })
+      );
+      if (uploadImageThunk.fulfilled.match(uploadResult)) {
+        const url = uploadResult.payload;
+        setValue('cover', url);
+      } else {
+        toast.error('Image upload failed');
+      }
+    } catch (error) {
+      toast.error('Image upload failed');
+    }
+  };
+
   const onSubmit = async (data: IPostForm) => {
+    if (!data.cover || data.cover.trim() === '') {
+      toast.error('Please upload a cover image.');
+      return;
+    }
+
     const finalData = {
       ...data,
       content: rawContent,
     };
+
     try {
       const token = authStorage.getToken();
+      if (!token) {
+        toast.error('Please log in to continue');
+        return;
+      }
+
       if (isEdit) {
         dispatch(
           openModal({
             modalType: ModalTypes.CONFIRM,
             modalProps: {
               title: 'Confirm Edit',
-              message: 'Are you sure ?',
+              message: 'Are you sure?',
               onConfirm: async () => {
                 dispatch(updatePostThunk({ id: id!, data: finalData }))
                   .then(() => {
@@ -137,7 +159,6 @@ const PostForm = () => {
           })
         );
       } else {
-        // Create new post
         dispatch(createPostThunk(finalData)).then((action) => {
           if (createPostThunk.fulfilled.match(action)) {
             const post = action.payload;
@@ -148,7 +169,6 @@ const PostForm = () => {
       }
     } catch (error) {
       toast.error(error);
-    } finally {
     }
   };
 
@@ -170,11 +190,8 @@ const PostForm = () => {
               />
             </div>
             <div className="form-body">
-              <UploadImage
-                typeUpload={TypeUpload.COVER_POST}
-                cover={cover}
-                onUploaded={(url) => setValue('cover', url)}
-              />
+              {/* Truyền URL string cho cover và trả về file khi chọn ảnh */}
+              <UploadImage cover={cover || ''} onChange={handleUploadImage} />
 
               <div className="row">
                 <div className="col-12 col-md-6 col-sm-6">

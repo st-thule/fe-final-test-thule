@@ -6,6 +6,7 @@ import {
   deletePostThunk,
   getPostByIdThunk,
   getPostDetailUpdateThunk,
+  getPostsByTagThunk,
 } from '../thunk/postThunk';
 
 const initialState = {
@@ -146,6 +147,27 @@ const postSlice = createSlice({
         state.loading.getForUpdate = false;
         state.error.getForUpdate =
           action.error.message || 'Failed to get post for update';
+      });
+
+    builder
+      .addCase(getPostsByTagThunk.pending, (state) => {
+        state.loading.fetch = true;
+        state.error.fetch = null;
+      })
+      .addCase(getPostsByTagThunk.fulfilled, (state, action) => {
+        state.loading.fetch = false;
+        state.posts = {
+          data: action.payload.data,
+          totalPage: action.payload.totalPage,
+          totalItems: action.payload.totalItems,
+          currentPage: action.payload.currentPage,
+          itemsPerPage: action.payload.itemsPerPage,
+          loadMore: action.payload.loadMore,
+        };
+      })
+      .addCase(getPostsByTagThunk.rejected, (state, action) => {
+        state.loading.fetch = false;
+        state.error.fetch = action.error.message || 'Failed to fetch posts';
       });
   },
 });

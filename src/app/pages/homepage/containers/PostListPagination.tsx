@@ -1,35 +1,27 @@
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React from 'react';
 
 import { Pagination } from '@shared/components/Pagination';
 import { PostComponent } from '@shared/components/Post';
-import { fetchPostsThunk } from '@app/store/post/thunk/postThunk';
-import { RootState } from '@app/store';
-import { useAppDispatch } from '@app/store/hook/useAppDispatch';
+import { PostResponse } from '@shared/models/post';
 
 const SIZE_PAGE = 8;
 
 interface PostListPaginationProps {
+  postResponse: PostResponse;
   currentPage: number;
   onPageChange: (page: number) => void;
+  loading: boolean;
+  error: string;
 }
 
 export const PostListPagination: React.FC<PostListPaginationProps> = ({
   currentPage,
   onPageChange,
+  postResponse,
+  loading,
+  error,
 }) => {
-  const dispatch = useAppDispatch();
-
-  const { posts, loading, error } = useSelector((state: RootState) => ({
-    posts: state.post?.posts,
-    loading: state.post?.loading.fetch,
-    error: state.post?.error.fetch,
-  }));
-
-  useEffect(() => {
-    dispatch(fetchPostsThunk({ page: currentPage, size: SIZE_PAGE }));
-  }, [currentPage, dispatch]);
-
+  // console.log('data', postResponse.data);
   return (
     <>
       <ul className="list list-posts row">
@@ -42,8 +34,8 @@ export const PostListPagination: React.FC<PostListPaginationProps> = ({
               post={undefined}
             />
           ))
-        ) : posts?.data && posts.data.length > 0 ? (
-          posts.data.map((post) => (
+        ) : postResponse?.data && postResponse.data.length > 0 ? (
+          postResponse.data.map((post) => (
             <PostComponent
               key={post.id}
               post={post}
@@ -55,9 +47,9 @@ export const PostListPagination: React.FC<PostListPaginationProps> = ({
         )}
       </ul>
 
-      {!loading && posts?.data && posts.data.length > 0 && (
+      {!loading && postResponse?.data && postResponse.data.length > 0 && (
         <Pagination
-          totalItems={posts.totalItems}
+          totalItems={postResponse.totalItems}
           itemsPerPage={SIZE_PAGE}
           currentPage={currentPage}
           onPageChange={onPageChange}

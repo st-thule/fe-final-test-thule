@@ -7,24 +7,19 @@ import { Button } from './partials';
 
 interface UploadImageProps {
   className?: string;
-  typeUpload: TypeUpload;
   cover?: string;
-  onUploaded?: (url: string) => void;
+  onChange?: (file: File) => void;
 }
 
 export const UploadImage = ({
   className,
-  typeUpload,
   cover,
-  onUploaded,
+  onChange,
 }: UploadImageProps) => {
-  const imageService = new ImageService();
-
   const [imagePreview, setImagePreview] = useState<string>(
     cover || '/assets/images/banner.png'
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isUpload, setIsUpload] = useState(false);
 
   useEffect(() => {
     if (cover && cover !== 'cover') {
@@ -37,34 +32,15 @@ export const UploadImage = ({
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setImagePreview(imageUrl);
-    }
-  };
 
-  const handleUploadClick = async () => {
-    if (fileInputRef.current?.files?.[0]) {
-      const file = fileInputRef.current.files[0];
-      setIsUpload(true);
-
-      try {
-        const { signedRequest, url } = await imageService.getSignedUrl(
-          typeUpload,
-          file.name,
-          file.type
-        );
-        await imageService.uploadImageToS3(signedRequest, file);
-        toast.success('Upload successfully');
-        setImagePreview(url);
-        if (onUploaded) {
-          onUploaded(url);
-        }
-      } catch (error) {
-        toast.error(error);
+      if (onChange) {
+        onChange(file);
       }
     }
   };
 
   return (
-    <div className="form-upload form-xl gap-4">
+    <label className="form-upload form-xl">
       <div className="form-preview form-dashed">
         <img src={imagePreview} alt="Preview" className="" />
       </div>
@@ -77,12 +53,13 @@ export const UploadImage = ({
       />
 
       <div className="form-action">
-        <Button
+        <span
           className="btn btn-primary"
-          label="Upload"
-          onClick={handleUploadClick}
-        />
+          onClick={() => fileInputRef.current?.click()}
+        >
+          Choose Image
+        </span>
       </div>
-    </div>
+    </label>
   );
 };
