@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
 import { authStorage } from '@app/core/services/auth-storage.service';
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { closeModal, openModal } from '@app/store/modal/action/modalAction';
 import CkEditor from '@shared/components/CkEditor';
 import { MultiSelect } from '@shared/components/MultiSelect';
@@ -23,6 +23,14 @@ import { AuthContext } from '@shared/contexts/auth.context';
 import { PostService } from '@shared/services/post.service';
 import { ModalTypes } from '@shared/utils/modalTypes';
 import { validationRulesPost } from '@shared/utils/validationRules';
+import {
+  createPostThunk,
+  getPostDetailUpdateThunk,
+  updatePostThunk,
+} from '@app/store/post/thunk/postThunk';
+import { updatePostSuccess } from '@app/store/post/action/postAction';
+import { error } from 'console';
+import { useAppSelector } from '@app/store/hook/useAppSelector';
 
 interface IPostForm {
   title: string;
@@ -37,10 +45,9 @@ const PostForm = () => {
   const postService = new PostService();
   const { id } = useParams();
   const isEdit = Boolean(id);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rawContent, setRawContent] = useState('');
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const { user } = useContext(AuthContext);
 
@@ -62,37 +69,38 @@ const PostForm = () => {
     },
   });
 
+  const loadingCreate = useAppSelector((state) => state.post.loading.create);
+  const loadingUpdate = useAppSelector((state) => state.post.loading.update);
+  const isLoading = isEdit ? loadingUpdate : loadingCreate;
+
   const cover = watch('cover');
 
   // render post data to post form
   useEffect(() => {
     if (!isEdit) {
-      setIsLoading(false);
       return;
     }
-    setIsLoading(true);
-    postService
-      .getPostDetailUpdate(id!)
-      .then((post) => {
-        if (post.userId === user.id) {
-          setValue('title', post.title);
-          setValue('content', post.content);
-          setValue('description', post.description);
-          setValue('cover', post.cover);
-          setValue('status', post.status as StatusPost);
-          setValue('tags', post.tags || []);
-        } else {
-          toast.error("You mustn't edit this post");
-          navigate(AppRoutes.POSTS, { replace: true });
+    dispatch(getPostDetailUpdateThunk(id!))
+      .then((action) => {
+        if (getPostDetailUpdateThunk.fulfilled.match(action)) {
+          const post = action.payload;
+          if (post.userId === user.id) {
+            setValue('title', post.title);
+            setValue('content', post.content);
+            setValue('description', post.description);
+            setValue('cover', post.cover);
+            setValue('status', post.status as StatusPost);
+            setValue('tags', post.tags || []);
+          } else {
+            toast.error("You mustn't edit this post");
+            navigate(AppRoutes.POSTS, { replace: true });
+          }
         }
       })
       .catch(() => {
         toast.error('No post');
-      })
-      .finally(() => {
-        setIsLoading(false);
       });
-  }, [id, isEdit, navigate, setValue, user.id]);
+  }, [dispatch, id, isEdit, navigate, setValue, user.id]);
 
   // handle for add and edit
   const onSubmit = async (data: IPostForm) => {
@@ -101,9 +109,7 @@ const PostForm = () => {
       content: rawContent,
     };
     try {
-      setIsLoading(true);
       const token = authStorage.getToken();
-
       if (isEdit) {
         dispatch(
           openModal({
@@ -112,35 +118,37 @@ const PostForm = () => {
               title: 'Confirm Edit',
               message: 'Are you sure ?',
               onConfirm: async () => {
-                try {
-                  const response = await postService.updatePost(id!, data);
-                  toast.success('Update post successfully');
-                  navigate(`${AppRoutes.POSTS}/${id}`);
-                } catch (error) {
-                  toast.error(error);
-                } finally {
-                  dispatch(closeModal());
-                  setIsLoading(false);
-                }
+                dispatch(updatePostThunk({ id: id!, data: finalData }))
+                  .then(() => {
+                    toast.success('Update post successfully');
+                    navigate(`${AppRoutes.POSTS}/${id}`);
+                  })
+                  .catch((error) => {
+                    toast.error(error.message || 'Update post failed');
+                  })
+                  .finally(() => {
+                    dispatch(closeModal());
+                  });
               },
               onCancel: () => {
                 dispatch(closeModal());
-                setIsLoading(false);
               },
             },
           })
         );
       } else {
         // Create new post
-        const response = await postService.createPost(data);
-        toast.success('Create post successfully');
-        navigate(`${AppRoutes.POSTS}/${response.id}`);
-        setIsLoading(false);
+        dispatch(createPostThunk(finalData)).then((action) => {
+          if (createPostThunk.fulfilled.match(action)) {
+            const post = action.payload;
+            toast.success('Create post successfully');
+            navigate(`${AppRoutes.POSTS}/${post.id}`);
+          }
+        });
       }
     } catch (error) {
       toast.error(error);
     } finally {
-      setIsLoading(false);
     }
   };
 

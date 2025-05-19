@@ -71,9 +71,7 @@ const postSlice = createSlice({
       })
       .addCase(createPostThunk.fulfilled, (state, action) => {
         state.loading.create = false;
-        // Thêm bài mới vào đầu mảng data
         state.posts.data.unshift(action.payload);
-        // Có thể cần tăng totalItems nếu có logic
         state.posts.totalItems += 1;
       })
       .addCase(createPostThunk.rejected, (state, action) => {
@@ -112,7 +110,6 @@ const postSlice = createSlice({
         state.posts.data = state.posts.data.filter(
           (post) => post.id !== action.payload
         );
-        // Có thể cần giảm totalItems nếu có logic
         state.posts.totalItems = Math.max(0, state.posts.totalItems - 1);
       })
       .addCase(deletePostThunk.rejected, (state, action) => {

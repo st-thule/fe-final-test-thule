@@ -1,10 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
+import { useAppSelector } from '@app/store/hook/useAppSelector';
 import { closeModal, openModal } from '@app/store/modal/action/modalAction';
+import {
+  deletePostThunk,
+  getPostByIdThunk,
+} from '@app/store/post/thunk/postThunk';
 import { AuthContext } from '@shared/contexts/auth.context';
 import { Post } from '@shared/models/post';
 import { PostService } from '@shared/services/post.service';
@@ -20,39 +25,41 @@ const PostDetail = () => {
   const postService = new PostService();
   const { id } = useParams();
   const [post, setPost] = useState<Post>(null);
-  const [loading, setLoading] = useState(false);
   const { user } = useContext(AuthContext);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const handleDeletePost = async (id: string | number) => {
-    try {
-      await postService.deletePost(id);
-    } catch (error) {
-      throw error;
-    }
-  };
+  const loadingFetch = useAppSelector((state) => state.post.loading.getById);
+  const errorFetch = useAppSelector((state) => state.post.error.getById);
+
+  const errorDelete = useAppSelector((state) => state.post.error.delete);
 
   useEffect(() => {
-    const fetchPostById = async () => {
-      try {
-        setLoading(true);
-        const data = await postService.getPostById(id);
-        setPost(data);
-      } catch (error) {
-        toast.error(error);
-      } finally {
-        setLoading(false);
+    dispatch(getPostByIdThunk(id!)).then((action) => {
+      if (getPostByIdThunk.fulfilled.match(action)) {
+        const post = action.payload;
+        setPost(post);
       }
-    };
-    fetchPostById();
+    });
   }, [id]);
 
+  useEffect(() => {
+    if (errorFetch) {
+      toast.error(errorFetch);
+    }
+  }, [errorFetch]);
+
+  useEffect(() => {
+    if (errorDelete) {
+      toast.error(errorDelete);
+    }
+  }, [errorDelete]);
   return (
     <div className="page page-post-detail">
       <div className="container">
         <div className="wrapper wrapper-padding">
           <article className="article article-post">
-            {loading ? (
+            {loadingFetch ? (
               <>
                 <div className="article-header">
                   <div className="skeleton-tag mb-2"></div>
@@ -131,14 +138,17 @@ const PostDetail = () => {
                                   title: 'Confirm delete',
                                   message: 'Are you sure ?',
                                   onConfirm: async () => {
-                                    try {
-                                      await handleDeletePost(post.id);
-                                      toast.success('Delete successfully');
-                                      window.location.reload();
-                                    } catch (error) {
-                                    } finally {
-                                      dispatch(closeModal());
-                                    }
+                                    dispatch(deletePostThunk(id!))
+                                      .then(() => {
+                                        toast.success('Delete successfully');
+                                        navigate(-1);
+                                      })
+                                      .catch((error) => {
+                                        toast.error(error);
+                                      })
+                                      .finally(() => {
+                                        closeModal();
+                                      });
                                   },
                                   onCancel: () => {
                                     dispatch(closeModal());
