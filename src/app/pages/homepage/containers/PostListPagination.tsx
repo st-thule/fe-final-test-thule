@@ -1,37 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import { Pagination } from '@shared/components/Pagination';
 import { PostComponent } from '@shared/components/Post';
-import { PostService } from '@shared/services/post.service';
+import { fetchPostsThunk } from '@app/store/post/thunk/postThunk';
+import { RootState } from '@app/store';
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 
 const SIZE_PAGE = 8;
 
-export const PostListPagination = ({ currentPage, onPageChange }) => {
-  const postService = new PostService();
-  const [publicPosts, setPublicPosts] = useState([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [loading, setLoading] = useState(true);
+interface PostListPaginationProps {
+  currentPage: number;
+  onPageChange: (page: number) => void;
+}
+
+export const PostListPagination: React.FC<PostListPaginationProps> = ({
+  currentPage,
+  onPageChange,
+}) => {
+  const dispatch = useAppDispatch();
+
+  const { posts, loading, error } = useSelector((state: RootState) => ({
+    posts: state.post?.posts,
+    loading: state.post?.loading.fetch,
+    error: state.post?.error.fetch,
+  }));
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        const response = await postService.getPublicPost(
-          currentPage,
-          SIZE_PAGE
-        );
-        setPublicPosts(response.data || []);
-        setTotalItems(response.totalItems || 0);
-        setTotalPages(response.totalPage || 0);
-      } catch (error) {
-        throw error;
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPosts();
-  }, [currentPage, 8]);
+    dispatch(fetchPostsThunk({ page: currentPage, size: SIZE_PAGE }));
+  }, [currentPage, dispatch]);
 
   return (
     <>
@@ -45,8 +42,8 @@ export const PostListPagination = ({ currentPage, onPageChange }) => {
               post={undefined}
             />
           ))
-        ) : publicPosts.length > 0 ? (
-          publicPosts.map((post) => (
+        ) : posts?.data && posts.data.length > 0 ? (
+          posts.data.map((post) => (
             <PostComponent
               key={post.id}
               post={post}
@@ -57,9 +54,10 @@ export const PostListPagination = ({ currentPage, onPageChange }) => {
           <p>No posts available</p>
         )}
       </ul>
-      {totalItems > 0 && !loading && (
+
+      {!loading && posts?.data && posts.data.length > 0 && (
         <Pagination
-          totalItems={totalItems}
+          totalItems={posts.totalItems}
           itemsPerPage={SIZE_PAGE}
           currentPage={currentPage}
           onPageChange={onPageChange}
