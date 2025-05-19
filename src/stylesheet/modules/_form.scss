@@ -17,8 +17,11 @@
 
     height: auto;
 
-    .input-group {
+    input {
       display: none;
+    }
+    .form-preview {
+      margin-bottom: $spacing-sm-plus;
     }
   }
 
