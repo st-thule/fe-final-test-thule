@@ -8,7 +8,6 @@ export class ApiService {
   authHelper: AuthHelper;
 
   constructor() {
-    console.log(environment);
     this.authHelper = new AuthHelper();
     // Init axiosInstance
     this.axiosInstance = axios.create({
