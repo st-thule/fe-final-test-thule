@@ -1,9 +1,6 @@
-/**
- * This configuration was generated using the CKEditor 5 Builder. You can modify it anytime using this link:
- * https://ckeditor.com/ckeditor-5/builder/#installation/NoJgNARCB0Bs0AYKQIwICwgBy1gTgHYBWBPLFEAgZisJCoNgLxQYKxHyatiy2QgBTAHbIEYYCjDjxUqQgC6kBAGMqKwQXQQFQA==
- */
-
 import { CKEditor } from '@ckeditor/ckeditor5-react';
+import type { Editor } from '@ckeditor/ckeditor5-core';
+import type { FileLoader, UploadAdapter } from '@ckeditor/ckeditor5-upload';
 import {
   Alignment,
   AutoImage,
@@ -64,9 +61,6 @@ import 'ckeditor5/ckeditor5.css';
 import { TypeUpload } from '@shared/constants/type-image';
 import { ImageService } from '@shared/services/image.service';
 
-/**
- * Create a free account with a trial: https://portal.ckeditor.com/checkout?plan=free
- */
 const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
 
 type CkeditorProps = {
@@ -75,14 +69,14 @@ type CkeditorProps = {
 };
 
 const imageService = new ImageService();
+
 export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
-  const editorContainerRef = useRef(null);
-  const editorRef = useRef(null);
+  const editorContainerRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
 
   useEffect(() => {
     setIsLayoutReady(true);
-
     return () => setIsLayoutReady(false);
   }, []);
 
@@ -255,9 +249,9 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
         initialData: '',
         licenseKey: LICENSE_KEY,
         extraPlugins: [
-          function CustomUploadAdapterPlugin(editor: any) {
+          function CustomUploadAdapterPlugin(editor: Editor) {
             editor.plugins.get('FileRepository').createUploadAdapter = (
-              loader: any
+              loader: FileLoader
             ) => {
               return new S3UploadAdapter(loader, TypeUpload.CONTENT_POST);
             };
@@ -329,40 +323,49 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
 // --------------------
 // Custom Upload Adapter
 // --------------------
-class S3UploadAdapter {
-  loader: any;
+class S3UploadAdapter implements UploadAdapter {
+  loader: FileLoader;
   typeUpload: TypeUpload;
 
-  constructor(loader: any, typeUpload: TypeUpload) {
+  constructor(loader: FileLoader, typeUpload: TypeUpload) {
     this.loader = loader;
     this.typeUpload = typeUpload;
   }
 
-  upload() {
+  upload(): Promise<{ default: string }> {
     return this.loader.file.then(
       (file: File) =>
-        new Promise((resolve, reject) => {
-          imageService;
+        new Promise<{ default: string }>((resolve, reject) => {
           imageService
             .getSignedUrl(this.typeUpload, file.name, file.type)
-            .then(({ signedRequest, url }) => {
-              imageService
-                .uploadImageToS3(signedRequest, file)
-                .then(() => {
-                  resolve({
-                    default: url,
+            .then(
+              ({
+                signedRequest,
+                url,
+              }: {
+                signedRequest: string;
+                url: string;
+              }) => {
+                imageService
+                  .uploadImageToS3(signedRequest, file)
+                  .then(() => {
+                    resolve({
+                      default: url,
+                    });
+                  })
+                  .catch((error: Error) => {
+                    reject(error.message);
                   });
-                })
-                .catch((error) => {
-                  reject(`${error.message}`);
-                });
-            })
-            .catch((error) => {
-              reject(`${error.message}`);
+              }
+            )
+            .catch((error: Error) => {
+              reject(error.message);
             });
         })
     );
   }
 
-  abort() {}
+  abort(): void {
+    // Implement abort if needed. For now, do nothing.
+  }
 }

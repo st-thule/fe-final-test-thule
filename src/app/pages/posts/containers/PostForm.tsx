@@ -123,7 +123,7 @@ const PostForm = () => {
       } else {
         toast.error('Failed to update post');
       }
-    } catch (err: any) {
+    } catch (err) {
       toast.error(err?.message || 'Update failed');
     } finally {
       setOpenModal(false);
@@ -159,7 +159,7 @@ const PostForm = () => {
         } else {
           toast.error('Failed to create post');
         }
-      } catch (err: any) {
+      } catch (err) {
         toast.error(err?.message || 'Create failed');
       }
     }
