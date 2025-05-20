@@ -1,31 +1,28 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { useAppSelector } from '@app/store/hook/useAppSelector';
-import { closeModal, openModal } from '@app/store/modal/action/modalAction';
 import {
   deletePostThunk,
   getPostByIdThunk,
 } from '@app/store/post/thunk/postThunk';
-import { AuthContext } from '@shared/contexts/auth.context';
 import { Post } from '@shared/models/post';
-import { PostService } from '@shared/services/post.service';
 import { formatDate } from '@shared/utils/formatDate';
-import { ModalTypes } from '@shared/utils/modalTypes';
 
 import calendarIcon from '@assets/icons/calendar.svg';
 import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
+import { ModalComponent } from '@shared/components/Modal';
 
 const PostDetail = () => {
-  const postService = new PostService();
   const { id } = useParams();
   const [post, setPost] = useState<Post>(null);
-  const { user } = useContext(AuthContext);
+  const [modalOpen, setModalOpen] = useState(false);
+  const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -54,6 +51,13 @@ const PostDetail = () => {
       toast.error(errorDelete);
     }
   }, [errorDelete]);
+
+  const handleDeletePost = (id: string | number) => {
+    dispatch(deletePostThunk(id!));
+    toast.success('Delete successfully');
+    navigate(-1);
+  };
+
   return (
     <div className="page page-post-detail">
       <div className="container">
@@ -131,31 +135,7 @@ const PostDetail = () => {
                         <button
                           className="action"
                           onClick={() => {
-                            dispatch(
-                              openModal({
-                                modalType: ModalTypes.CONFIRM,
-                                modalProps: {
-                                  title: 'Confirm delete',
-                                  message: 'Are you sure ?',
-                                  onConfirm: async () => {
-                                    dispatch(deletePostThunk(id!))
-                                      .then(() => {
-                                        toast.success('Delete successfully');
-                                        navigate(-1);
-                                      })
-                                      .catch((error) => {
-                                        toast.error(error);
-                                      })
-                                      .finally(() => {
-                                        closeModal();
-                                      });
-                                  },
-                                  onCancel: () => {
-                                    dispatch(closeModal());
-                                  },
-                                },
-                              })
-                            );
+                            setModalOpen(true);
                           }}
                         >
                           <img
@@ -187,6 +167,13 @@ const PostDetail = () => {
           </article>
         </div>
       </div>
+      <ModalComponent
+        isOpen={modalOpen}
+        title="Confirm logout"
+        message="Are you sure you want to logout?"
+        onConfirm={() => handleDeletePost(id!)}
+        onCancel={() => setModalOpen(false)}
+      />
     </div>
   );
 };

@@ -21,7 +21,6 @@ export const PostListPagination: React.FC<PostListPaginationProps> = ({
   loading,
   error,
 }) => {
-  // console.log('data', postResponse.data);
   return (
     <>
       <ul className="list list-posts row">
