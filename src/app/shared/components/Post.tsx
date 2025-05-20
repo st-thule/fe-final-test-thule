@@ -1,20 +1,19 @@
-import React, { useContext } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
-import { closeModal, openModal } from '@app/store/modal/action/modalAction';
-import { AuthContext } from '@shared/contexts/auth.context';
 import { Post } from '@shared/models/post';
 import { formatDate } from '@shared/utils/formatDate';
-import { ModalTypes } from '@shared/utils/modalTypes';
 
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
+import { useAppSelector } from '@app/store/hook/useAppSelector';
 import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 import author from '@assets/images/author.png';
 import { PostService } from '@shared/services/post.service';
+import { ModalComponent } from './Modal';
 
 interface IPostProps {
   post: Post;
@@ -35,12 +34,14 @@ export const PostComponent: React.FC<IPostProps> = ({
   fallbackUser,
 }) => {
   const postService = new PostService();
-  const { user } = useContext(AuthContext);
-  const dispatch = useDispatch();
-
+  const [modalOpen, setModalOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
   const handleDeletePost = async (id: string | number) => {
     try {
       await postService.deletePost(id);
+      toast.success('Delete successfully');
+      window.location.reload();
     } catch (error) {
       throw error;
     }
@@ -83,33 +84,7 @@ export const PostComponent: React.FC<IPostProps> = ({
               >
                 <img className="action-icon" src={editIcon} alt="edit" />
               </Link>
-              <button
-                className="action"
-                onClick={() => {
-                  dispatch(
-                    openModal({
-                      modalType: ModalTypes.CONFIRM,
-                      modalProps: {
-                        title: 'Confirm delete',
-                        message: 'Are you sure ?',
-                        onConfirm: async () => {
-                          try {
-                            await handleDeletePost(post.id);
-                            toast.success('Delete successfully');
-                            window.location.reload();
-                          } catch (error) {
-                          } finally {
-                            dispatch(closeModal());
-                          }
-                        },
-                        onCancel: () => {
-                          dispatch(closeModal());
-                        },
-                      },
-                    })
-                  );
-                }}
-              >
+              <button className="action" onClick={() => setModalOpen(true)}>
                 <img className="action-icon" src={deleteIcon} alt="delete" />
               </button>
             </div>
@@ -155,6 +130,13 @@ export const PostComponent: React.FC<IPostProps> = ({
           </div>
         </div>
       </div>
+      <ModalComponent
+        isOpen={modalOpen}
+        title="Confirm logout"
+        message="Are you sure you want to logout?"
+        onConfirm={() => handleDeletePost(post.id)}
+        onCancel={() => setModalOpen(false)}
+      />
     </li>
   );
 };

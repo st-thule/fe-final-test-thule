@@ -2,7 +2,7 @@ import { ENDPOINT } from '@config/endpoint';
 import { User } from '@shared/models/user';
 import { ApiService } from './api.service';
 
-interface RegisterPayload {
+export interface RegisterPayload {
   email: string;
   password: string;
   firstName: string;
@@ -13,12 +13,12 @@ interface RegisterPayload {
   displayName: string;
 }
 
-interface LoginPayload {
+export interface LoginPayload {
   email: string;
   password: string;
 }
 
-interface LoginResponse {
+export interface LoginResponse {
   accessToken: string;
   userInfo: User;
 }
@@ -31,12 +31,10 @@ export class AuthService {
   };
 
   loginAccount(data: LoginPayload): Promise<LoginResponse> {
-    const endpoint = ENDPOINT.auth.login;
     return this.apiService.post([ENDPOINT.auth.login], data);
   }
 
   logoutAccount() {
-    const endpoint = ENDPOINT.auth.logout;
-    return this.apiService.delete([ENDPOINT.auth.login]);
+    return this.apiService.post([ENDPOINT.auth.logout]);
   }
 }

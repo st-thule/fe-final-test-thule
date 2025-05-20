@@ -1,14 +1,13 @@
-import { combineReducers } from '@reduxjs/toolkit';
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
-import { modalReducer } from './modal/reducers/modalReducer';
-import postSlice from './post/reducers/postReducer';
-import imageSlice from './image/reducers/imageReducer';
+import imageReducer from './image/reducers/imageReducer';
+import postReducer from './post/reducers/postReducer';
+import authReducer from './auth/reducers/authReducer';
 
 const rootReducer = combineReducers({
-  modal: modalReducer,
-  post: postSlice,
-  image: imageSlice,
+  post: postReducer,
+  image: imageReducer,
+  auth: authReducer,
 });
 
 export const store = configureStore({

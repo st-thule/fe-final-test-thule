@@ -3,18 +3,18 @@ import { useParams } from 'react-router-dom';
 
 import { Button } from '@shared/components/partials';
 import { PostListLoadMore } from '@shared/components/PostListLoadMore';
-import { AuthContext } from '@shared/contexts/auth.context';
 import { UserWithPost } from '@shared/models/user';
 import { UserService } from '@shared/services/user.service';
 
 import avatar from '@assets/icons/avatar.svg';
+import { useAppSelector } from '@app/store/hook/useAppSelector';
 
 const Profile = () => {
   const userService = new UserService();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { user } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState<UserWithPost | null>(null);
+  const user = useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
     const fetchUserData = async () => {
