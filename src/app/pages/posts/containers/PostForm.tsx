@@ -1,12 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
 import { authStorage } from '@app/core/services/auth-storage.service';
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
+import { useAppSelector } from '@app/store/hook/useAppSelector';
+import { uploadImageThunk } from '@app/store/image/thunk/imageThunk';
 import { closeModal, openModal } from '@app/store/modal/action/modalAction';
+import {
+  createPostThunk,
+  getPostDetailUpdateThunk,
+  updatePostThunk,
+} from '@app/store/post/thunk/postThunk';
 import CkEditor from '@shared/components/CkEditor';
 import { MultiSelect } from '@shared/components/MultiSelect';
 import { UploadImage } from '@shared/components/UploadImage';
@@ -18,32 +25,26 @@ import {
   optionTags,
   StatusPost,
 } from '@shared/constants/options';
-import { TypeUpload } from '@shared/constants/type-image';
 import { AuthContext } from '@shared/contexts/auth.context';
-import {
-  createPost,
-  getPostDetailUpdate,
-  updatePost,
-} from '@shared/services/post.service';
 import { ModalTypes } from '@shared/utils/modalTypes';
 import { validationRulesPost } from '@shared/utils/validationRules';
+import { TypeUpload } from '@shared/constants/type-image';
 
 interface IPostForm {
   title: string;
   description: string;
   content: string;
   status: StatusPost;
-  tags?: string[] | [];
-  cover?: string | 'cover';
+  tags?: string[];
+  cover?: string; // CHỈ nhận string URL
 }
 
 const PostForm = () => {
   const { id } = useParams();
   const isEdit = Boolean(id);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rawContent, setRawContent] = useState('');
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const { user } = useContext(AuthContext);
 
@@ -65,46 +66,71 @@ const PostForm = () => {
     },
   });
 
+  const loadingCreate = useAppSelector((state) => state.post.loading.create);
+  const loadingUpdate = useAppSelector((state) => state.post.loading.update);
+  const isLoading = isEdit ? loadingUpdate : loadingCreate;
+
   const cover = watch('cover');
 
-  // render post data to post form
+  // Load data when update
   useEffect(() => {
-    if (!isEdit) {
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(true);
-    getPostDetailUpdate(id!)
-      .then((post) => {
-        if (post.userId === user.id) {
-          setValue('title', post.title);
-          setValue('content', post.content);
-          setValue('description', post.description);
-          setValue('cover', post.cover);
-          setValue('status', post.status as StatusPost);
-          setValue('tags', post.tags || []);
-        } else {
-          toast.error("You mustn't edit this post");
-          navigate(AppRoutes.POSTS, { replace: true });
+    if (!isEdit) return;
+
+    dispatch(getPostDetailUpdateThunk(id!))
+      .then((action) => {
+        if (getPostDetailUpdateThunk.fulfilled.match(action)) {
+          const post = action.payload;
+          if (post.userId === user.id) {
+            setValue('title', post.title);
+            setValue('content', post.content);
+            setValue('description', post.description);
+            setValue('cover', post.cover || '');
+            setValue('status', post.status as StatusPost);
+            setValue('tags', post.tags || []);
+          } else {
+            toast.error("You mustn't edit this post");
+            navigate(AppRoutes.POSTS, { replace: true });
+          }
         }
       })
       .catch(() => {
         toast.error('No post');
-      })
-      .finally(() => {
-        setIsLoading(false);
       });
-  }, [id, isEdit, navigate, setValue, user.id]);
+  }, [dispatch, id, isEdit, navigate, setValue, user.id]);
 
-  // handle for add and edit
+  const handleUploadImage = async (file: File) => {
+    try {
+      const uploadResult = await dispatch(
+        uploadImageThunk({ file, typeUpload: TypeUpload.COVER_POST })
+      );
+      if (uploadImageThunk.fulfilled.match(uploadResult)) {
+        const url = uploadResult.payload;
+        setValue('cover', url);
+      } else {
+        toast.error('Image upload failed');
+      }
+    } catch (error) {
+      toast.error('Image upload failed');
+    }
+  };
+
   const onSubmit = async (data: IPostForm) => {
+    if (!data.cover || data.cover.trim() === '') {
+      toast.error('Please upload a cover image.');
+      return;
+    }
+
     const finalData = {
       ...data,
       content: rawContent,
     };
+
     try {
-      setIsLoading(true);
       const token = authStorage.getToken();
+      if (!token) {
+        toast.error('Please log in to continue');
+        return;
+      }
 
       if (isEdit) {
         dispatch(
@@ -112,37 +138,37 @@ const PostForm = () => {
             modalType: ModalTypes.CONFIRM,
             modalProps: {
               title: 'Confirm Edit',
-              message: 'Are you sure ?',
+              message: 'Are you sure?',
               onConfirm: async () => {
-                try {
-                  const response = await updatePost(id!, data);
-                  toast.success('Update post successfully');
-                  navigate(`${AppRoutes.POSTS}/${id}`);
-                } catch (error) {
-                  toast.error(error);
-                } finally {
-                  dispatch(closeModal());
-                  setIsLoading(false);
-                }
+                dispatch(updatePostThunk({ id: id!, data: finalData }))
+                  .then(() => {
+                    toast.success('Update post successfully');
+                    navigate(`${AppRoutes.POSTS}/${id}`);
+                  })
+                  .catch((error) => {
+                    toast.error(error.message || 'Update post failed');
+                  })
+                  .finally(() => {
+                    dispatch(closeModal());
+                  });
               },
               onCancel: () => {
                 dispatch(closeModal());
-                setIsLoading(false);
               },
             },
           })
         );
       } else {
-        // Create new post
-        const response = await createPost(data);
-        toast.success('Create post successfully');
-        navigate(`${AppRoutes.POSTS}/${response.id}`);
-        setIsLoading(false);
+        dispatch(createPostThunk(finalData)).then((action) => {
+          if (createPostThunk.fulfilled.match(action)) {
+            const post = action.payload;
+            toast.success('Create post successfully');
+            navigate(`${AppRoutes.POSTS}/${post.id}`);
+          }
+        });
       }
     } catch (error) {
       toast.error(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -164,11 +190,8 @@ const PostForm = () => {
               />
             </div>
             <div className="form-body">
-              <UploadImage
-                typeUpload={TypeUpload.COVER_POST}
-                cover={cover}
-                onUploaded={(url) => setValue('cover', url)}
-              />
+              {/* Truyền URL string cho cover và trả về file khi chọn ảnh */}
+              <UploadImage cover={cover || ''} onChange={handleUploadImage} />
 
               <div className="row">
                 <div className="col-12 col-md-6 col-sm-6">

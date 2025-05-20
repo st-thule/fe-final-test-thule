@@ -5,11 +5,12 @@ import { Button } from '@shared/components/partials';
 import { PostListLoadMore } from '@shared/components/PostListLoadMore';
 import { AuthContext } from '@shared/contexts/auth.context';
 import { UserWithPost } from '@shared/models/user';
-import { getPersonalInfo } from '@shared/services/user.service';
+import { UserService } from '@shared/services/user.service';
 
 import avatar from '@assets/icons/avatar.svg';
 
 const Profile = () => {
+  const userService = new UserService();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user } = useContext(AuthContext);
@@ -20,7 +21,7 @@ const Profile = () => {
       setIsLoading(true);
       try {
         const targetId = id || user?.id || 'me';
-        const data = await getPersonalInfo(targetId);
+        const data = await userService.getPersonalInfo(targetId);
         setUserInfo(data);
       } catch (error) {
         throw error;

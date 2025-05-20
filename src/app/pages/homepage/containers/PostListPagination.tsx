@@ -1,33 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+
 import { Pagination } from '@shared/components/Pagination';
 import { PostComponent } from '@shared/components/Post';
-import { getPublicPost } from '@shared/services/post.service';
+import { PostResponse } from '@shared/models/post';
 
 const SIZE_PAGE = 8;
 
-export const PostListPagination = ({ currentPage, onPageChange }) => {
-  const [publicPosts, setPublicPosts] = useState([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [loading, setLoading] = useState(true);
+interface PostListPaginationProps {
+  postResponse: PostResponse;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+  loading: boolean;
+  error: string;
+}
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        const response = await getPublicPost(currentPage, SIZE_PAGE);
-        setPublicPosts(response.data || []);
-        setTotalItems(response.totalItems || 0);
-        setTotalPages(response.totalPage || 0);
-      } catch (error) {
-        throw error;
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPosts();
-  }, [currentPage, 8]);
-
+export const PostListPagination: React.FC<PostListPaginationProps> = ({
+  currentPage,
+  onPageChange,
+  postResponse,
+  loading,
+  error,
+}) => {
+  // console.log('data', postResponse.data);
   return (
     <>
       <ul className="list list-posts row">
@@ -40,8 +34,8 @@ export const PostListPagination = ({ currentPage, onPageChange }) => {
               post={undefined}
             />
           ))
-        ) : publicPosts.length > 0 ? (
-          publicPosts.map((post) => (
+        ) : postResponse?.data && postResponse.data.length > 0 ? (
+          postResponse.data.map((post) => (
             <PostComponent
               key={post.id}
               post={post}
@@ -52,9 +46,10 @@ export const PostListPagination = ({ currentPage, onPageChange }) => {
           <p>No posts available</p>
         )}
       </ul>
-      {totalItems > 0 && !loading && (
+
+      {!loading && postResponse?.data && postResponse.data.length > 0 && (
         <Pagination
-          totalItems={totalItems}
+          totalItems={postResponse.totalItems}
           itemsPerPage={SIZE_PAGE}
           currentPage={currentPage}
           onPageChange={onPageChange}

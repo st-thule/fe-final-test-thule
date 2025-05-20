@@ -21,6 +21,7 @@ export const PostListLoadMore: React.FC<IPostListLoadMoreProps> = ({
   className,
 }) => {
   const [visibleCount, setVisibleCount] = useState(SIZE_PAGE);
+  console.log('posts', posts);
 
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + SIZE_PAGE);
@@ -52,7 +53,7 @@ export const PostListLoadMore: React.FC<IPostListLoadMoreProps> = ({
               />
             </div>
           ) : (
-            <p className="text-center">No post here</p>
+            <p className="text-center">No post more here</p>
           )}
         </>
       )}

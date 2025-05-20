@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
@@ -14,7 +14,7 @@ import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 import author from '@assets/images/author.png';
-import { deletePost } from '@shared/services/post.service';
+import { PostService } from '@shared/services/post.service';
 
 interface IPostProps {
   post: Post;
@@ -34,12 +34,13 @@ export const PostComponent: React.FC<IPostProps> = ({
   loading = false,
   fallbackUser,
 }) => {
+  const postService = new PostService();
   const { user } = useContext(AuthContext);
   const dispatch = useDispatch();
 
   const handleDeletePost = async (id: string | number) => {
     try {
-      await deletePost(id);
+      await postService.deletePost(id);
     } catch (error) {
       throw error;
     }
@@ -127,27 +128,27 @@ export const PostComponent: React.FC<IPostProps> = ({
           <Link to={`${AppRoutes.POSTS}/${post.id}`} onClick={() => onClick}>
             <h3 className="card-title">{post.title}</h3>
           </Link>
+          <p className="card-desc">{post.description}</p>
           <div className="card-detail detail">
-            <div className="detail-group">
-              <Link
-                to={
-                  user?.id === post.userId
-                    ? `${AppRoutes.USER}/me`
-                    : `${AppRoutes.USER}/${post.userId}`
-                }
-              >
-                <img
-                  className="detail-image"
-                  src={post.user?.picture ?? fallbackUser?.picture ?? author}
-                  alt="avatar"
-                />
-                <p className="detail-value">
-                  {post.user?.displayName ??
-                    fallbackUser?.displayName ??
-                    user?.displayName}
-                </p>
-              </Link>
-            </div>
+            <Link
+              to={
+                user?.id === post.userId
+                  ? `${AppRoutes.USER}/me`
+                  : `${AppRoutes.USER}/${post.userId}`
+              }
+              className="detail-group"
+            >
+              <img
+                className="detail-image"
+                src={post.user?.picture ?? fallbackUser?.picture ?? author}
+                alt="avatar"
+              />
+              <p className="detail-value">
+                {post.user?.displayName ??
+                  fallbackUser?.displayName ??
+                  user?.displayName}
+              </p>
+            </Link>
             <div className="detail-group">
               <p className="detail-value">{formatDate(post.createdAt)}</p>
             </div>

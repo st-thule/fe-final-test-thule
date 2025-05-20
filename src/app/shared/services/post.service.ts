@@ -1,4 +1,4 @@
-import { apiService } from '@app/core/services/api.service';
+import { ApiService } from '@app/core/services/api.service';
 import { ENDPOINT } from '@config/endpoint';
 import { StatusPost } from '@shared/constants/options';
 import { Post, PostResponse } from '@shared/models/post';
@@ -11,33 +11,41 @@ interface IPostPayLoad {
   tags?: string[] | [];
   cover?: string | 'cover';
 }
-export const getPublicPost = (page, size): Promise<PostResponse> => {
-  return apiService.get([`${ENDPOINT.post.postList}/public`], { page, size });
-};
 
-export const getPostById = (id: string | number): Promise<Post> => {
-  return apiService.get([`${ENDPOINT.post.postDetail(id)}`]);
-};
+export class PostService {
+  apiService = new ApiService();
 
-export const createPost = (data: IPostPayLoad): Promise<Post> => {
-  return apiService.post([`${ENDPOINT.post.postCreate}`], data);
-};
+  getPublicPost = (page, size): Promise<PostResponse> => {
+    return this.apiService.get([`${ENDPOINT.post.postList}/public`], {
+      page,
+      size,
+    });
+  };
 
-export const getPostDetailUpdate = (id: string | number): Promise<Post> => {
-  return apiService.get([`${ENDPOINT.post.postDetail(id)}`]);
-};
+  getPostById = (id: string | number): Promise<Post> => {
+    return this.apiService.get([`${ENDPOINT.post.postDetail(id)}`]);
+  };
 
-export const updatePost = (
-  id: string | number,
-  data: IPostPayLoad
-): Promise<Post> => {
-  return apiService.put([`${ENDPOINT.post.postEdit(id)}`], data);
-};
+  createPost = (data: IPostPayLoad): Promise<Post> => {
+    return this.apiService.post([`${ENDPOINT.post.postCreate}`], data);
+  };
 
-export const deletePost = (id: string | number) => {
-  return apiService.delete([`${ENDPOINT.post.postDelete(id)}`]);
-};
+  getPostDetailUpdate = (id: string | number): Promise<Post> => {
+    return this.apiService.get([`${ENDPOINT.post.postDetail(id)}`]);
+  };
 
-export const getPostsByTag = (tagName: string): Promise<PostResponse> => {
-  return apiService.get([`${ENDPOINT.post.postByTag(tagName)}`]);
-};
+  updatePost = (id: string | number, data: IPostPayLoad): Promise<Post> => {
+    return this.apiService.put([`${ENDPOINT.post.postEdit(id)}`], data);
+  };
+
+  deletePost = (id: string | number) => {
+    return this.apiService.delete([`${ENDPOINT.post.postDelete(id)}`]);
+  };
+
+  getPostsByTag = (tagName: string, page, size): Promise<PostResponse> => {
+    return this.apiService.get([`${ENDPOINT.post.postByTag(tagName)}`], {
+      page,
+      size,
+    });
+  };
+}

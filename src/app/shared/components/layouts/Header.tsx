@@ -13,6 +13,7 @@ import { ModalTypes } from '@shared/utils/modalTypes';
 export const Header = () => {
   const { user, isAuthenticated, clearUserSession } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -33,6 +34,22 @@ export const Header = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const currentUrl = window.location.pathname;
@@ -73,7 +90,7 @@ export const Header = () => {
                 </div>
 
                 {isOpen && (
-                  <nav className="dropdown-menu">
+                  <nav className="dropdown-menu" ref={dropdownRef}>
                     <ul className="list list-dropdown">
                       <li className="list-item">
                         <Link
@@ -108,9 +125,7 @@ export const Header = () => {
                           )
                         }
                       >
-                        <Link className="list-link" to="/">
-                          Sign out
-                        </Link>
+                        <span className="list-link">Sign out</span>
                       </li>
                     </ul>
                   </nav>

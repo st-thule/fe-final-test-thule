@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
-import { registerAccount } from '@app/core/services/auth.service';
+import { AuthService } from '@app/core/services/auth.service';
 import { Button } from '@shared/components/partials/Button';
 import { Input } from '@shared/components/partials/Input';
 import { Select } from '@shared/components/partials/Select';
@@ -27,6 +27,7 @@ interface IRegisterForm {
 }
 
 const Register = () => {
+  const authService = new AuthService();
   const navigation = useNavigate();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -45,7 +46,7 @@ const Register = () => {
   const onSubmit = async (data: IRegisterForm) => {
     try {
       setIsLoading(true);
-      await registerAccount({
+      await authService.registerAccount({
         email: data.email!,
         password: data.password!,
         firstName: data.firstName!,

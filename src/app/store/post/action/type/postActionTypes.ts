@@ -1,0 +1,30 @@
+// Fetch all posts
+export const FETCH_POSTS = 'FETCH_POSTS';
+export const FETCH_POSTS_SUCCESS = 'FETCH_POSTS_SUCCESS';
+export const FETCH_POSTS_FAILURE = 'FETCH_POSTS_FAILURE';
+
+// Fetch single post by ID
+export const FETCH_POST_BY_ID = 'FETCH_POST_BY_ID';
+export const FETCH_POST_BY_ID_SUCCESS = 'FETCH_POST_BY_ID_SUCCESS';
+export const FETCH_POST_BY_ID_FAILURE = 'FETCH_POST_BY_ID_FAILURE';
+
+// Fetch posts by tag
+export const FETCH_POSTS_BY_TAG = 'FETCH_POSTS_BY_TAG';
+export const FETCH_POSTS_BY_TAG_SUCCESS = 'FETCH_POSTS_BY_TAG_SUCCESS';
+export const FETCH_POSTS_BY_TAG_FAILURE = 'FETCH_POSTS_BY_TAG_FAILURE';
+
+// Create a post
+export const CREATE_POST = 'CREATE_POST';
+export const CREATE_POST_SUCCESS = 'CREATE_POST_SUCCESS';
+export const CREATE_POST_FAILURE = 'CREATE_POST_FAILURE';
+
+// Update a post
+export const UPDATE_POST = 'UPDATE_POST';
+export const UPDATE_POST_SUCCESS = 'UPDATE_POST_SUCCESS';
+export const UPDATE_POST_FAILURE = 'UPDATE_POST_FAILURE';
+
+// Delete a post
+export const DELETE_POST = 'DELETE_POST';
+export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS';
+export const DELETE_POST_FAILURE = 'DELETE_POST_FAILURE';
+

@@ -1,40 +1,65 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { AppRoutes } from '@app/core/constants/app-routes';
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
+import { useAppSelector } from '@app/store/hook/useAppSelector';
+import { closeModal, openModal } from '@app/store/modal/action/modalAction';
+import {
+  deletePostThunk,
+  getPostByIdThunk,
+} from '@app/store/post/thunk/postThunk';
+import { AuthContext } from '@shared/contexts/auth.context';
 import { Post } from '@shared/models/post';
-import { getPostById } from '@shared/services/post.service';
+import { PostService } from '@shared/services/post.service';
 import { formatDate } from '@shared/utils/formatDate';
+import { ModalTypes } from '@shared/utils/modalTypes';
 
 import calendarIcon from '@assets/icons/calendar.svg';
+import deleteIcon from '@assets/icons/delete.svg';
+import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 
 const PostDetail = () => {
+  const postService = new PostService();
   const { id } = useParams();
   const [post, setPost] = useState<Post>(null);
-  const [loading, setLoading] = useState(false);
+  const { user } = useContext(AuthContext);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const loadingFetch = useAppSelector((state) => state.post.loading.getById);
+  const errorFetch = useAppSelector((state) => state.post.error.getById);
+
+  const errorDelete = useAppSelector((state) => state.post.error.delete);
 
   useEffect(() => {
-    const fetchPostById = async () => {
-      try {
-        setLoading(true);
-        const data = await getPostById(id);
-        setPost(data);
-      } catch (error) {
-        toast.error(error);
-      } finally {
-        setLoading(false);
+    dispatch(getPostByIdThunk(id!)).then((action) => {
+      if (getPostByIdThunk.fulfilled.match(action)) {
+        const post = action.payload;
+        setPost(post);
       }
-    };
-    fetchPostById();
+    });
   }, [id]);
 
+  useEffect(() => {
+    if (errorFetch) {
+      toast.error(errorFetch);
+    }
+  }, [errorFetch]);
+
+  useEffect(() => {
+    if (errorDelete) {
+      toast.error(errorDelete);
+    }
+  }, [errorDelete]);
   return (
     <div className="page page-post-detail">
       <div className="container">
         <div className="wrapper wrapper-padding">
           <article className="article article-post">
-            {loading ? (
+            {loadingFetch ? (
               <>
                 <div className="article-header">
                   <div className="skeleton-tag mb-2"></div>
@@ -68,25 +93,82 @@ const PostDetail = () => {
                   </ul>
                   <h1 className="article-title">{post.title}</h1>
                   <p className="article-subtitle">{post.description}</p>
-                  <div className="article-meta meta">
-                    <div className="meta-group">
-                      <img
-                        className="img meta-img"
-                        src={post.user?.picture ?? '/assets/images/author.png'}
-                        alt="Author"
-                      />
-                      <p className="meta-title">{post.user?.displayName}</p>
+                  <div className="article-info">
+                    <div className="article-meta">
+                      <div className="meta-group">
+                        <img
+                          className="img meta-img"
+                          src={
+                            post.user?.picture ?? '/assets/images/author.png'
+                          }
+                          alt="Author"
+                        />
+                        <p className="meta-title">{post.user?.displayName}</p>
+                      </div>
+                      <div className="meta-group">
+                        <img
+                          className="img meta-img"
+                          src={calendarIcon}
+                          alt="Calendar"
+                        />
+                        <p className="meta-title">
+                          {formatDate(post.createdAt)}
+                        </p>
+                      </div>
                     </div>
-                    <div className="meta-group">
-                      <img
-                        className="img meta-img"
-                        src={calendarIcon}
-                        alt="Calendar"
-                      />
-                      <p className="meta-title">{formatDate(post.createdAt)}</p>
-                    </div>
+                    {user.id === post.userId && (
+                      <div className="article-action">
+                        <Link
+                          className="action"
+                          to={`${AppRoutes.POSTS}/edit/${post.id}`}
+                        >
+                          <img
+                            className="action-icon"
+                            src={editIcon}
+                            alt="edit"
+                          />
+                        </Link>
+                        <button
+                          className="action"
+                          onClick={() => {
+                            dispatch(
+                              openModal({
+                                modalType: ModalTypes.CONFIRM,
+                                modalProps: {
+                                  title: 'Confirm delete',
+                                  message: 'Are you sure ?',
+                                  onConfirm: async () => {
+                                    dispatch(deletePostThunk(id!))
+                                      .then(() => {
+                                        toast.success('Delete successfully');
+                                        navigate(-1);
+                                      })
+                                      .catch((error) => {
+                                        toast.error(error);
+                                      })
+                                      .finally(() => {
+                                        closeModal();
+                                      });
+                                  },
+                                  onCancel: () => {
+                                    dispatch(closeModal());
+                                  },
+                                },
+                              })
+                            );
+                          }}
+                        >
+                          <img
+                            className="action-icon"
+                            src={deleteIcon}
+                            alt="delete"
+                          />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
+                <div className="line"></div>
                 <div className="article-body">
                   <img
                     className="img article-thumbnail"
