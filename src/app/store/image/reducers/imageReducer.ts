@@ -13,7 +13,7 @@ const initialState: UploadImageState = {
   error: null,
 };
 
-const imageSlice = createSlice({
+const imageReducer = createSlice({
   name: 'uploadImage',
   initialState,
   reducers: {
@@ -40,6 +40,6 @@ const imageSlice = createSlice({
   },
 });
 
-export const { resetImageUploadState } = imageSlice.actions;
+export const { resetImageUploadState } = imageReducer.actions;
 
-export default imageSlice;
+export default imageReducer;
