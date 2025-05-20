@@ -1,29 +1,30 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
-import { authStorage } from '@app/core/services/auth-storage.service';
-import { AuthContext } from '@shared/contexts/auth.context';
+import { logoutThunk } from '@app/store/auth/thunk/authThunk';
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
+import { useAppSelector } from '@app/store/hook/useAppSelector';
+import { ModalComponent } from '../Modal';
 import { Button } from '../partials/Button';
-import { openModal } from '@app/store/modal/action/modalAction';
-import { ModalTypes } from '@shared/utils/modalTypes';
 
 export const Header = () => {
-  const { user, isAuthenticated, clearUserSession } = useContext(AuthContext);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const [hidden, setHidden] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
+  const [hidden, setHidden] = useState(false);
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
+  const isAuthenticated = !!user;
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
       if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
         setHidden(true);
       } else {
@@ -31,7 +32,6 @@ export const Header = () => {
       }
       lastScrollY.current = currentScrollY;
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -45,24 +45,15 @@ export const Header = () => {
         setIsOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const currentUrl = window.location.pathname;
-
-  const handleClickDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleLogout = () => {
-    clearUserSession();
-    authStorage.removeToken();
+  const onLogoutConfirm = () => {
+    dispatch(logoutThunk());
     toast.success('Logout successfully');
-    navigate(currentUrl, { replace: true });
+    setModalOpen(false);
+    navigate(window.location.pathname, { replace: true });
   };
 
   return (
@@ -77,13 +68,13 @@ export const Header = () => {
           <div className="header-action">
             {isAuthenticated ? (
               <div className="dropdown">
-                <div className="dropdown-toggle">
+                <div
+                  className="dropdown-toggle"
+                  onClick={() => setIsOpen((prev) => !prev)}
+                >
                   <p className="dropdown-title">{user.displayName}</p>
                   {!user.picture?.trim() ? (
-                    <i
-                      className="fas fa-user"
-                      onClick={handleClickDropdown}
-                    ></i>
+                    <i className="fas fa-user"></i>
                   ) : (
                     <img src={user.picture} alt="User Avatar" />
                   )}
@@ -110,20 +101,7 @@ export const Header = () => {
                       </li>
                       <li
                         className="list-item"
-                        onClick={() =>
-                          dispatch(
-                            openModal({
-                              modalType: ModalTypes.CONFIRM,
-                              modalProps: {
-                                title: 'Confirm logout',
-                                message: 'Are you sure you want to logout ?',
-                                onConfirm: () => {
-                                  handleLogout();
-                                },
-                              },
-                            })
-                          )
-                        }
+                        onClick={() => setModalOpen(true)}
                       >
                         <span className="list-link">Sign out</span>
                       </li>
@@ -136,7 +114,7 @@ export const Header = () => {
                 to={{
                   pathname: `${AppRoutes.AUTH}/${AppRoutes.LOGIN}`,
                 }}
-                state={{ from: location.pathname }}
+                state={{ from: window.location.pathname }}
               >
                 <Button className="btn btn-primary" label="Login" />
               </Link>
@@ -144,6 +122,14 @@ export const Header = () => {
           </div>
         </div>
       </div>
+
+      <ModalComponent
+        isOpen={modalOpen}
+        title="Confirm logout"
+        message="Are you sure you want to logout?"
+        onConfirm={onLogoutConfirm}
+        onCancel={() => setModalOpen(false)}
+      />
     </header>
   );
 };
