@@ -3,7 +3,7 @@ import { ENDPOINT } from '@config/endpoint';
 import { StatusPost } from '@shared/constants/options';
 import { Post, PostResponse } from '@shared/models/post';
 
-interface IPostPayLoad {
+export interface IPostPayLoad {
   title: string;
   description: string;
   content: string;
