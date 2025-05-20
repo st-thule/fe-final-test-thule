@@ -84,10 +84,7 @@ export const Header = () => {
                   <nav className="dropdown-menu" ref={dropdownRef}>
                     <ul className="list list-dropdown">
                       <li className="list-item">
-                        <Link
-                          className="list-link"
-                          to={`${AppRoutes.USER}/${AppRoutes.PROFILE}`}
-                        >
+                        <Link className="list-link" to={`${AppRoutes.USER}/me`}>
                           Profile
                         </Link>
                       </li>
