@@ -31,12 +31,10 @@ export class AuthService {
   };
 
   loginAccount(data: LoginPayload): Promise<LoginResponse> {
-    const endpoint = ENDPOINT.auth.login;
     return this.apiService.post([ENDPOINT.auth.login], data);
   }
 
   logoutAccount() {
-    const endpoint = ENDPOINT.auth.logout;
     return this.apiService.post([ENDPOINT.auth.logout]);
   }
 }
