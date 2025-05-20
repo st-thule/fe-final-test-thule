@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { Post, PostResponse } from '@shared/models/post';
-import { PostService } from '@shared/services/post.service';
+import { IPostPayLoad, PostService } from '@shared/services/post.service';
 
 const postService = new PostService();
 
@@ -14,7 +14,7 @@ export const fetchPostsThunk = createAsyncThunk<
   try {
     const response = await postService.getPublicPost(page, size);
     return response;
-  } catch (error: any) {
+  } catch (error) {
     return rejectWithValue(error.message || 'Failed to fetch posts');
   }
 });
@@ -22,13 +22,13 @@ export const fetchPostsThunk = createAsyncThunk<
 //create post
 export const createPostThunk = createAsyncThunk<
   Post,
-  any,
+  IPostPayLoad,
   { rejectValue: string }
 >('posts/createPost', async (postData, { rejectWithValue }) => {
   try {
     const response = await postService.createPost(postData);
     return response;
-  } catch (error: any) {
+  } catch (error) {
     return rejectWithValue(error.message || 'Failed to create post');
   }
 });
@@ -36,13 +36,13 @@ export const createPostThunk = createAsyncThunk<
 //update post
 export const updatePostThunk = createAsyncThunk<
   Post,
-  { id: string | number; data: any },
+  { id: string | number; data },
   { rejectValue: string }
 >('posts/updatePost', async ({ id, data }, { rejectWithValue }) => {
   try {
     const updatedPost = await postService.updatePost(id, data);
     return updatedPost;
-  } catch (error: any) {
+  } catch (error) {
     return rejectWithValue(error.message || 'Failed to update post');
   }
 });
@@ -56,7 +56,7 @@ export const deletePostThunk = createAsyncThunk<
   try {
     await postService.deletePost(id);
     return id;
-  } catch (error: any) {
+  } catch (error) {
     return rejectWithValue(error.message || 'Failed to delete post');
   }
 });
@@ -70,7 +70,7 @@ export const getPostByIdThunk = createAsyncThunk<
   try {
     const post = await postService.getPostById(id);
     return post;
-  } catch (error: any) {
+  } catch (error) {
     return rejectWithValue(error.message || 'Failed to fetch post by id');
   }
 });
@@ -84,7 +84,7 @@ export const getPostDetailUpdateThunk = createAsyncThunk<
   try {
     const post = await postService.getPostDetailUpdate(id);
     return post;
-  } catch (error: any) {
+  } catch (error) {
     return rejectWithValue(
       error.message || 'Failed to fetch post detail for update'
     );
