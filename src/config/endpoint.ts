@@ -31,5 +31,6 @@ export const ENDPOINT = {
       id === 'me'
         ? `${RESOURCES.users}/me/${RESOURCES.post}`
         : `${RESOURCES.users}/${id}/${RESOURCES.post}`,
+    editInfo: `${RESOURCES.users}/me`,
   },
 };
