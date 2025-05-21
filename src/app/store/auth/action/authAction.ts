@@ -14,6 +14,9 @@ import {
   VALIDATE_TOKEN,
   VALIDATE_TOKEN_FAILURE,
   VALIDATE_TOKEN_SUCCESS,
+  UPDATE_USER_INFO,
+  UPDATE_USER_INFO_FAILURE,
+  UPDATE_USER_INFO_SUCCESS,
 } from './type/authActionType';
 
 export interface LoginAction extends Action<typeof LOGIN> {}
@@ -56,6 +59,20 @@ export interface ValidateTokenFailureAction
   payload: string;
 }
 
+export interface UpdateUserInfoAction extends Action<typeof UPDATE_USER_INFO> {
+  payload: User;
+}
+
+export interface UpdateUserInfoSuccessAction
+  extends Action<typeof UPDATE_USER_INFO_SUCCESS> {
+  payload: User;
+}
+
+export interface UpdateUserInfoFailureAction
+  extends Action<typeof UPDATE_USER_INFO_FAILURE> {
+  payload: string;
+}
+
 export type AuthActions =
   | LoginAction
   | LoginSuccessAction
@@ -68,7 +85,10 @@ export type AuthActions =
   | LogoutFailureAction
   | ValidateTokenAction
   | ValidateTokenSuccessAction
-  | ValidateTokenFailureAction;
+  | ValidateTokenFailureAction
+  | UpdateUserInfoAction
+  | UpdateUserInfoSuccessAction
+  | UpdateUserInfoFailureAction;
 
 export const login = (): LoginAction => ({ type: LOGIN });
 export const loginSuccess = (payload: User): LoginSuccessAction => ({
@@ -114,5 +134,24 @@ export const validateTokenFailure = (
   payload: string
 ): ValidateTokenFailureAction => ({
   type: VALIDATE_TOKEN_FAILURE,
+  payload,
+});
+
+export const updateUserInfo = (payload: User): UpdateUserInfoAction => ({
+  type: UPDATE_USER_INFO,
+  payload,
+});
+
+export const updateUserInfoSuccess = (
+  payload: User
+): UpdateUserInfoSuccessAction => ({
+  type: UPDATE_USER_INFO_SUCCESS,
+  payload,
+});
+
+export const updateUserInfoFailure = (
+  payload: string
+): UpdateUserInfoFailureAction => ({
+  type: UPDATE_USER_INFO_FAILURE,
   payload,
 });

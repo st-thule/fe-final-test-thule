@@ -2,7 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { User, UserWithPost } from '@shared/models/user';
 import { IUserPayload, UserService } from '@shared/services/user.service';
-import { data } from 'react-router-dom';
 
 const userService = new UserService();
 
