@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { Tag } from '@shared/components/TagComponent';
-import { PostListPagination } from './PostListPagination';
-import { optionTags } from '@shared/constants/options';
-import { useAppDispatch } from '@app/store/hook/useAppDispatch';
-import { useSelector } from 'react-redux';
 import { RootState } from '@app/store';
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { fetchPostsThunk } from '@app/store/post/thunk/postThunk';
+import { Tag } from '@shared/components/TagComponent';
+import { optionTags } from '@shared/constants/options';
+import { useSelector } from 'react-redux';
+import { PostListPagination } from '@app/shared/components/PostListPagination';
 
 const SIZE_PAGE = 8;
 
