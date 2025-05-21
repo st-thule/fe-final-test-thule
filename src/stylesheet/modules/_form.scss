@@ -13,6 +13,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: 10px;
 
     height: auto;
@@ -34,6 +35,21 @@
     overflow-x: scroll;
     img {
       height: 100%;
+      object-fit: cover;
+    }
+  }
+  &-dashed-circle {
+    width: 150px;
+    height: 150px;
+    padding: $spacing-sm;
+    border: 2px dashed $color-primary;
+    border-radius: 50%;
+
+    overflow: hidden;
+    img {
+      border-radius: 50%;
+      height: 100%;
+      object-fit: cover;
     }
   }
   &.form-auth {
@@ -126,6 +142,35 @@
           color: $color-black;
           font-size: $font-size-lg;
         }
+      }
+    }
+  }
+
+  &.form-user {
+    width: 100%;
+    .form-body {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 100px;
+      .form-field-text {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 20px;
+
+        @media screen and (max-width: $md) {
+          width: 100%;
+          gap: 15px;
+        }
+      }
+      @media screen and (max-width: $md) {
+        flex-direction: column;
+        gap: 50px;
+      }
+      @media screen and (max-width: $sm) {
+        flex-direction: column;
+        gap: 20px;
       }
     }
   }

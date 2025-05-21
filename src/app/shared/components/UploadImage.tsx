@@ -58,8 +58,8 @@ export const UploadImage = ({
   }, [imagePreview]);
 
   return (
-    <label className={`form-upload form-xl ${className || ''}`}>
-      <div className="form-preview form-dashed">
+    <label className={`form-upload form-xl`}>
+      <div className={`form-preview form-dashed ${className}`}>
         <img src={imagePreview} alt="Preview" className="" />
       </div>
       <input

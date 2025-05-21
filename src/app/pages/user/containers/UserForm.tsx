@@ -22,7 +22,7 @@ const UserForm = () => {
               />
             </div>
             <div className="form-body">
-              <UploadImage />
+              <UploadImage className="form-dashed-circle" />
               <div className="form-field-text">
                 <div className="row">
                   <div className="col-12 col-md-6 col-sm-6">
