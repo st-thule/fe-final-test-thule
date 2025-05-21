@@ -36,7 +36,7 @@ const Login = () => {
 
   const onSubmit = async (data: ILoginForm) => {
     try {
-      const result = await dispatch(
+      await dispatch(
         loginThunk({ email: data.email, password: data.password })
       );
       toast.success('Login successfully');

@@ -43,6 +43,6 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
-    <ToastContainer position="top-center" autoClose={2000} />
+    <ToastContainer position="top-right" autoClose={3000} />
   </>
 );

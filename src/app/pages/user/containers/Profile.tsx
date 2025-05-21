@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { useAppSelector } from '@app/store/hook/useAppSelector';
 import { getPersonalInfoThunk } from '@app/store/user/thunk/userThunk';
-import avatar from '@assets/icons/avatar.svg';
 import { Button } from '@shared/components/partials';
 import { PostList } from '../components/PostList';
 

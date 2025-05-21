@@ -6,9 +6,8 @@ import {
   LoginPayload,
   RegisterPayload,
 } from '@app/core/services/auth.service';
-import { User, UserWithPost } from '@shared/models/user';
+import { User } from '@shared/models/user';
 import { UserService } from '@shared/services/user.service';
-import Posts from '@app/pages/posts/containers/Posts';
 
 const authService = new AuthService();
 const userService = new UserService();
