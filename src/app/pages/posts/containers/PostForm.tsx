@@ -25,8 +25,8 @@ import {
   optionTags,
   StatusPost,
 } from '@shared/constants/options';
-import { TypeUpload } from '@shared/constants/type-image';
-import { validationRulesPost } from '@shared/utils/validationRules';
+import { TypeUpload } from '@shared/types/enum';
+import { validationRulesPost } from '@shared/constants/validationRules';
 
 interface IPostForm {
   title: string;
@@ -71,7 +71,7 @@ const PostForm = () => {
   const cover = watch('cover');
 
   useEffect(() => {
-    if (!isEdit) return;
+    if (!isEdit || !user?.id) return;
 
     dispatch(getPostDetailUpdateThunk(id!))
       .then((action) => {
@@ -91,7 +91,7 @@ const PostForm = () => {
             setRawContent(post.content);
           } else {
             toast.error("You don't have permission to edit this post");
-            navigate(AppRoutes.POSTS, { replace: true });
+            navigate(AppRoutes.HOME, { replace: true });
           }
         }
       })
@@ -105,7 +105,7 @@ const PostForm = () => {
       );
       if (uploadImageThunk.fulfilled.match(uploadResult)) {
         const url = uploadResult.payload;
-        setValue('cover', url);
+        setValue('cover', url, { shouldValidate: true });
       } else {
         toast.error('Image upload failed');
       }
@@ -169,7 +169,10 @@ const PostForm = () => {
     <div className="page page-post-form">
       <div className="container">
         <div className="wrapper wrapper-padding">
-          <form className="form form-xl" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="form form-xl form-post"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div className="form-header">
               <h1 className="page-title">
                 {isEdit ? 'Edit Post' : 'Create Post'}
@@ -229,11 +232,11 @@ const PostForm = () => {
                   <Input
                     {...field}
                     label="Title"
+                    className="txt-bold"
                     errorMessage={errors.title?.message}
                   />
                 )}
               />
-
               <Controller
                 control={control}
                 name="description"

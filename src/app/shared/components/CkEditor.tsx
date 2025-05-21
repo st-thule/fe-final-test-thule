@@ -58,7 +58,7 @@ import {
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import 'ckeditor5/ckeditor5.css';
-import { TypeUpload } from '@shared/constants/type-image';
+import { TypeUpload } from '@shared/types/enum';
 import { ImageService } from '@shared/services/image.service';
 
 const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
