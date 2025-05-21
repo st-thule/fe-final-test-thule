@@ -19,10 +19,6 @@ export class ImageService {
 
       return response;
     } catch (error) {
-      console.error(
-        'Error getting signed URL:',
-        error.response || error.message
-      );
       throw error;
     }
   };
