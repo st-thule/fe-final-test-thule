@@ -5,6 +5,7 @@ import { PageRoute } from '@app/core/modules/custom-router-dom/router.interface'
 
 const User = React.lazy(() => import('./containers/User'));
 const Profile = React.lazy(() => import('./containers/Profile'));
+const UserForm = React.lazy(() => import('./containers/UserForm'));
 
 export const userRoutes: PageRoute[] = [
   {
@@ -19,6 +20,11 @@ export const userRoutes: PageRoute[] = [
       {
         path: AppRoutes.USER_WALL, //:id
         element: Profile,
+      },
+      {
+        path: AppRoutes.USER_EDIT, //edit
+        element: UserForm,
+        isProtected: true,
       },
     ],
   },

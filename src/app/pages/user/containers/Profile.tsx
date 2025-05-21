@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
+import { AppRoutes } from '@app/core/constants/app-routes';
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { useAppSelector } from '@app/store/hook/useAppSelector';
 import { getPersonalInfoThunk } from '@app/store/user/thunk/userThunk';
-import { Button } from '@shared/components/partials';
 import { PostList } from '../components/PostList';
 
 import femaleIcon from '@assets/icons/avatar-female.svg';
@@ -57,7 +57,12 @@ const Profile = () => {
                 <p className="section-subtitle">{personalInfo.email}</p>
               </div>
               {isMyProfile && (
-                <Button label="Edit" className="btn btn-primary" />
+                <Link
+                  className="btn btn-primary"
+                  to={`${AppRoutes.USER}/${AppRoutes.USER_EDIT}`}
+                >
+                  Edit
+                </Link>
               )}
             </div>
           </section>
