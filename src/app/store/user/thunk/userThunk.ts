@@ -11,8 +11,15 @@ export const getPersonalInfoThunk = createAsyncThunk<
   { rejectValue: string }
 >('users/userInfo', async ({ id }, { rejectWithValue }) => {
   try {
-    const response = userService.getPersonalInfo(id);
-    return response;
+    const response = await userService.getPersonalInfo(id);
+    const sortedPosts = response.Posts.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+    return {
+      ...response,
+      Posts: sortedPosts,
+    };
   } catch (error) {
     return rejectWithValue(error.message || 'Failed to fetch user info');
   }
