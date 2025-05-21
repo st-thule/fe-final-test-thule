@@ -6,9 +6,12 @@ import {
   LoginPayload,
   RegisterPayload,
 } from '@app/core/services/auth.service';
-import { User } from '@shared/models/user';
+import { User, UserWithPost } from '@shared/models/user';
+import { UserService } from '@shared/services/user.service';
+import Posts from '@app/pages/posts/containers/Posts';
 
 const authService = new AuthService();
+const userService = new UserService();
 
 export const loginThunk = createAsyncThunk<
   User,
@@ -47,3 +50,17 @@ export const logoutThunk = createAsyncThunk<{ rejectValue: string }>(
     }
   }
 );
+
+export const validateAuthTokenThunk = createAsyncThunk<
+  User,
+  void,
+  { rejectValue: string }
+>('auth/validateToken', async (__, { rejectWithValue }) => {
+  try {
+    const response = await userService.getPersonalInfo('me');
+    const { Posts, ...rest } = response;
+    return rest;
+  } catch (error) {
+    return rejectWithValue(error.message || 'Register Failed');
+  }
+});

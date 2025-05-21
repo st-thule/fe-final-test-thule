@@ -1,7 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { User } from '@shared/models/user';
-import { loginThunk, logoutThunk, registerThunk } from '../thunk/authThunk';
+import {
+  loginThunk,
+  logoutThunk,
+  registerThunk,
+  validateAuthTokenThunk,
+} from '../thunk/authThunk';
 
 interface AuthState {
   user: User | null;
@@ -59,8 +64,21 @@ const authReducer = createSlice({
         state.loading = false;
         state.error = action.error.message || 'Failed to login';
       });
+
+    builder
+      .addCase(validateAuthTokenThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(validateAuthTokenThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(validateAuthTokenThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to login';
+      });
   },
 });
 
 export default authReducer.reducer;
-
