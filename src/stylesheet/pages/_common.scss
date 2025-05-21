@@ -9,3 +9,12 @@
   min-height: calc(100vh - 40px);
   padding-top: calc(85px + 10px);
 }
+
+.avatar-icon {
+  max-width: 24px;
+  height: 24px;
+
+  border-radius: $border-radius-circle;
+
+  object-fit: cover;
+}

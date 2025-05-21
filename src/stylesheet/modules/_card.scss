@@ -148,9 +148,11 @@
 
   &-image {
     max-width: 24px;
-    height: auto;
+    height: 24px;
 
     border-radius: $border-radius-circle;
+
+    object-fit: cover;
   }
 
   &-group {
