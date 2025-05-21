@@ -8,11 +8,13 @@ import { formatDate } from '@shared/utils/formatDate';
 
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { useAppSelector } from '@app/store/hook/useAppSelector';
+import { deletePostThunk } from '@app/store/post/thunk/postThunk';
 import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
-import author from '@assets/images/author.png';
-import { PostService } from '@shared/services/post.service';
+import femaleIcon from '@assets/icons/avatar-female.svg';
+import maleIcon from '@assets/icons/avatar-male.svg';
+import otherIcon from '@assets/icons/avatar-other.svg';
 import { ModalComponent } from './Modal';
 
 interface IPostProps {
@@ -33,19 +35,25 @@ export const PostComponent: React.FC<IPostProps> = ({
   loading = false,
   fallbackUser,
 }) => {
-  const postService = new PostService();
   const [modalOpen, setModalOpen] = useState(false);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const handleDeletePost = async (id: string | number) => {
     try {
-      await postService.deletePost(id);
+      dispatch(deletePostThunk(id!));
       toast.success('Delete successfully');
       window.location.reload();
     } catch (error) {
       throw error;
     }
   };
+
+  const author =
+    post?.user?.gender === 'female'
+      ? femaleIcon
+      : post?.user?.gender === 'male'
+      ? maleIcon
+      : otherIcon;
 
   if (loading) {
     return (
@@ -92,7 +100,11 @@ export const PostComponent: React.FC<IPostProps> = ({
         </div>
         {post.tags && post.tags.length > 0 ? (
           post.tags.map((tag) => (
-            <Link className="card-tag" to="" key={tag}>
+            <Link
+              className="card-tag"
+              key={tag}
+              to={`${AppRoutes.POSTS}/tags/${tag}`}
+            >
               {tag}
             </Link>
           ))
@@ -114,7 +126,7 @@ export const PostComponent: React.FC<IPostProps> = ({
               className="detail-group"
             >
               <img
-                className="detail-image"
+                className="detail-image avatar-icon"
                 src={post.user?.picture ?? fallbackUser?.picture ?? author}
                 alt="avatar"
               />

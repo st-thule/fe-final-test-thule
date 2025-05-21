@@ -9,6 +9,10 @@ import { useAppSelector } from '@app/store/hook/useAppSelector';
 import { ModalComponent } from '../Modal';
 import { Button } from '../partials/Button';
 
+import femaleIcon from '@assets/icons/avatar-female.svg';
+import maleIcon from '@assets/icons/avatar-male.svg';
+import otherIcon from '@assets/icons/avatar-other.svg';
+
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -21,6 +25,13 @@ export const Header = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const isAuthenticated = !!user;
+
+  const author =
+    user?.gender === 'female'
+      ? femaleIcon
+      : user?.gender === 'male'
+      ? maleIcon
+      : otherIcon;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,7 +64,7 @@ export const Header = () => {
     dispatch(logoutThunk());
     toast.success('Logout successfully');
     setModalOpen(false);
-    navigate(window.location.pathname, { replace: true });
+    navigate(`${AppRoutes.HOME}`);
   };
 
   return (
@@ -74,9 +85,13 @@ export const Header = () => {
                 >
                   <p className="dropdown-title">{user.displayName}</p>
                   {!user.picture?.trim() ? (
-                    <i className="fas fa-user"></i>
+                    <img className="avatar-icon" src={author} />
                   ) : (
-                    <img src={user.picture} alt="User Avatar" />
+                    <img
+                      className="avatar-icon"
+                      src={user.picture}
+                      alt="User Avatar"
+                    />
                   )}
                 </div>
 
@@ -96,6 +111,7 @@ export const Header = () => {
                           + Add post
                         </Link>
                       </li>
+                      <li className="line"></li>
                       <li
                         className="list-item"
                         onClick={() => setModalOpen(true)}
