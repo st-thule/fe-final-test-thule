@@ -13,7 +13,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     gap: 10px;
 
     height: auto;
@@ -148,6 +147,9 @@
 
   &.form-user {
     width: 100%;
+    .form-upload {
+      align-items: center;
+    }
     .form-body {
       display: flex;
       flex-direction: row;
