@@ -34,17 +34,17 @@
   }
 
   &-lg > .bounce {
-    @include pxRem(width, 15);
-    @include pxRem(height, 15);
-  }
-
-  &-md > .bounce {
     @include pxRem(width, 10);
     @include pxRem(height, 10);
   }
 
-  &-sm > .bounce {
+  &-md > .bounce {
     @include pxRem(width, 5);
     @include pxRem(height, 5);
+  }
+
+  &-sm > .bounce {
+    @include pxRem(width, 3);
+    @include pxRem(height, 3);
   }
 }

@@ -1,5 +1,5 @@
 import { RegrexPattern } from '@app/core/constants/regrexPattern';
-import { isPastDate } from './checkDate';
+import { isPastDate } from '../utils/checkDate';
 
 export const validationRulesAuth = {
   firstName: {

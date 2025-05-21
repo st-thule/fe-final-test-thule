@@ -11,6 +11,9 @@ import {
   REGISTER,
   REGISTER_FAILURE,
   REGISTER_SUCCESS,
+  VALIDATE_TOKEN,
+  VALIDATE_TOKEN_FAILURE,
+  VALIDATE_TOKEN_SUCCESS,
 } from './type/authActionType';
 
 export interface LoginAction extends Action<typeof LOGIN> {}
@@ -41,6 +44,18 @@ export interface LogoutFailureAction extends Action<typeof LOGOUT_FAILURE> {
   payload: string;
 }
 
+export interface ValidateTokenAction extends Action<typeof VALIDATE_TOKEN> {}
+
+export interface ValidateTokenSuccessAction
+  extends Action<typeof VALIDATE_TOKEN_SUCCESS> {
+  payload: User;
+}
+
+export interface ValidateTokenFailureAction
+  extends Action<typeof VALIDATE_TOKEN_FAILURE> {
+  payload: string;
+}
+
 export type AuthActions =
   | LoginAction
   | LoginSuccessAction
@@ -50,7 +65,10 @@ export type AuthActions =
   | RegisterFailureAction
   | LogoutAction
   | LogoutSuccessAction
-  | LogoutFailureAction;
+  | LogoutFailureAction
+  | ValidateTokenAction
+  | ValidateTokenSuccessAction
+  | ValidateTokenFailureAction;
 
 export const login = (): LoginAction => ({ type: LOGIN });
 export const loginSuccess = (payload: User): LoginSuccessAction => ({
@@ -78,5 +96,23 @@ export const logoutSuccess = (): LogoutSuccessAction => ({
 });
 export const logoutFailure = (payload: string): LogoutFailureAction => ({
   type: LOGOUT_FAILURE,
+  payload,
+});
+
+export const validateToken = (): ValidateTokenAction => ({
+  type: VALIDATE_TOKEN,
+});
+
+export const validateTokenSuccess = (
+  payload: User
+): ValidateTokenSuccessAction => ({
+  type: VALIDATE_TOKEN_SUCCESS,
+  payload,
+});
+
+export const validateTokenFailure = (
+  payload: string
+): ValidateTokenFailureAction => ({
+  type: VALIDATE_TOKEN_FAILURE,
   payload,
 });

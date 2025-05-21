@@ -3,11 +3,11 @@ import Modal from 'react-modal';
 import { Button } from './partials';
 
 interface ModalProps {
-  isOpen: boolean;
-  title: string;
-  message: string;
-  onConfirm: () => void;
-  onCancel: () => void;
+  isOpen?: boolean;
+  title?: string;
+  message?: string;
+  onConfirm?: () => void;
+  onCancel?: () => void;
   children?: React.ReactNode;
 }
 

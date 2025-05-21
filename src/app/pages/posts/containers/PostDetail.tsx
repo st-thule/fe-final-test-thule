@@ -9,14 +9,17 @@ import {
   deletePostThunk,
   getPostByIdThunk,
 } from '@app/store/post/thunk/postThunk';
+import { ModalComponent } from '@shared/components/Modal';
 import { Post } from '@shared/models/post';
 import { formatDate } from '@shared/utils/formatDate';
 
+import femaleIcon from '@assets/icons/avatar-female.svg';
+import maleIcon from '@assets/icons/avatar-male.svg';
+import otherIcon from '@assets/icons/avatar-other.svg';
 import calendarIcon from '@assets/icons/calendar.svg';
 import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
-import { ModalComponent } from '@shared/components/Modal';
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -57,6 +60,13 @@ const PostDetail = () => {
     toast.success('Delete successfully');
     navigate(-1);
   };
+
+  const author =
+    post?.user?.gender === 'female'
+      ? femaleIcon
+      : post?.user?.gender === 'male'
+      ? maleIcon
+      : otherIcon;
 
   return (
     <div className="page page-post-detail">
@@ -101,10 +111,8 @@ const PostDetail = () => {
                     <div className="article-meta">
                       <div className="meta-group">
                         <img
-                          className="img meta-img"
-                          src={
-                            post.user?.picture ?? '/assets/images/author.png'
-                          }
+                          className="avatar-icon"
+                          src={post.user?.picture ?? author}
                           alt="Author"
                         />
                         <p className="meta-title">{post.user?.displayName}</p>
@@ -120,7 +128,7 @@ const PostDetail = () => {
                         </p>
                       </div>
                     </div>
-                    {user.id === post.userId && (
+                    {user?.id === post.userId && (
                       <div className="article-action">
                         <Link
                           className="action"

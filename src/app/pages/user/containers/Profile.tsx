@@ -4,9 +4,12 @@ import { useParams } from 'react-router-dom';
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { useAppSelector } from '@app/store/hook/useAppSelector';
 import { getPersonalInfoThunk } from '@app/store/user/thunk/userThunk';
-import avatar from '@assets/icons/avatar.svg';
 import { Button } from '@shared/components/partials';
-import { PostListLoadMore } from '@shared/components/PostListLoadMore';
+import { PostList } from '../components/PostList';
+
+import femaleIcon from '@assets/icons/avatar-female.svg';
+import maleIcon from '@assets/icons/avatar-male.svg';
+import otherIcon from '@assets/icons/avatar-other.svg';
 
 const Profile = () => {
   const params = useParams();
@@ -27,6 +30,13 @@ const Profile = () => {
     return <div className="text-center">Loading profile...</div>;
   }
 
+  const author =
+    personalInfo?.gender === 'female'
+      ? femaleIcon
+      : personalInfo?.gender === 'male'
+      ? maleIcon
+      : otherIcon;
+
   return (
     <div className="page page-profile">
       <div className="container">
@@ -35,7 +45,7 @@ const Profile = () => {
             <div className="section-image">
               <img
                 className="img avatar"
-                src={personalInfo.picture || avatar}
+                src={personalInfo.picture || author}
                 alt="avatar"
               />
             </div>
@@ -56,7 +66,7 @@ const Profile = () => {
             <div className="section-header">
               <h2 className="section-title">Articles</h2>
             </div>
-            <PostListLoadMore
+            <PostList
               posts={personalInfo.Posts || []}
               userInfo={{
                 displayName: personalInfo.displayName,

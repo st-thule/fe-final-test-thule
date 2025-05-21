@@ -13,7 +13,7 @@ import { Input } from '@shared/components/partials/Input';
 import { Select } from '@shared/components/partials/Select';
 import { LabelGender, optionGender } from '@shared/constants/options';
 import { formatDate } from '@shared/utils/formatDate';
-import { validationRulesAuth } from '@shared/utils/validationRules';
+import { validationRulesAuth } from '@shared/constants/validationRules';
 
 import hideIcon from '@assets/icons/hide.svg';
 import showIcon from '@assets/icons/show.svg';
@@ -62,7 +62,7 @@ const Register = () => {
         })
       );
       toast.success('Create successfully');
-      navigation('/auth/login');
+      navigation(`${AppRoutes.AUTH}/${AppRoutes.LOGIN}`);
     } catch (error) {
       toast.error(error?.response?.data?.errors?.[0]);
     }
@@ -70,11 +70,11 @@ const Register = () => {
 
   return (
     <div className="page page-auth page-register">
-      <h1 className="page-title">Register</h1>
       <form
         className="form form-auth form-register"
         onSubmit={handleSubmit(onSubmit)}
       >
+        <h1 className="form-title">Register</h1>
         <div className="row">
           <div className="col-12 col-sm-12 col-md-6">
             <Controller
@@ -194,7 +194,7 @@ const Register = () => {
         />
         <p className="form-link">
           Yes, I have an account?{' '}
-          <Link to={AppRoutes.LOGIN}>
+          <Link to={`${AppRoutes.AUTH}/${AppRoutes.LOGIN}`}>
             <span>Login</span>
           </Link>
         </p>
