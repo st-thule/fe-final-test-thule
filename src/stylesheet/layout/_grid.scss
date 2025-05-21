@@ -9,6 +9,7 @@
 }
 
 .wrapper {
+  padding: $spacing-md-plus $spacing-none;
   &.wrapper-padding {
     max-width: 800px;
     width: 100%;

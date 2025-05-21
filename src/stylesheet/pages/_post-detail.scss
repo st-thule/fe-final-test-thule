@@ -4,7 +4,6 @@
   .article {
     &-header {
       padding: $spacing-lg-plus $spacing-none;
-      border-bottom: 1px solid $color-grey-light;
     }
     .list-tags {
       display: flex;
@@ -64,37 +63,42 @@
       }
     }
 
+    &-info {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     &-meta {
-      &.meta {
+      display: flex;
+      flex-direction: row;
+      justify-content: left;
+      align-items: center;
+      gap: 20px;
+
+      .meta-title {
+        color: $color-grey;
+        font-size: $font-size-xs;
+        font-weight: $font-weight-semi;
+
+        @media screen and (max-width: $sm) {
+          font-size: $font-size-2xs;
+        }
+      }
+      .meta-group {
         display: flex;
         flex-direction: row;
-        justify-content: left;
+        justify-content: start;
         align-items: center;
-        gap: 20px;
 
-        .meta-title {
-          color: $color-grey;
-          font-size: $font-size-xs;
-          font-weight: $font-weight-semi;
+        gap: 10px;
 
-          @media screen and (max-width: $sm) {
-            font-size: $font-size-2xs;
-          }
-        }
-        .meta-group {
-          display: flex;
-          flex-direction: row;
-          justify-content: start;
-          align-items: center;
+        .meta-img {
+          max-width: 24px;
+          height: auto;
 
-          gap: 10px;
-
-          .meta-img {
-            max-width: 24px;
-            height: auto;
-
-            border-radius: $border-radius-circle;
-          }
+          border-radius: $border-radius-circle;
         }
       }
     }
@@ -151,6 +155,39 @@
 
       blockquote p {
         margin: $spacing-none;
+      }
+    }
+
+    &-action {
+      display: flex;
+      flex-direction: row;
+      gap: 6px;
+
+      .action {
+        display: flex;
+        align-items: center;
+
+        padding: $spacing-sm;
+
+        border-radius: $border-radius-circle;
+        border: none;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+
+        background-color: rgba(255, 255, 255, 0.7);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+        transition: transform 0.3s ease;
+
+        cursor: pointer;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+
+      img {
+        width: 20px;
+        height: auto;
       }
     }
   }

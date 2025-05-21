@@ -4,7 +4,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
-import { registerAccount } from '@app/core/services/auth.service';
+import { AuthService } from '@app/core/services/auth.service';
+import { registerThunk } from '@app/store/auth/thunk/authThunk';
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
+import { useAppSelector } from '@app/store/hook/useAppSelector';
 import { Button } from '@shared/components/partials/Button';
 import { Input } from '@shared/components/partials/Input';
 import { Select } from '@shared/components/partials/Select';
@@ -27,9 +30,11 @@ interface IRegisterForm {
 }
 
 const Register = () => {
+  const authService = new AuthService();
   const navigation = useNavigate();
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const loading = useAppSelector((state) => state.auth.loading);
 
   const {
     control,
@@ -44,23 +49,22 @@ const Register = () => {
 
   const onSubmit = async (data: IRegisterForm) => {
     try {
-      setIsLoading(true);
-      await registerAccount({
-        email: data.email!,
-        password: data.password!,
-        firstName: data.firstName!,
-        lastName: data.lastName!,
-        gender: data.gender!,
-        dob: formatDate(data.dob!),
-        phone: data.phone!,
-        displayName: data.displayName!,
-      });
+      await dispatch(
+        registerThunk({
+          email: data.email!,
+          password: data.password!,
+          firstName: data.firstName!,
+          lastName: data.lastName!,
+          gender: data.gender!,
+          dob: formatDate(data.dob!),
+          phone: data.phone!,
+          displayName: data.displayName!,
+        })
+      );
       toast.success('Create successfully');
       navigation('/auth/login');
     } catch (error) {
       toast.error(error?.response?.data?.errors?.[0]);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -198,8 +202,8 @@ const Register = () => {
           className="btn btn-primary btn-xl"
           type="submit"
           label="Register"
-          isDisabled={!isValid || isLoading}
-          isLoading={isLoading}
+          isDisabled={!isValid || loading}
+          isLoading={loading}
           onClick={() => {}}
         />
       </form>

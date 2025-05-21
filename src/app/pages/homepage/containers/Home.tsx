@@ -4,11 +4,18 @@ import { useSearchParams } from 'react-router-dom';
 import { Tag } from '@shared/components/TagComponent';
 import { PostListPagination } from './PostListPagination';
 import { optionTags } from '@shared/constants/options';
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
+import { useSelector } from 'react-redux';
+import { RootState } from '@app/store';
+import { fetchPostsThunk } from '@app/store/post/thunk/postThunk';
+
+const SIZE_PAGE = 8;
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const postListRef = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const pageFromUrl = searchParams.get('page');
@@ -21,11 +28,21 @@ const Home = () => {
   const handlePageChange = useCallback(
     (page: number) => {
       setCurrentPage(page);
-      setSearchParams({ page: page.toString(), size: '8' });
+      setSearchParams({ page: page.toString() });
       postListRef.current?.scrollIntoView({ behavior: 'smooth' });
     },
     [setSearchParams]
   );
+
+  const { posts, loading, error } = useSelector((state: RootState) => ({
+    posts: state.post?.posts,
+    loading: state.post?.loading.fetch,
+    error: state.post?.error.fetch,
+  }));
+
+  useEffect(() => {
+    dispatch(fetchPostsThunk({ page: currentPage, size: SIZE_PAGE }));
+  }, [currentPage, dispatch]);
 
   return (
     <div className="page page-home">
@@ -64,6 +81,9 @@ const Home = () => {
           <PostListPagination
             currentPage={currentPage}
             onPageChange={handlePageChange}
+            postResponse={posts}
+            loading={loading}
+            error={error}
           />
         </section>
       </div>

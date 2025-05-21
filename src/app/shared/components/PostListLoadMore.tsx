@@ -52,7 +52,7 @@ export const PostListLoadMore: React.FC<IPostListLoadMoreProps> = ({
               />
             </div>
           ) : (
-            <p className="text-center">No post here</p>
+            <p className="text-center">No post more here</p>
           )}
         </>
       )}

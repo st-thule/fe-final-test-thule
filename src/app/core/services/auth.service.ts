@@ -1,8 +1,8 @@
-import { User } from '@shared/models/user';
-import { apiService } from './api.service';
 import { ENDPOINT } from '@config/endpoint';
+import { User } from '@shared/models/user';
+import { ApiService } from './api.service';
 
-interface RegisterPayload {
+export interface RegisterPayload {
   email: string;
   password: string;
   firstName: string;
@@ -13,25 +13,28 @@ interface RegisterPayload {
   displayName: string;
 }
 
-interface LoginPayload {
+export interface LoginPayload {
   email: string;
   password: string;
 }
 
-interface LoginResponse {
+export interface LoginResponse {
   accessToken: string;
   userInfo: User;
 }
-export const registerAccount = (data: RegisterPayload) => {
-  return apiService.post([ENDPOINT.auth.register], data);
-};
 
-export const loginAccount = async (
-  data: LoginPayload
-): Promise<LoginResponse> => {
-  return await apiService.post([ENDPOINT.auth.login], data);
-};
+export class AuthService {
+  apiService = new ApiService();
 
-export const logoutAccount = async () => {
-  return apiService.delete([ENDPOINT.auth.logout]);
-};
+  registerAccount = (data: RegisterPayload) => {
+    return this.apiService.post([ENDPOINT.auth.register], data);
+  };
+
+  loginAccount(data: LoginPayload): Promise<LoginResponse> {
+    return this.apiService.post([ENDPOINT.auth.login], data);
+  }
+
+  logoutAccount() {
+    return this.apiService.post([ENDPOINT.auth.logout]);
+  }
+}

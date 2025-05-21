@@ -12,7 +12,7 @@ export const userRoutes: PageRoute[] = [
     element: User,
     children: [
       {
-        path: AppRoutes.PROFILE, //:me
+        path: AppRoutes.PROFILE, //me
         element: Profile,
         isProtected: true,
       },

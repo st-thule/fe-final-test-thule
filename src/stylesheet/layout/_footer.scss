@@ -2,8 +2,6 @@
 
 .footer {
   .wrapper {
-    padding: $spacing-lg-plus $spacing-none;
-
     @media screen and (max-width: $md) {
       justify-content: center;
       gap: 24px;

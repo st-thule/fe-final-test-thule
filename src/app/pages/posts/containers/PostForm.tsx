@@ -1,13 +1,20 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
 import { authStorage } from '@app/core/services/auth-storage.service';
-import { closeModal, openModal } from '@app/store/modal/action/modalAction';
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
+import { useAppSelector } from '@app/store/hook/useAppSelector';
+import { uploadImageThunk } from '@app/store/image/thunk/imageThunk';
+import {
+  createPostThunk,
+  getPostDetailUpdateThunk,
+  updatePostThunk,
+} from '@app/store/post/thunk/postThunk';
 import CkEditor from '@shared/components/CkEditor';
+import { ModalComponent } from '@shared/components/Modal';
 import { MultiSelect } from '@shared/components/MultiSelect';
 import { UploadImage } from '@shared/components/UploadImage';
 import { Button, Input } from '@shared/components/partials';
@@ -19,13 +26,6 @@ import {
   StatusPost,
 } from '@shared/constants/options';
 import { TypeUpload } from '@shared/constants/type-image';
-import { AuthContext } from '@shared/contexts/auth.context';
-import {
-  createPost,
-  getPostDetailUpdate,
-  updatePost,
-} from '@shared/services/post.service';
-import { ModalTypes } from '@shared/utils/modalTypes';
 import { validationRulesPost } from '@shared/utils/validationRules';
 
 interface IPostForm {
@@ -33,19 +33,18 @@ interface IPostForm {
   description: string;
   content: string;
   status: StatusPost;
-  tags?: string[] | [];
-  cover?: string | 'cover';
+  tags?: string[];
+  cover?: string;
 }
 
 const PostForm = () => {
   const { id } = useParams();
   const isEdit = Boolean(id);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rawContent, setRawContent] = useState('');
+  const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const { user } = useContext(AuthContext);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
 
   const {
     control,
@@ -60,89 +59,109 @@ const PostForm = () => {
       description: '',
       content: '',
       status: StatusPost.PUBLIC,
-      cover: 'cover',
+      cover: '',
       tags: [],
     },
   });
 
+  const loadingCreate = useAppSelector((state) => state.post.loading.create);
+  const loadingUpdate = useAppSelector((state) => state.post.loading.update);
+  const isLoading = isEdit ? loadingUpdate : loadingCreate;
+
   const cover = watch('cover');
 
-  // render post data to post form
   useEffect(() => {
-    if (!isEdit) {
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(true);
-    getPostDetailUpdate(id!)
-      .then((post) => {
-        if (post.userId === user.id) {
-          setValue('title', post.title);
-          setValue('content', post.content);
-          setValue('description', post.description);
-          setValue('cover', post.cover);
-          setValue('status', post.status as StatusPost);
-          setValue('tags', post.tags || []);
-        } else {
-          toast.error("You mustn't edit this post");
-          navigate(AppRoutes.POSTS, { replace: true });
+    if (!isEdit) return;
+
+    dispatch(getPostDetailUpdateThunk(id!))
+      .then((action) => {
+        if (getPostDetailUpdateThunk.fulfilled.match(action)) {
+          const post = action.payload;
+          if (!post) {
+            toast.error('Post not found');
+            return;
+          }
+          if (post.userId === user.id) {
+            setValue('title', post.title);
+            setValue('content', post.content);
+            setValue('description', post.description);
+            setValue('cover', post.cover || '');
+            setValue('status', post.status as StatusPost);
+            setValue('tags', post.tags || []);
+            setRawContent(post.content);
+          } else {
+            toast.error("You don't have permission to edit this post");
+            navigate(AppRoutes.POSTS, { replace: true });
+          }
         }
       })
-      .catch(() => {
-        toast.error('No post');
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [id, isEdit, navigate, setValue, user.id]);
+      .catch(() => toast.error('Failed to load post'));
+  }, [dispatch, id, isEdit, navigate, setValue, user.id]);
 
-  // handle for add and edit
+  const handleUploadImage = async (file: File) => {
+    try {
+      const uploadResult = await dispatch(
+        uploadImageThunk({ file, typeUpload: TypeUpload.COVER_POST })
+      );
+      if (uploadImageThunk.fulfilled.match(uploadResult)) {
+        const url = uploadResult.payload;
+        setValue('cover', url);
+      } else {
+        toast.error('Image upload failed');
+      }
+    } catch {
+      toast.error('Image upload failed');
+    }
+  };
+
+  const handleUpdatePost = async (data: IPostForm) => {
+    try {
+      const result = await dispatch(updatePostThunk({ id: id!, data }));
+      if (updatePostThunk.fulfilled.match(result)) {
+        toast.success('Post updated successfully');
+        navigate(`${AppRoutes.POSTS}/${id}`);
+      } else {
+        toast.error('Failed to update post');
+      }
+    } catch (err) {
+      toast.error(err?.message || 'Update failed');
+    } finally {
+      setOpenModal(false);
+    }
+  };
+
   const onSubmit = async (data: IPostForm) => {
+    if (!data.cover || data.cover.trim() === '') {
+      toast.error('Please upload a cover image.');
+      return;
+    }
+
     const finalData = {
       ...data,
       content: rawContent,
     };
-    try {
-      setIsLoading(true);
-      const token = authStorage.getToken();
 
-      if (isEdit) {
-        dispatch(
-          openModal({
-            modalType: ModalTypes.CONFIRM,
-            modalProps: {
-              title: 'Confirm Edit',
-              message: 'Are you sure ?',
-              onConfirm: async () => {
-                try {
-                  const response = await updatePost(id!, data);
-                  toast.success('Update post successfully');
-                  navigate(`${AppRoutes.POSTS}/${id}`);
-                } catch (error) {
-                  toast.error(error);
-                } finally {
-                  dispatch(closeModal());
-                  setIsLoading(false);
-                }
-              },
-              onCancel: () => {
-                dispatch(closeModal());
-                setIsLoading(false);
-              },
-            },
-          })
-        );
-      } else {
-        // Create new post
-        const response = await createPost(data);
-        toast.success('Create post successfully');
-        navigate(`${AppRoutes.POSTS}/${response.id}`);
-        setIsLoading(false);
+    const token = authStorage.getToken();
+    if (!token) {
+      toast.error('Please log in to continue');
+      return;
+    }
+
+    if (isEdit) {
+      setOpenModal(true);
+    } else {
+      try {
+        const result = await dispatch(createPostThunk(finalData));
+        if (createPostThunk.fulfilled.match(result)) {
+          const post = result.payload;
+          toast.success('Post created successfully');
+          navigate(`${AppRoutes.POSTS}/${post.id}`);
+        } else {
+          toast.error('Failed to create post');
+        }
+      } catch (err) {
+        toast.error(err?.message || 'Create failed');
       }
-    } catch (error) {
-      toast.error(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -163,12 +182,9 @@ const PostForm = () => {
                 isLoading={isLoading}
               />
             </div>
+
             <div className="form-body">
-              <UploadImage
-                typeUpload={TypeUpload.COVER_POST}
-                cover={cover}
-                onUploaded={(url) => setValue('cover', url)}
-              />
+              <UploadImage cover={cover || ''} onChange={handleUploadImage} />
 
               <div className="row">
                 <div className="col-12 col-md-6 col-sm-6">
@@ -255,6 +271,16 @@ const PostForm = () => {
           </form>
         </div>
       </div>
+
+      {isEdit && (
+        <ModalComponent
+          isOpen={openModal}
+          title="Confirm Edit"
+          message="Are you sure you want to update this post?"
+          onConfirm={handleSubmit(handleUpdatePost)}
+          onCancel={() => setOpenModal(false)}
+        />
+      )}
     </div>
   );
 };

@@ -1,12 +1,21 @@
-import { combineReducers, createStore } from 'redux';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
-import { modalReducer } from './modal/reducers/modalReducer';
+import authReducer from './auth/reducers/authReducer';
+import imageReducer from './image/reducers/imageReducer';
+import postReducer from './post/reducers/postReducer';
+import userReducer from './user/reducers/userReducer';
 
 const rootReducer = combineReducers({
-  modal: modalReducer,
+  post: postReducer,
+  image: imageReducer,
+  auth: authReducer,
+  user: userReducer,
 });
 
-export const store = createStore(rootReducer);
+export const store = configureStore({
+  reducer: rootReducer,
+});
 
-export type RootState = ReturnType<typeof rootReducer>;
+export type RootState = ReturnType<typeof store.getState>;
+
 export type AppDispatch = typeof store.dispatch;

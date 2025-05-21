@@ -90,6 +90,20 @@
     }
   }
 
+  &-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    color: $color-grey-dark;
+    font-size: $font-size-xs;
+    line-height: 1.5;
+    margin-top: $spacing-xs;
+  }
+
   &-action {
     position: absolute;
     top: 8px;

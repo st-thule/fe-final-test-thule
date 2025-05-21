@@ -1,9 +1,6 @@
-/**
- * This configuration was generated using the CKEditor 5 Builder. You can modify it anytime using this link:
- * https://ckeditor.com/ckeditor-5/builder/#installation/NoJgNARCB0Bs0AYKQIwICwgBy1gTgHYBWBPLFEAgZisJCoNgLxQYKxHyatiy2QgBTAHbIEYYCjDjxUqQgC6kBAGMqKwQXQQFQA==
- */
-
 import { CKEditor } from '@ckeditor/ckeditor5-react';
+import type { Editor } from '@ckeditor/ckeditor5-core';
+import type { FileLoader, UploadAdapter } from '@ckeditor/ckeditor5-upload';
 import {
   Alignment,
   AutoImage,
@@ -62,11 +59,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import 'ckeditor5/ckeditor5.css';
 import { TypeUpload } from '@shared/constants/type-image';
-import { getSignedUrl, uploadImageToS3 } from '@shared/services/image.service';
+import { ImageService } from '@shared/services/image.service';
 
-/**
- * Create a free account with a trial: https://portal.ckeditor.com/checkout?plan=free
- */
 const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
 
 type CkeditorProps = {
@@ -74,14 +68,15 @@ type CkeditorProps = {
   onChange?: (data: string) => void;
 };
 
+const imageService = new ImageService();
+
 export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
-  const editorContainerRef = useRef(null);
-  const editorRef = useRef(null);
+  const editorContainerRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
 
   useEffect(() => {
     setIsLayoutReady(true);
-
     return () => setIsLayoutReady(false);
   }, []);
 
@@ -251,13 +246,12 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
             'resizeImage',
           ],
         },
-        initialData:
-          '<h2>Congratulations on setting up CKEditor 5! 🎉</h2>\n<p>\n\tYou\'ve successfully created a CKEditor 5 project. This powerful text editor\n\twill enhance your application, enabling rich text editing capabilities that\n\tare customizable and easy to use.\n</p>\n<h3>What\'s next?</h3>\n<ol>\n\t<li>\n\t\t<strong>Integrate into your app</strong>: time to bring the editing into\n\t\tyour application. Take the code you created and add to your application.\n\t</li>\n\t<li>\n\t\t<strong>Explore features:</strong> Experiment with different plugins and\n\t\ttoolbar options to discover what works best for your needs.\n\t</li>\n\t<li>\n\t\t<strong>Customize your editor:</strong> Tailor the editor\'s\n\t\tconfiguration to match your application\'s style and requirements. Or\n\t\teven write your plugin!\n\t</li>\n</ol>\n<p>\n\tKeep experimenting, and don\'t hesitate to push the boundaries of what you\n\tcan achieve with CKEditor 5. Your feedback is invaluable to us as we strive\n\tto improve and evolve. Happy editing!\n</p>\n<h3>Helpful resources</h3>\n<ul>\n\t<li>📝 <a href="https://portal.ckeditor.com/checkout?plan=free">Trial sign up</a>,</li>\n\t<li>📕 <a href="https://ckeditor.com/docs/ckeditor5/latest/installation/index.html">Documentation</a>,</li>\n\t<li>⭐️ <a href="https://github.com/ckeditor/ckeditor5">GitHub</a> (star us if you can!),</li>\n\t<li>🏠 <a href="https://ckeditor.com">CKEditor Homepage</a>,</li>\n\t<li>🧑‍💻 <a href="https://ckeditor.com/ckeditor-5/demo/">CKEditor 5 Demos</a>,</li>\n</ul>\n<h3>Need help?</h3>\n<p>\n\tSee this text, but the editor is not starting up? Check the browser\'s\n\tconsole for clues and guidance. It may be related to an incorrect license\n\tkey if you use premium features or another feature-related requirement. If\n\tyou cannot make it work, file a GitHub issue, and we will help as soon as\n\tpossible!\n</p>\n',
+        initialData: '',
         licenseKey: LICENSE_KEY,
         extraPlugins: [
-          function CustomUploadAdapterPlugin(editor: any) {
+          function CustomUploadAdapterPlugin(editor: Editor) {
             editor.plugins.get('FileRepository').createUploadAdapter = (
-              loader: any
+              loader: FileLoader
             ) => {
               return new S3UploadAdapter(loader, TypeUpload.CONTENT_POST);
             };
@@ -329,37 +323,49 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
 // --------------------
 // Custom Upload Adapter
 // --------------------
-class S3UploadAdapter {
-  loader: any;
+class S3UploadAdapter implements UploadAdapter {
+  loader: FileLoader;
   typeUpload: TypeUpload;
 
-  constructor(loader: any, typeUpload: TypeUpload) {
+  constructor(loader: FileLoader, typeUpload: TypeUpload) {
     this.loader = loader;
     this.typeUpload = typeUpload;
   }
 
-  upload() {
+  upload(): Promise<{ default: string }> {
     return this.loader.file.then(
       (file: File) =>
-        new Promise((resolve, reject) => {
-          getSignedUrl(this.typeUpload, file.name, file.type)
-            .then(({ signedRequest, url }) => {
-              uploadImageToS3(signedRequest, file)
-                .then(() => {
-                  resolve({
-                    default: url,
+        new Promise<{ default: string }>((resolve, reject) => {
+          imageService
+            .getSignedUrl(this.typeUpload, file.name, file.type)
+            .then(
+              ({
+                signedRequest,
+                url,
+              }: {
+                signedRequest: string;
+                url: string;
+              }) => {
+                imageService
+                  .uploadImageToS3(signedRequest, file)
+                  .then(() => {
+                    resolve({
+                      default: url,
+                    });
+                  })
+                  .catch((error: Error) => {
+                    reject(error.message);
                   });
-                })
-                .catch((error) => {
-                  reject(`${error.message}`);
-                });
-            })
-            .catch((error) => {
-              reject(`${error.message}`);
+              }
+            )
+            .catch((error: Error) => {
+              reject(error.message);
             });
         })
     );
   }
 
-  abort() {}
+  abort(): void {
+    // Implement abort if needed. For now, do nothing.
+  }
 }

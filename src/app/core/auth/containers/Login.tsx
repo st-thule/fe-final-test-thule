@@ -1,13 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
-import { authStorage } from '@app/core/services/auth-storage.service';
-import { loginAccount } from '@app/core/services/auth.service';
+import { loginThunk } from '@app/store/auth/thunk/authThunk';
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
+import { useAppSelector } from '@app/store/hook/useAppSelector';
 import { Button, Input } from '@shared/components/partials';
-import { AuthContext } from '@shared/contexts/auth.context';
 import { validationRulesAuth } from '@shared/utils/validationRules';
 
 import hideIcon from '@assets/icons/hide.svg';
@@ -21,8 +21,10 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { setUserSession } = useContext(AuthContext);
+
+  const dispatch = useAppDispatch();
+  const loading = useAppSelector((state) => state.auth.loading);
+  const error = useAppSelector((state) => state.auth.error);
 
   const {
     control,
@@ -34,30 +36,18 @@ const Login = () => {
 
   const onSubmit = async (data: ILoginForm) => {
     try {
-      setIsLoading(true);
-      const response = await loginAccount({
-        email: data.email,
-        password: data.password,
-      });
-
-      const { accessToken, userInfo } = response;
-
-      if (!accessToken || !userInfo) {
-        throw new Error('Invalid login response');
-      }
-
-      setUserSession(userInfo, accessToken);
-      authStorage.setToken(accessToken);
+      await dispatch(
+        loginThunk({ email: data.email, password: data.password })
+      );
       toast.success('Login successfully');
       navigate(location.state?.from || AppRoutes.HOME, { replace: true });
-    } catch (error) {
+    } catch (err) {
       const message =
-        error?.response?.data?.message ||
-        error.message ||
+        err?.response?.data?.message ||
+        err?.message ||
+        error ||
         'Invalid email or password!';
       toast.error(message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -97,7 +87,7 @@ const Login = () => {
         />
         <p className="form-link">
           Don't have an account?{' '}
-          <Link to={AppRoutes.REGISTER}>
+          <Link to={`${AppRoutes.AUTH}/${AppRoutes.REGISTER}`}>
             <span>Register</span>
           </Link>
         </p>
@@ -106,8 +96,8 @@ const Login = () => {
           className="btn btn-primary btn-xl"
           type="submit"
           label="Login"
-          isDisabled={!isValid || isLoading}
-          isLoading={isLoading}
+          isDisabled={!isValid || loading}
+          isLoading={loading}
           onClick={() => {}}
         />
       </form>

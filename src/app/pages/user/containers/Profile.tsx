@@ -1,38 +1,31 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
+import { useAppSelector } from '@app/store/hook/useAppSelector';
+import { getPersonalInfoThunk } from '@app/store/user/thunk/userThunk';
+import avatar from '@assets/icons/avatar.svg';
 import { Button } from '@shared/components/partials';
 import { PostListLoadMore } from '@shared/components/PostListLoadMore';
-import { AuthContext } from '@shared/contexts/auth.context';
-import { UserWithPost } from '@shared/models/user';
-import { getPersonalInfo } from '@shared/services/user.service';
-
-import avatar from '@assets/icons/avatar.svg';
 
 const Profile = () => {
-  const { id } = useParams();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { user } = useContext(AuthContext);
-  const [userInfo, setUserInfo] = useState<UserWithPost | null>(null);
+  const params = useParams();
+  const id = params.id ?? 'me';
+  const dispatch = useAppDispatch();
+  const authUser = useAppSelector((state) => state.auth.user);
+  const { personalInfo, loading } = useAppSelector((state) => state.user);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      setIsLoading(true);
-      try {
-        const targetId = id || user?.id || 'me';
-        const data = await getPersonalInfo(targetId);
-        setUserInfo(data);
-      } catch (error) {
-        throw error;
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (id || user?.id) {
-      fetchUserData();
+    if (id) {
+      dispatch(getPersonalInfoThunk({ id }));
     }
-  }, [id, user?.id]);
+  }, [dispatch, id, authUser?.id]);
+
+  const isMyProfile = personalInfo?.id === authUser?.id;
+
+  if (loading || !personalInfo) {
+    return <div className="text-center">Loading profile...</div>;
+  }
 
   return (
     <div className="page page-profile">
@@ -40,36 +33,37 @@ const Profile = () => {
         <div className="wrapper wrapper-padding">
           <section className="section section-info">
             <div className="section-image">
-              <img className="img avatar" src={userInfo?.picture || avatar} />
+              <img
+                className="img avatar"
+                src={personalInfo.picture || avatar}
+                alt="avatar"
+              />
             </div>
             <div className="section-content">
-              {userInfo && (
-                <div className="section-text">
-                  <h1 className="section-title">
-                    {userInfo.firstName} {userInfo.lastName}
-                  </h1>
-                  <p className="section-subtitle">{userInfo.email}</p>
-                </div>
+              <div className="section-text">
+                <h1 className="section-title">
+                  {personalInfo.firstName} {personalInfo.lastName}
+                </h1>
+                <p className="section-subtitle">{personalInfo.email}</p>
+              </div>
+              {isMyProfile && (
+                <Button label="Edit" className="btn btn-primary" />
               )}
-
-              <Button label="Edit" className="btn btn-primary" />
             </div>
           </section>
-          <div className=""></div>
+
           <section className="section section-list section-post">
             <div className="section-header">
               <h2 className="section-title">Articles</h2>
-              {userInfo && (
-                <PostListLoadMore
-                  posts={userInfo.Posts || []}
-                  userInfo={{
-                    displayName: userInfo.displayName,
-                    picture: userInfo.picture,
-                  }}
-                  className="col-12 col-sm-6 com-md-3"
-                />
-              )}
             </div>
+            <PostListLoadMore
+              posts={personalInfo.Posts || []}
+              userInfo={{
+                displayName: personalInfo.displayName,
+                picture: personalInfo.picture,
+              }}
+              className="col-12 col-sm-6 com-md-3"
+            />
           </section>
         </div>
       </div>
