@@ -4,15 +4,17 @@ interface UploadImageProps {
   className?: string;
   cover?: string;
   onChange?: (file: File) => void;
+  defaultImage?: string;
 }
 
 export const UploadImage = ({
   className,
   cover,
   onChange,
+  defaultImage,
 }: UploadImageProps) => {
   const [imagePreview, setImagePreview] = useState<string>(
-    cover || '/assets/images/articles/article-travel.png'
+    cover || defaultImage
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
