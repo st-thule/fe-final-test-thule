@@ -4,15 +4,17 @@ interface UploadImageProps {
   className?: string;
   cover?: string;
   onChange?: (file: File) => void;
+  defaultImage?: string;
 }
 
 export const UploadImage = ({
   className,
   cover,
   onChange,
+  defaultImage,
 }: UploadImageProps) => {
   const [imagePreview, setImagePreview] = useState<string>(
-    cover || '/assets/images/articles/article-travel.png'
+    cover || defaultImage
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -58,8 +60,8 @@ export const UploadImage = ({
   }, [imagePreview]);
 
   return (
-    <label className={`form-upload form-xl ${className || ''}`}>
-      <div className="form-preview form-dashed">
+    <label className={`form-upload form-xl`}>
+      <div className={`form-preview form-dashed ${className}`}>
         <img src={imagePreview} alt="Preview" className="" />
       </div>
       <input

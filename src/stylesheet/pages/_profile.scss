@@ -4,6 +4,9 @@
   .section {
     &-image {
       width: 15%;
+      .avatar {
+        border-radius: 50%;
+      }
     }
 
     &.section-info {
