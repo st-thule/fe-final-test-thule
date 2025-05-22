@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
@@ -16,6 +16,7 @@ import { TypeUpload } from '@shared/types/enum';
 import femaleIcon from '@assets/icons/avatar-female.svg';
 import maleIcon from '@assets/icons/avatar-male.svg';
 import otherIcon from '@assets/icons/avatar-other.svg';
+import { AppRoutes } from '@app/core/constants/app-routes';
 
 interface IUserForm {
   firstName: string;
@@ -101,13 +102,16 @@ const UserForm = () => {
           <form className="form form-user" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-header">
               <h1 className="page-title">My Profile</h1>
-              <Button
-                type="submit"
-                className="btn btn-primary"
-                label="Save"
-                isDisabled={!isValid || loading}
-                isLoading={loading}
-              />
+              <div className="form-action">
+                <Link to={`${AppRoutes.USER}/me`}>Back to profile</Link>
+                <Button
+                  type="submit"
+                  className="btn btn-primary"
+                  label="Save"
+                  isDisabled={!isValid || loading}
+                  isLoading={loading}
+                />
+              </div>
             </div>
             <div className="form-body">
               <UploadImage
