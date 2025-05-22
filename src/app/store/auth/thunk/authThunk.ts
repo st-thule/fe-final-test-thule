@@ -23,7 +23,11 @@ export const loginThunk = createAsyncThunk<
     authStorage.setToken(response.accessToken);
     return response.userInfo;
   } catch (error) {
-    return rejectWithValue(error.message || 'Login Failed');
+    const message =
+      error?.response?.data?.errors?.[0] ||
+      error?.response?.data?.message ||
+      'Login Failed';
+    return rejectWithValue(message);
   }
 });
 

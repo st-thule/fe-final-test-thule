@@ -36,11 +36,16 @@ const Login = () => {
 
   const onSubmit = async (data: ILoginForm) => {
     try {
-      await dispatch(
+      const response = await dispatch(
         loginThunk({ email: data.email, password: data.password })
       );
-      toast.success('Login successfully');
-      navigate(location.state?.from || AppRoutes.HOME, { replace: true });
+
+      if (loginThunk.fulfilled.match(response)) {
+        toast.success('Login successfully');
+        navigate(location.state?.from || AppRoutes.HOME, { replace: true });
+      } else {
+        toast.error(response.payload);
+      }
     } catch (err) {
       const message =
         err?.response?.data?.message ||
