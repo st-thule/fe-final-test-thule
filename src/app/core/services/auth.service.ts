@@ -23,6 +23,11 @@ export interface LoginResponse {
   userInfo: User;
 }
 
+export interface ChangePasswordPayload {
+  oldPassword: string;
+  newPassword: string;
+}
+
 export class AuthService {
   apiService = new ApiService();
 
@@ -36,5 +41,9 @@ export class AuthService {
 
   logoutAccount() {
     return this.apiService.post([ENDPOINT.auth.logout]);
+  }
+
+  changePassword(data: ChangePasswordPayload) {
+    return this.apiService.put([ENDPOINT.auth.changePassword], data);
   }
 }

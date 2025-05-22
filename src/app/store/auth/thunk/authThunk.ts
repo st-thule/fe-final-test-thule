@@ -3,6 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { authStorage } from '@app/core/services/auth-storage.service';
 import {
   AuthService,
+  ChangePasswordPayload,
   LoginPayload,
   RegisterPayload,
 } from '@app/core/services/auth.service';
@@ -61,5 +62,18 @@ export const validateAuthTokenThunk = createAsyncThunk<
     return rest;
   } catch (error) {
     return rejectWithValue(error.message || 'Register Failed');
+  }
+});
+
+export const changePasswordThunk = createAsyncThunk<
+  string,
+  ChangePasswordPayload,
+  { rejectValue: string }
+>('auth/changePassword', async (changePasswordPayload, { rejectWithValue }) => {
+  try {
+    await authService.changePassword(changePasswordPayload);
+  } catch (error: any) {
+    const message = error.response?.data?.errors?.[0] || 'Invalid password';
+    return rejectWithValue(message);
   }
 });

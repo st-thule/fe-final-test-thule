@@ -25,7 +25,7 @@ import {
   optionTags,
   StatusPost,
 } from '@shared/constants/options';
-import { TypeUpload } from '@shared/types/enum';
+import { ModalTypes, TypeUpload } from '@shared/types/enum';
 import { validationRulesPost } from '@shared/constants/validationRules';
 
 interface IPostForm {
@@ -281,6 +281,7 @@ const PostForm = () => {
 
       {isEdit && (
         <ModalComponent
+          type={ModalTypes.CONFIRM}
           isOpen={openModal}
           title="Confirm Edit"
           message="Are you sure you want to update this post?"

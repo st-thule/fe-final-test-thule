@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
+import { changePasswordThunk } from '@app/store/auth/thunk/authThunk';
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { useAppSelector } from '@app/store/hook/useAppSelector';
 import { getPersonalInfoThunk } from '@app/store/user/thunk/userThunk';
-import { PostList } from '../components/PostList';
-
 import femaleIcon from '@assets/icons/avatar-female.svg';
 import maleIcon from '@assets/icons/avatar-male.svg';
 import otherIcon from '@assets/icons/avatar-other.svg';
-import { Button, Input } from '@shared/components/partials';
 import { ModalComponent } from '@shared/components/Modal';
-import { Controller, useForm } from 'react-hook-form';
+import { Button, Input } from '@shared/components/partials';
 import { ModalTypes } from '@shared/types/enum';
+import { PostList } from '../components/PostList';
 
 interface IPasswordForm {
   oldPassword: string;
@@ -32,7 +33,8 @@ const Profile = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
+    reset,
   } = useForm<IPasswordForm>({
     defaultValues: {
       oldPassword: '',
@@ -58,6 +60,31 @@ const Profile = () => {
       : personalInfo?.gender === 'male'
       ? maleIcon
       : otherIcon;
+
+  const handleChangePassword = async (data: IPasswordForm) => {
+    if (data.newPassword === data.confirmPassword) {
+      try {
+        const response = await dispatch(
+          changePasswordThunk({
+            oldPassword: data.oldPassword,
+            newPassword: data.newPassword,
+          })
+        );
+
+        if (changePasswordThunk.fulfilled.match(response)) {
+          toast.success('Update password successfully');
+          setModalOpen(false);
+          reset();
+        } else {
+          setModalOpen(false);
+          toast.error(response.payload || 'Invalid password');
+        }
+      } catch (error) {
+        const errorMessage = error.message || 'Something went wrong';
+        toast.error(errorMessage);
+      }
+    }
+  };
 
   return (
     <div className="page page-profile">
@@ -116,7 +143,10 @@ const Profile = () => {
         isOpen={modalOpen}
         confirmLabel="Change"
       >
-        <form className="form form-modal">
+        <form
+          className="form form-modal"
+          onSubmit={handleSubmit(handleChangePassword)}
+        >
           <div className="form-header">
             <h2 className="form-title">Change Password</h2>
           </div>
@@ -125,26 +155,48 @@ const Profile = () => {
               name="oldPassword"
               control={control}
               render={({ field }) => (
-                <Input label="Old password" errorMessage="" />
+                <Input
+                  {...field}
+                  type="password"
+                  label="Old password"
+                  errorMessage=""
+                />
               )}
             />
             <Controller
               name="newPassword"
               control={control}
+              rules={{ required: 'New password is required' }}
               render={({ field }) => (
-                <Input label="New password" errorMessage="" />
+                <Input
+                  {...field}
+                  type="password"
+                  label="New password"
+                  errorMessage={errors.newPassword?.message || ''}
+                />
               )}
             />
             <Controller
               name="confirmPassword"
               control={control}
+              rules={{
+                required: 'Please confirm your password',
+                validate: (value) =>
+                  value === control._formValues.newPassword ||
+                  'Passwords do not match',
+              }}
               render={({ field }) => (
-                <Input label="Confirm password" errorMessage="" />
+                <Input
+                  {...field}
+                  type="password"
+                  label="Confirm password"
+                  errorMessage={errors.confirmPassword?.message || ''}
+                />
               )}
             />
           </div>
           <div className="form-action">
-            <Button className="btn btn-primary" label="Change" />
+            <Button type="submit" className="btn btn-primary" label="Change" />
           </div>
         </form>
       </ModalComponent>

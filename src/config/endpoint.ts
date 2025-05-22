@@ -11,6 +11,7 @@ export const ENDPOINT = {
     register: `${RESOURCES.auth}/register`,
     login: `${RESOURCES.auth}/login`,
     logout: `${RESOURCES.auth}/logout`,
+    changePassword: `${RESOURCES.auth}/change-password`,
   },
 
   post: {
