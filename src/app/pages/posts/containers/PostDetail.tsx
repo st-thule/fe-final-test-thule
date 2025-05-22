@@ -20,6 +20,7 @@ import calendarIcon from '@assets/icons/calendar.svg';
 import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
+import { ModalTypes } from '@shared/types/enum';
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -176,6 +177,7 @@ const PostDetail = () => {
         </div>
       </div>
       <ModalComponent
+        type={ModalTypes.CONFIRM}
         isOpen={modalOpen}
         title="Confirm logout"
         message="Are you sure you want to logout?"
