@@ -7,6 +7,7 @@ import {
   registerThunk,
   validateAuthTokenThunk,
 } from '../thunk/authThunk';
+import { updateInfoThunk } from '@app/store/user/thunk/userThunk';
 
 interface AuthState {
   user: User | null;
@@ -77,6 +78,20 @@ const authReducer = createSlice({
       .addCase(validateAuthTokenThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to login';
+      });
+
+    builder
+      .addCase(updateInfoThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateInfoThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(updateInfoThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to update post';
       });
   },
 });

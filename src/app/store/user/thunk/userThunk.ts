@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { UserWithPost } from '@shared/models/user';
-import { UserService } from '@shared/services/user.service';
+import { User, UserWithPost } from '@shared/models/user';
+import { IUserPayload, UserService } from '@shared/services/user.service';
 
 const userService = new UserService();
 
@@ -22,5 +22,18 @@ export const getPersonalInfoThunk = createAsyncThunk<
     };
   } catch (error) {
     return rejectWithValue(error.message || 'Failed to fetch user info');
+  }
+});
+
+export const updateInfoThunk = createAsyncThunk<
+  User,
+  IUserPayload,
+  { rejectValue: string }
+>('user/updateInfo', async (data, { rejectWithValue }) => {
+  try {
+    const updatedUser = await userService.updateProfile(data);
+    return updatedUser;
+  } catch (error) {
+    return rejectWithValue(error.message || 'Failed to update info');
   }
 });

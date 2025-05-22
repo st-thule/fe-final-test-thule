@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 import { User } from '@shared/models/user';
 import { getPersonalInfoThunk } from '../thunk/userThunk';
 

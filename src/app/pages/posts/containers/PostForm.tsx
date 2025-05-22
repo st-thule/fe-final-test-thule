@@ -187,7 +187,11 @@ const PostForm = () => {
             </div>
 
             <div className="form-body">
-              <UploadImage cover={cover || ''} onChange={handleUploadImage} />
+              <UploadImage
+                cover={cover || ''}
+                onChange={handleUploadImage}
+                defaultImage="/assets/images/articles/article-travel.png"
+              />
 
               <div className="row">
                 <div className="col-12 col-md-6 col-sm-6">
