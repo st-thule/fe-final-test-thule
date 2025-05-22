@@ -9,12 +9,13 @@ import { formatDate } from '@shared/utils/formatDate';
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { useAppSelector } from '@app/store/hook/useAppSelector';
 import { deletePostThunk } from '@app/store/post/thunk/postThunk';
-import deleteIcon from '@assets/icons/delete.svg';
-import editIcon from '@assets/icons/edit.svg';
-import imagePost from '@assets/images/articles/article-travel.png';
 import femaleIcon from '@assets/icons/avatar-female.svg';
 import maleIcon from '@assets/icons/avatar-male.svg';
 import otherIcon from '@assets/icons/avatar-other.svg';
+import deleteIcon from '@assets/icons/delete.svg';
+import editIcon from '@assets/icons/edit.svg';
+import imagePost from '@assets/images/articles/article-travel.png';
+import { ModalTypes } from '@shared/types/enum';
 import { ModalComponent } from './Modal';
 
 interface IPostProps {
@@ -148,6 +149,7 @@ export const PostComponent: React.FC<IPostProps> = ({
         message="Are you sure you want to logout?"
         onConfirm={() => handleDeletePost(post.id)}
         onCancel={() => setModalOpen(false)}
+        type={ModalTypes.CONFIRM}
       />
     </li>
   );

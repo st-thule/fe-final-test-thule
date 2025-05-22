@@ -1,13 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { updateInfoThunk } from '@app/store/user/thunk/userThunk';
 import { User } from '@shared/models/user';
 import {
+  changePasswordThunk,
   loginThunk,
   logoutThunk,
   registerThunk,
   validateAuthTokenThunk,
 } from '../thunk/authThunk';
-import { updateInfoThunk } from '@app/store/user/thunk/userThunk';
 
 interface AuthState {
   user: User | null;
@@ -92,6 +93,18 @@ const authReducer = createSlice({
       .addCase(updateInfoThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to update post';
+      });
+    builder
+      .addCase(changePasswordThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(changePasswordThunk.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(changePasswordThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to login';
       });
   },
 });

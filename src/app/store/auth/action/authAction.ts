@@ -17,6 +17,9 @@ import {
   UPDATE_USER_INFO,
   UPDATE_USER_INFO_FAILURE,
   UPDATE_USER_INFO_SUCCESS,
+  CHANGE_PASSWORD,
+  CHANGE_PASSWORD_SUCCESS,
+  CHANGE_PASSWORD_FAILURE,
 } from './type/authActionType';
 
 export interface LoginAction extends Action<typeof LOGIN> {}
@@ -73,6 +76,18 @@ export interface UpdateUserInfoFailureAction
   payload: string;
 }
 
+export interface ChangePasswordAction extends Action<typeof CHANGE_PASSWORD> {}
+
+export interface ChangePasswordSuccessAction
+  extends Action<typeof CHANGE_PASSWORD_SUCCESS> {
+  payload: string;
+}
+
+export interface ChangePasswordFailureAction
+  extends Action<typeof CHANGE_PASSWORD_FAILURE> {
+  payload: string;
+}
+
 export type AuthActions =
   | LoginAction
   | LoginSuccessAction
@@ -88,7 +103,10 @@ export type AuthActions =
   | ValidateTokenFailureAction
   | UpdateUserInfoAction
   | UpdateUserInfoSuccessAction
-  | UpdateUserInfoFailureAction;
+  | UpdateUserInfoFailureAction
+  | ChangePasswordAction
+  | ChangePasswordSuccessAction
+  | ChangePasswordFailureAction;
 
 export const login = (): LoginAction => ({ type: LOGIN });
 export const loginSuccess = (payload: User): LoginSuccessAction => ({
@@ -153,5 +171,23 @@ export const updateUserInfoFailure = (
   payload: string
 ): UpdateUserInfoFailureAction => ({
   type: UPDATE_USER_INFO_FAILURE,
+  payload,
+});
+
+export const changePassword = (): ChangePasswordAction => ({
+  type: CHANGE_PASSWORD,
+});
+
+export const changePasswordSuccess = (
+  payload: string
+): ChangePasswordSuccessAction => ({
+  type: CHANGE_PASSWORD_SUCCESS,
+  payload,
+});
+
+export const changePasswordFailure = (
+  payload: string
+): ChangePasswordFailureAction => ({
+  type: CHANGE_PASSWORD_FAILURE,
   payload,
 });
