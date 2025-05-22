@@ -14,7 +14,7 @@
     font-weight: $font-weight-base;
 
     &:hover {
-      box-shadow: 0px 5px 20px 0px rgba($color-primary, 0.3);
+      box-shadow: 0px 2px 10px 0px rgba($color-primary, 0.2);
     }
 
     &:disabled {
@@ -45,5 +45,8 @@
 
   &-no {
     background-color: $color-danger;
+    &:hover {
+      box-shadow: 0px 2px 10px 0px rgba($color-danger, 0.2);
+    }
   }
 }
