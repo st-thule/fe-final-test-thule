@@ -41,9 +41,8 @@ export const PostComponent: React.FC<IPostProps> = ({
   const user = useAppSelector((state) => state.auth.user);
   const handleDeletePost = async (id: string | number) => {
     try {
-      dispatch(deletePostThunk(id!));
+      await dispatch(deletePostThunk(id!));
       toast.success('Delete successfully');
-      window.location.reload();
     } catch (error) {
       throw error;
     }
@@ -145,8 +144,8 @@ export const PostComponent: React.FC<IPostProps> = ({
       </div>
       <ModalComponent
         isOpen={modalOpen}
-        title="Confirm logout"
-        message="Are you sure you want to logout?"
+        title="Confirm delete"
+        message="Are you sure you want to delete?"
         onConfirm={() => handleDeletePost(post.id)}
         onCancel={() => setModalOpen(false)}
         type={ModalTypes.CONFIRM}
