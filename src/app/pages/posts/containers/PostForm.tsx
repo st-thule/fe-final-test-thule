@@ -119,7 +119,7 @@ const PostForm = () => {
       const result = await dispatch(updatePostThunk({ id: id!, data }));
       if (updatePostThunk.fulfilled.match(result)) {
         toast.success('Post updated successfully');
-        navigate(`${AppRoutes.POSTS}/${id}`);
+        navigate(`${AppRoutes.USER}/me`);
       } else {
         toast.error('Failed to update post');
       }

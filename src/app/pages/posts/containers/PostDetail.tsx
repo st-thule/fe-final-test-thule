@@ -97,7 +97,11 @@ const PostDetail = () => {
                     {post.tags && post.tags.length > 0 ? (
                       post.tags.map((tag) => (
                         <li className="list-item">
-                          <Link className="tag" to="" key={tag}>
+                          <Link
+                            className="tag"
+                            to={`${AppRoutes.POSTS}/tags/${tag}`}
+                            key={tag}
+                          >
                             {tag}
                           </Link>
                         </li>
@@ -116,7 +120,11 @@ const PostDetail = () => {
                           src={post.user?.picture ?? author}
                           alt="Author"
                         />
-                        <p className="meta-title">{post.user?.displayName}</p>
+                        <p className="meta-title">
+                          <Link to={`${AppRoutes.USER}/${post.user?.id}`}>
+                            {post.user?.displayName}
+                          </Link>
+                        </p>
                       </div>
                       <div className="meta-group">
                         <img
