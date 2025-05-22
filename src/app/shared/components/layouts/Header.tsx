@@ -12,6 +12,7 @@ import { Button } from '../partials/Button';
 import femaleIcon from '@assets/icons/avatar-female.svg';
 import maleIcon from '@assets/icons/avatar-male.svg';
 import otherIcon from '@assets/icons/avatar-other.svg';
+import { ModalTypes } from '@shared/types/enum';
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -137,6 +138,7 @@ export const Header = () => {
       </div>
 
       <ModalComponent
+        type={ModalTypes.CONFIRM}
         isOpen={modalOpen}
         title="Confirm logout"
         message="Are you sure you want to logout?"
