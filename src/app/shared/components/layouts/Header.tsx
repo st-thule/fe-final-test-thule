@@ -99,12 +99,18 @@ export const Header = () => {
                 {isOpen && (
                   <nav className="dropdown-menu" ref={dropdownRef}>
                     <ul className="list list-dropdown">
-                      <li className="list-item">
+                      <li
+                        className="list-item"
+                        onClick={() => setIsOpen(false)}
+                      >
                         <Link className="list-link" to={`${AppRoutes.USER}/me`}>
                           Profile
                         </Link>
                       </li>
-                      <li className="list-item">
+                      <li
+                        className="list-item"
+                        onClick={() => setIsOpen(false)}
+                      >
                         <Link
                           className="list-link"
                           to={`${AppRoutes.POSTS}/${AppRoutes.POSTADD}`}
