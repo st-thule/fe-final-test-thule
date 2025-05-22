@@ -119,20 +119,20 @@ export class ApiService {
   }
 
   private async _handleError(error: AxiosError) {
+    return Promise.reject(error);
     // Detect refresh Token
-    if (error.isAxiosError && error.response?.status === 401) {
-      const originalRequest = error.config;
-      const req = await this.authHelper.handleRefreshToken(originalRequest);
-      return this.axiosInstance(req);
-    }
+    // if (error.isAxiosError && error.response?.status === 401) {
+    //   const originalRequest = error.config;
+    //   const req = await this.authHelper.handleRefreshToken(originalRequest);
+    //   return this.axiosInstance(req);
+    // }
 
-    // Make error model before promise
-    if (error.isAxiosError && error.response) {
-      // Axios error
-      return Promise.reject(error);
-    } else {
-      // Default | Network errors | CORS | ...
-      return Promise.reject({});
-    }
+    // // Make error model before promise
+    // if (error.isAxiosError && error.response) {
+    //   // Axios error
+    // } else {
+    //   // Default | Network errors | CORS | ...
+    //   return Promise.reject({});
+    // }
   }
 }
