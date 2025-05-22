@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { User, UserWithPost } from '@shared/models/user';
+import { User } from '@shared/models/user';
 import { IUserPayload, UserService } from '@shared/services/user.service';
 
 const userService = new UserService();
 
 export const getPersonalInfoThunk = createAsyncThunk<
-  UserWithPost,
+  User,
   { id: number | string },
   { rejectValue: string }
 >('users/userInfo', async ({ id }, { rejectWithValue }) => {

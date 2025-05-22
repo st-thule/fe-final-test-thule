@@ -1,18 +1,16 @@
 import { Post } from './post';
-
-export interface User {
-  id: string;
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  dob: string;
-  phone: string;
-  displayName: string;
-  picture?: string | null;
-}
-
-export interface UserWithPost extends User {
-  Posts: Post[];
+export class User {
+  constructor(
+    public id: string,
+    public email: string,
+    public password: string,
+    public firstName: string,
+    public lastName: string,
+    public gender: string,
+    public dob: string,
+    public phone: string,
+    public displayName: string,
+    public picture?: string | null,
+    public Posts?: Post[]
+  ) {}
 }

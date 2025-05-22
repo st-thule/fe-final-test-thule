@@ -72,7 +72,7 @@ export const changePasswordThunk = createAsyncThunk<
 >('auth/changePassword', async (changePasswordPayload, { rejectWithValue }) => {
   try {
     await authService.changePassword(changePasswordPayload);
-  } catch (error: any) {
+  } catch (error) {
     const message = error.response?.data?.errors?.[0] || 'Invalid password';
     return rejectWithValue(message);
   }

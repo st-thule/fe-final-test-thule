@@ -1,6 +1,6 @@
 import { ApiService } from '@app/core/services/api.service';
 import { ENDPOINT } from '@config/endpoint';
-import { User, UserWithPost } from '@shared/models/user';
+import { User } from '@shared/models/user';
 
 export interface IUserPayload {
   firstName: string;
@@ -12,7 +12,7 @@ export interface IUserPayload {
 export class UserService {
   apiService = new ApiService();
 
-  getPersonalInfo = (id: number | string): Promise<UserWithPost> => {
+  getPersonalInfo = (id: number | string): Promise<User> => {
     const endpoint = ENDPOINT.users.userInfoWithPost(id);
     return this.apiService.get([endpoint]);
   };
