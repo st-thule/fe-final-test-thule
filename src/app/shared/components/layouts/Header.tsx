@@ -65,7 +65,6 @@ export const Header = () => {
     dispatch(logoutThunk());
     toast.success('Logout successfully');
     setModalOpen(false);
-    navigate(`${AppRoutes.HOME}`);
   };
 
   return (
