@@ -74,11 +74,11 @@ const Profile = () => {
         if (changePasswordThunk.fulfilled.match(response)) {
           toast.success('Update password successfully');
           setModalOpen(false);
-          reset();
         } else {
           setModalOpen(false);
-          toast.error(response.payload || 'Invalid password');
+          toast.error(response.payload);
         }
+        reset();
       } catch (error) {
         const errorMessage = error.message || 'Something went wrong';
         toast.error(errorMessage);
@@ -197,6 +197,15 @@ const Profile = () => {
           </div>
           <div className="form-action">
             <Button type="submit" className="btn btn-primary" label="Change" />
+            <Button
+              type="button"
+              className="btn btn-primary btn-no"
+              label="Cancel"
+              onClick={() => {
+                setModalOpen(false);
+                reset();
+              }}
+            />
           </div>
         </form>
       </ModalComponent>
