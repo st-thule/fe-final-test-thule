@@ -245,12 +245,13 @@ const PostForm = () => {
                 control={control}
                 name="description"
                 rules={validationRulesPost.description}
-                render={({ field }) => (
-                  <Textarea
-                    {...field}
-                    label="Description"
-                    errorMessage={errors.description?.message}
-                  />
+                render={({ field, fieldState }) => (
+                  <div className="form-control">
+                    <Textarea {...field} label="Description" />
+                    {fieldState.error && (
+                      <p className="form-error">{fieldState.error.message}</p>
+                    )}
+                  </div>
                 )}
               />
 
