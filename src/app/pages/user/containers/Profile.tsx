@@ -50,10 +50,6 @@ const Profile = () => {
 
   const isMyProfile = personalInfo?.id === authUser?.id;
 
-  if (loading || !personalInfo) {
-    return <div className="text-center">Loading profile...</div>;
-  }
-
   const author =
     personalInfo?.gender === 'female'
       ? femaleIcon
@@ -90,54 +86,69 @@ const Profile = () => {
     <div className="page page-profile">
       <div className="container">
         <div className="wrapper wrapper-padding">
-          <section className="section section-info">
-            <div className="section-image">
-              <img
-                className="img avatar"
-                src={personalInfo.picture || author}
-                alt="avatar"
-              />
-            </div>
-            <div className="section-content">
-              <div className="section-text">
-                <h1 className="section-title">
-                  {personalInfo.firstName} {personalInfo.lastName}
-                </h1>
-                <p className="section-subtitle">{personalInfo.email}</p>
+          {loading || !personalInfo ? (
+            <section className="section section-info">
+              <div className="section-image skeleton-avatar"></div>
+
+              <div className="section-content skeleton-content">
+                <div className="skeleton-title" />
+                <div className="skeleton-text" />
+                <div className="skeleton-text" />
+                <div className="skeleton-text" />
               </div>
-              {isMyProfile && (
-                <div className="section-action">
-                  <Link
-                    className=""
-                    to={`${AppRoutes.USER}/${AppRoutes.USER_EDIT}`}
-                  >
-                    Edit
-                  </Link>
-                  <Button
-                    className="btn btn-primary"
-                    label="Change password"
-                    onClick={() => setModalOpen(true)}
+            </section>
+          ) : (
+            <>
+              <section className="section section-info">
+                <div className="section-image">
+                  <img
+                    className="img avatar"
+                    src={personalInfo.picture || author}
+                    alt="avatar"
                   />
                 </div>
-              )}
-            </div>
-          </section>
+                <div className="section-content">
+                  <div className="section-text">
+                    <h1 className="section-title">
+                      {personalInfo.firstName} {personalInfo.lastName}
+                    </h1>
+                    <p className="section-subtitle">{personalInfo.email}</p>
+                    <p>{personalInfo.phone}</p>
+                    <p>{personalInfo.dob}</p>
+                  </div>
+                  {isMyProfile && (
+                    <div className="section-action">
+                      <Link to={`${AppRoutes.USER}/${AppRoutes.USER_EDIT}`}>
+                        Edit
+                      </Link>
+                      <Button
+                        className="btn btn-primary"
+                        label="Change password"
+                        onClick={() => setModalOpen(true)}
+                      />
+                    </div>
+                  )}
+                </div>
+              </section>
 
-          <section className="section section-list section-post">
-            <div className="section-header">
-              <h2 className="section-title">Articles</h2>
-            </div>
-            <PostList
-              posts={personalInfo.Posts || []}
-              userInfo={{
-                displayName: personalInfo.displayName,
-                picture: personalInfo.picture,
-              }}
-              className="col-12 col-sm-6 com-md-3"
-            />
-          </section>
+              <section className="section section-list section-post">
+                <div className="section-header">
+                  <h2 className="section-title">Articles</h2>
+                </div>
+                <PostList
+                  posts={personalInfo.Posts || []}
+                  userInfo={{
+                    displayName: personalInfo.displayName,
+                    picture: personalInfo.picture,
+                  }}
+                  className="col-12 col-sm-6 com-md-3"
+                />
+              </section>
+            </>
+          )}
         </div>
       </div>
+
       <ModalComponent
         type={ModalTypes.USER_FORM}
         isOpen={modalOpen}
