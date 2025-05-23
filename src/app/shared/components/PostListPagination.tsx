@@ -3,6 +3,7 @@ import React from 'react';
 import { Pagination } from '@shared/components/Pagination';
 import { PostComponent } from '@shared/components/Post';
 import { PostResponse } from '@shared/models/post';
+import { SkeletonPost } from './partials/Skeleton';
 
 const SIZE_PAGE = 8;
 
@@ -26,11 +27,9 @@ export const PostListPagination: React.FC<PostListPaginationProps> = ({
       <ul className="list list-posts row">
         {loading ? (
           Array.from({ length: SIZE_PAGE }).map((_, index) => (
-            <PostComponent
+            <SkeletonPost
               key={`skeleton-${index}`}
               className="col-12 col-sm-6 col-md-3"
-              loading={true}
-              post={undefined}
             />
           ))
         ) : postResponse?.data && postResponse.data.length > 0 ? (

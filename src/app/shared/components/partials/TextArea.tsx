@@ -59,11 +59,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const handleBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
       if (onBlur) onBlur(e);
       if (onInputBlur) onInputBlur(e.target.value);
-
-      // Manual minLength validation
-      if (minLength && e.target.value.length < minLength) {
-        setError(`Minlength ${minLength}`);
-      }
     };
 
     return (

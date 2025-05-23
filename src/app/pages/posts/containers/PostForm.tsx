@@ -20,13 +20,9 @@ import { UploadImage } from '@shared/components/UploadImage';
 import { Button, Input } from '@shared/components/partials';
 import { Select } from '@shared/components/partials/Select';
 import { Textarea } from '@shared/components/partials/TextArea';
-import {
-  optionStatusPost,
-  optionTags,
-  StatusPost,
-} from '@shared/constants/options';
-import { ModalTypes, TypeUpload } from '@shared/types/enum';
+import { optionStatusPost, optionTags } from '@shared/constants/options';
 import { validationRulesPost } from '@shared/constants/validationRules';
+import { ModalTypes, StatusPost, TypeUpload } from '@shared/types/enum';
 
 interface IPostForm {
   title: string;
@@ -70,6 +66,7 @@ const PostForm = () => {
 
   const cover = watch('cover');
 
+  // get post detail update
   useEffect(() => {
     if (!isEdit || !user?.id) return;
 
@@ -98,6 +95,7 @@ const PostForm = () => {
       .catch(() => toast.error('Failed to load post'));
   }, [dispatch, id, isEdit, navigate, setValue, user.id]);
 
+  // upload image
   const handleUploadImage = async (file: File) => {
     try {
       const uploadResult = await dispatch(
@@ -114,14 +112,15 @@ const PostForm = () => {
     }
   };
 
+  // update post
   const handleUpdatePost = async (data: IPostForm) => {
     try {
-      const result = await dispatch(updatePostThunk({ id: id!, data }));
-      if (updatePostThunk.fulfilled.match(result)) {
+      const response = await dispatch(updatePostThunk({ id: id!, data }));
+      if (updatePostThunk.fulfilled.match(response)) {
         toast.success('Post updated successfully');
-        navigate(`${AppRoutes.POSTS}/${id}`);
+        navigate(`${AppRoutes.USER}/me`);
       } else {
-        toast.error('Failed to update post');
+        toast.error(response.payload);
       }
     } catch (err) {
       toast.error(err?.message || 'Update failed');
@@ -130,6 +129,7 @@ const PostForm = () => {
     }
   };
 
+  // create post
   const onSubmit = async (data: IPostForm) => {
     if (!data.cover || data.cover.trim() === '') {
       toast.error('Please upload a cover image.');
@@ -151,13 +151,13 @@ const PostForm = () => {
       setOpenModal(true);
     } else {
       try {
-        const result = await dispatch(createPostThunk(finalData));
-        if (createPostThunk.fulfilled.match(result)) {
-          const post = result.payload;
+        const response = await dispatch(createPostThunk(finalData));
+        if (createPostThunk.fulfilled.match(response)) {
+          const post = response.payload;
           toast.success('Post created successfully');
           navigate(`${AppRoutes.POSTS}/${post.id}`);
         } else {
-          toast.error('Failed to create post');
+          toast.error(response.payload);
         }
       } catch (err) {
         toast.error(err?.message || 'Create failed');
@@ -245,12 +245,13 @@ const PostForm = () => {
                 control={control}
                 name="description"
                 rules={validationRulesPost.description}
-                render={({ field }) => (
-                  <Textarea
-                    {...field}
-                    label="Description"
-                    errorMessage={errors.description?.message}
-                  />
+                render={({ field, fieldState }) => (
+                  <div className="form-control">
+                    <Textarea {...field} label="Description" />
+                    {fieldState.error && (
+                      <p className="form-error">{fieldState.error.message}</p>
+                    )}
+                  </div>
                 )}
               />
 
@@ -278,7 +279,7 @@ const PostForm = () => {
           </form>
         </div>
       </div>
-
+      {/* modal confirm update */}
       {isEdit && (
         <ModalComponent
           type={ModalTypes.CONFIRM}

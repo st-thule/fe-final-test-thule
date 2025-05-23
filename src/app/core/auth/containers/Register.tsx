@@ -4,19 +4,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
-import { AuthService } from '@app/core/services/auth.service';
 import { registerThunk } from '@app/store/auth/thunk/authThunk';
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { useAppSelector } from '@app/store/hook/useAppSelector';
+import hideIcon from '@assets/icons/hide.svg';
+import showIcon from '@assets/icons/show.svg';
 import { Button } from '@shared/components/partials/Button';
 import { Input } from '@shared/components/partials/Input';
 import { Select } from '@shared/components/partials/Select';
-import { LabelGender, optionGender } from '@shared/constants/options';
-import { formatDate } from '@shared/utils/formatDate';
+import { optionGender } from '@shared/constants/options';
 import { validationRulesAuth } from '@shared/constants/validationRules';
-
-import hideIcon from '@assets/icons/hide.svg';
-import showIcon from '@assets/icons/show.svg';
+import { LabelGender } from '@shared/types/enum';
+import { formatDate } from '@shared/utils/formatDate';
 
 interface IRegisterForm {
   email: string;
@@ -30,11 +29,10 @@ interface IRegisterForm {
 }
 
 const Register = () => {
-  const authService = new AuthService();
   const navigation = useNavigate();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const loading = useAppSelector((state) => state.auth.loading);
+  const { loading } = useAppSelector((state) => state.auth);
 
   const {
     control,
@@ -47,9 +45,10 @@ const Register = () => {
     },
   });
 
+  // register
   const onSubmit = async (data: IRegisterForm) => {
     try {
-      await dispatch(
+      const response = await dispatch(
         registerThunk({
           email: data.email!,
           password: data.password!,
@@ -61,8 +60,12 @@ const Register = () => {
           displayName: data.displayName!,
         })
       );
-      toast.success('Create successfully');
-      navigation(`${AppRoutes.AUTH}/${AppRoutes.LOGIN}`);
+      if (registerThunk.fulfilled.match(response)) {
+        toast.success('Create successfully');
+        navigation(`${AppRoutes.AUTH}/${AppRoutes.LOGIN}`);
+      } else {
+        toast.error(response.payload);
+      }
     } catch (error) {
       toast.error(error?.response?.data?.errors?.[0]);
     }

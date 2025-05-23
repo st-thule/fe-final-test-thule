@@ -21,12 +21,13 @@ export const Header = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
   const [hidden, setHidden] = useState(false);
-  const navigate = useNavigate();
 
+  // check is authen
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const isAuthenticated = !!user;
 
+  // check gender to set default icon avatar
   const author =
     user?.gender === 'female'
       ? femaleIcon
@@ -34,6 +35,7 @@ export const Header = () => {
       ? maleIcon
       : otherIcon;
 
+  // scroll header
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -48,6 +50,7 @@ export const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // click outsite to set close dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -61,11 +64,11 @@ export const Header = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // logout
   const onLogoutConfirm = () => {
     dispatch(logoutThunk());
     toast.success('Logout successfully');
     setModalOpen(false);
-    navigate(`${AppRoutes.HOME}`);
   };
 
   return (
@@ -99,12 +102,18 @@ export const Header = () => {
                 {isOpen && (
                   <nav className="dropdown-menu" ref={dropdownRef}>
                     <ul className="list list-dropdown">
-                      <li className="list-item">
+                      <li
+                        className="list-item"
+                        onClick={() => setIsOpen(false)}
+                      >
                         <Link className="list-link" to={`${AppRoutes.USER}/me`}>
                           Profile
                         </Link>
                       </li>
-                      <li className="list-item">
+                      <li
+                        className="list-item"
+                        onClick={() => setIsOpen(false)}
+                      >
                         <Link
                           className="list-link"
                           to={`${AppRoutes.POSTS}/${AppRoutes.POSTADD}`}

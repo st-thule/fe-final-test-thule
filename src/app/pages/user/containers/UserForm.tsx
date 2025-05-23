@@ -3,20 +3,19 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { AppRoutes } from '@app/core/constants/app-routes';
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { useAppSelector } from '@app/store/hook/useAppSelector';
 import { uploadImageThunk } from '@app/store/image/thunk/imageThunk';
 import { updateInfoThunk } from '@app/store/user/thunk/userThunk';
+import femaleIcon from '@assets/icons/avatar-female.svg';
+import maleIcon from '@assets/icons/avatar-male.svg';
+import otherIcon from '@assets/icons/avatar-other.svg';
 import { Button, Input } from '@shared/components/partials';
 import { Select } from '@shared/components/partials/Select';
 import { UploadImage } from '@shared/components/UploadImage';
 import { optionGender } from '@shared/constants/options';
 import { TypeUpload } from '@shared/types/enum';
-
-import femaleIcon from '@assets/icons/avatar-female.svg';
-import maleIcon from '@assets/icons/avatar-male.svg';
-import otherIcon from '@assets/icons/avatar-other.svg';
-import { AppRoutes } from '@app/core/constants/app-routes';
 
 interface IUserForm {
   firstName: string;
@@ -51,6 +50,7 @@ const UserForm = () => {
   });
 
   const picture = watch('picture');
+  // set value for field
   useEffect(() => {
     if (user) {
       setValue('firstName', user.firstName || '');
@@ -62,18 +62,22 @@ const UserForm = () => {
     }
   }, [user, setValue]);
 
+  // edit profile
   const onSubmit = async (data: IUserForm) => {
     try {
-      const result = await dispatch(updateInfoThunk(data));
-      if (updateInfoThunk.fulfilled.match(result)) {
+      const response = await dispatch(updateInfoThunk(data));
+      if (updateInfoThunk.fulfilled.match(response)) {
         toast.success('Profile updated successfully!');
         navigate(-1);
+      } else {
+        toast.error(response.payload);
       }
     } catch (error) {
       throw error;
     }
   };
 
+  // upload avatar
   const handleUploadImage = async (file: File) => {
     try {
       const uploadResult = await dispatch(
@@ -88,6 +92,7 @@ const UserForm = () => {
     }
   };
 
+  // check avatar default follow gender
   const author =
     user?.gender === 'female'
       ? femaleIcon

@@ -1,7 +1,7 @@
 import { ApiService } from '@app/core/services/api.service';
 import { ENDPOINT } from '@config/endpoint';
-import { StatusPost } from '@shared/constants/options';
 import { Post, PostResponse } from '@shared/models/post';
+import { StatusPost } from '@shared/types/enum';
 
 export interface IPostPayLoad {
   title: string;

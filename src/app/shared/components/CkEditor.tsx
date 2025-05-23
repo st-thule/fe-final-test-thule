@@ -60,6 +60,9 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import 'ckeditor5/ckeditor5.css';
 import { TypeUpload } from '@shared/types/enum';
 import { ImageService } from '@shared/services/image.service';
+import { AppDispatch } from '@app/store';
+import { uploadImageThunk } from '@app/store/image/thunk/imageThunk';
+import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 
 const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
 
@@ -74,6 +77,7 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
   const editorContainerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<HTMLDivElement>(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     setIsLayoutReady(true);
@@ -253,7 +257,11 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
             editor.plugins.get('FileRepository').createUploadAdapter = (
               loader: FileLoader
             ) => {
-              return new S3UploadAdapter(loader, TypeUpload.CONTENT_POST);
+              return new S3UploadAdapter(
+                loader,
+                TypeUpload.CONTENT_POST,
+                dispatch
+              );
             };
           },
         ],
@@ -320,49 +328,38 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
   );
 }
 
-// --------------------
-// Custom Upload Adapter
-// --------------------
+// Upload Image in Ckeditor Adapter
 class S3UploadAdapter implements UploadAdapter {
   loader: FileLoader;
   typeUpload: TypeUpload;
+  dispatch: AppDispatch;
 
-  constructor(loader: FileLoader, typeUpload: TypeUpload) {
+  constructor(
+    loader: FileLoader,
+    typeUpload: TypeUpload,
+    dispatch: AppDispatch
+  ) {
     this.loader = loader;
     this.typeUpload = typeUpload;
+    this.dispatch = dispatch;
   }
 
-  upload(): Promise<{ default: string }> {
-    return this.loader.file.then(
-      (file: File) =>
-        new Promise<{ default: string }>((resolve, reject) => {
-          imageService
-            .getSignedUrl(this.typeUpload, file.name, file.type)
-            .then(
-              ({
-                signedRequest,
-                url,
-              }: {
-                signedRequest: string;
-                url: string;
-              }) => {
-                imageService
-                  .uploadImageToS3(signedRequest, file)
-                  .then(() => {
-                    resolve({
-                      default: url,
-                    });
-                  })
-                  .catch((error: Error) => {
-                    reject(error.message);
-                  });
-              }
-            )
-            .catch((error: Error) => {
-              reject(error.message);
-            });
-        })
-    );
+  async upload(): Promise<{ default: string }> {
+    const file = await this.loader.file;
+
+    try {
+      const resultAction = await this.dispatch(
+        uploadImageThunk({ file, typeUpload: this.typeUpload })
+      );
+
+      if (uploadImageThunk.fulfilled.match(resultAction)) {
+        return { default: resultAction.payload };
+      } else {
+        throw new Error(resultAction.payload || 'Upload failed');
+      }
+    } catch (error) {
+      return Promise.reject(error.message || 'Upload failed');
+    }
   }
 
   abort(): void {

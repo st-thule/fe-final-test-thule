@@ -23,7 +23,11 @@ export const loginThunk = createAsyncThunk<
     authStorage.setToken(response.accessToken);
     return response.userInfo;
   } catch (error) {
-    return rejectWithValue(error.message || 'Login Failed');
+    const message =
+      error?.response?.data?.errors?.[0] ||
+      error?.response?.data?.message ||
+      'Login Failed';
+    return rejectWithValue(message);
   }
 });
 
@@ -35,7 +39,11 @@ export const registerThunk = createAsyncThunk<
   try {
     await authService.registerAccount(registerPayload);
   } catch (error) {
-    return rejectWithValue(error.message || 'Register Failed');
+    const message =
+      error?.response?.data?.errors?.[0] ||
+      error?.response?.data?.message ||
+      'Register Failed';
+    return rejectWithValue(message);
   }
 });
 
@@ -72,7 +80,7 @@ export const changePasswordThunk = createAsyncThunk<
 >('auth/changePassword', async (changePasswordPayload, { rejectWithValue }) => {
   try {
     await authService.changePassword(changePasswordPayload);
-  } catch (error: any) {
+  } catch (error) {
     const message = error.response?.data?.errors?.[0] || 'Invalid password';
     return rejectWithValue(message);
   }

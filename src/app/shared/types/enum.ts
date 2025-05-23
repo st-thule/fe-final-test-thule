@@ -8,3 +8,14 @@ export enum ModalTypes {
   CONFIRM = 'CONFIRM',
   USER_FORM = 'USER_FORM',
 }
+
+export enum LabelGender {
+  MALE = 'male',
+  FEMALE = 'female',
+  OTHER = 'other',
+}
+
+export enum StatusPost {
+  PUBLIC = 'public',
+  PRIVATE = 'private',
+}

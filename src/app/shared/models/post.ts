@@ -1,21 +1,23 @@
 import { User } from './user';
 
-export interface Post {
-  id: string;
-  title: string;
-  description: string;
-  content: string;
-  status: string;
-  tags: string[];
-  userId: string;
-  likes: number | 0;
-  comments: number | 0;
-  cover: string;
-  recommend: boolean;
-  deletedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  user: User;
+export class Post {
+  constructor(
+    public id: string,
+    public title: string,
+    public description: string,
+    public content: string,
+    public status: string,
+    public tags: string[],
+    public userId: string,
+    public likes: number | 0,
+    public comments: number | 0,
+    public cover: string,
+    public recommend: boolean,
+    public deletedAt: string | null,
+    public createdAt: string,
+    public updatedAt: string,
+    public user: User
+  ) {}
 }
 
 export interface PostResponse {

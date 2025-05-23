@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Post } from '@shared/models/post';
-import { PostComponent } from '../../../shared/components/Post';
+import { PostComponent } from '@app/shared/components/Post';
 
 interface IPostListProps {
   posts: Post[];
@@ -20,7 +20,7 @@ export const PostList: React.FC<IPostListProps> = ({
   return (
     <>
       {!posts || posts.length === 0 ? (
-        <p className="text-center">No post here</p>
+        <p>No post here</p>
       ) : (
         <>
           <ul className="list list-posts row">

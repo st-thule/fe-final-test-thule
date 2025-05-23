@@ -18,7 +18,15 @@ const initialState: UserState = {
 const userReducer = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    removePostFromPersonalInfo(state, action) {
+      if (state.personalInfo && state.personalInfo.Posts) {
+        state.personalInfo.Posts = state.personalInfo.Posts.filter(
+          (post) => post.id !== action.payload
+        );
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getPersonalInfoThunk.pending, (state) => {
@@ -35,4 +43,6 @@ const userReducer = createSlice({
       });
   },
 });
+
+export const { removePostFromPersonalInfo } = userReducer.actions;
 export default userReducer.reducer;

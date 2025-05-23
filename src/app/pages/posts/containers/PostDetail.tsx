@@ -21,6 +21,7 @@ import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 import { ModalTypes } from '@shared/types/enum';
+import { SkeletonPostDetail } from '@shared/components/partials/Skeleton';
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -35,6 +36,7 @@ const PostDetail = () => {
 
   const errorDelete = useAppSelector((state) => state.post.error.delete);
 
+  // get post detail
   useEffect(() => {
     dispatch(getPostByIdThunk(id!)).then((action) => {
       if (getPostByIdThunk.fulfilled.match(action)) {
@@ -56,12 +58,19 @@ const PostDetail = () => {
     }
   }, [errorDelete]);
 
-  const handleDeletePost = (id: string | number) => {
-    dispatch(deletePostThunk(id!));
-    toast.success('Delete successfully');
-    navigate(-1);
+  // delete post
+  const handleDeletePost = async (id: string | number) => {
+    const response = await dispatch(deletePostThunk(id!));
+    if (deletePostThunk.fulfilled.match(response)) {
+      toast.success('Delete successfully');
+      navigate(-1);
+    } else {
+      const errorMessage = response.payload || 'Something went wrong';
+      toast.error(errorMessage);
+    }
   };
 
+  // set default avatar follow gender
   const author =
     post?.user?.gender === 'female'
       ? femaleIcon
@@ -75,21 +84,7 @@ const PostDetail = () => {
         <div className="wrapper wrapper-padding">
           <article className="article article-post">
             {loadingFetch ? (
-              <>
-                <div className="article-header">
-                  <div className="skeleton-tag mb-2"></div>
-                  <div className="skeleton-title"></div>
-                  <div className="skeleton-small">
-                    <div className="skeleton-circle"></div>
-                  </div>
-                </div>
-                <div className="article-body">
-                  <div className="article-thumbnail">
-                    <div className="skeleton-image"></div>
-                  </div>
-                  <div className="skeleton-content"></div>
-                </div>
-              </>
+              <SkeletonPostDetail />
             ) : post ? (
               <>
                 <div className="article-header">
@@ -97,7 +92,11 @@ const PostDetail = () => {
                     {post.tags && post.tags.length > 0 ? (
                       post.tags.map((tag) => (
                         <li className="list-item">
-                          <Link className="tag" to="" key={tag}>
+                          <Link
+                            className="tag"
+                            to={`${AppRoutes.POSTS}/tags/${tag}`}
+                            key={tag}
+                          >
                             {tag}
                           </Link>
                         </li>
@@ -116,7 +115,11 @@ const PostDetail = () => {
                           src={post.user?.picture ?? author}
                           alt="Author"
                         />
-                        <p className="meta-title">{post.user?.displayName}</p>
+                        <p className="meta-title">
+                          <Link to={`${AppRoutes.USER}/${post.user?.id}`}>
+                            {post.user?.displayName}
+                          </Link>
+                        </p>
                       </div>
                       <div className="meta-group">
                         <img

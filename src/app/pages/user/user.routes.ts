@@ -20,6 +20,7 @@ export const userRoutes: PageRoute[] = [
       {
         path: AppRoutes.USER_WALL, //:id
         element: Profile,
+        isProtected: true,
       },
       {
         path: AppRoutes.USER_EDIT, //edit

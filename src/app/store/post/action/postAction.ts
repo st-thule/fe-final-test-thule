@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+
 import {
   CREATE_POST,
   CREATE_POST_FAILURE,

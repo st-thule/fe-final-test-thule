@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { User, UserWithPost } from '@shared/models/user';
+import { User } from '@shared/models/user';
 import { IUserPayload, UserService } from '@shared/services/user.service';
 
 const userService = new UserService();
 
 export const getPersonalInfoThunk = createAsyncThunk<
-  UserWithPost,
+  User,
   { id: number | string },
   { rejectValue: string }
 >('users/userInfo', async ({ id }, { rejectWithValue }) => {
@@ -21,7 +21,11 @@ export const getPersonalInfoThunk = createAsyncThunk<
       Posts: sortedPosts,
     };
   } catch (error) {
-    return rejectWithValue(error.message || 'Failed to fetch user info');
+    const message =
+      error?.response?.data?.errors?.[0] ||
+      error?.response?.data?.message ||
+      'Login Failed';
+    return rejectWithValue(message);
   }
 });
 
@@ -34,6 +38,10 @@ export const updateInfoThunk = createAsyncThunk<
     const updatedUser = await userService.updateProfile(data);
     return updatedUser;
   } catch (error) {
-    return rejectWithValue(error.message || 'Failed to update info');
+    const message =
+      error?.response?.data?.errors?.[0] ||
+      error?.response?.data?.message ||
+      'Login Failed';
+    return rejectWithValue(message);
   }
 });

@@ -1,18 +1,9 @@
+import { LabelGender, StatusPost } from '@shared/types/enum';
+
 export interface IOption {
   id: number;
   label: string;
   value: string;
-}
-
-export enum LabelGender {
-  MALE = 'male',
-  FEMALE = 'female',
-  OTHER = 'other',
-}
-
-export enum StatusPost {
-  PUBLIC = 'public',
-  PRIVATE = 'private',
 }
 
 export const optionGender: IOption[] = [
