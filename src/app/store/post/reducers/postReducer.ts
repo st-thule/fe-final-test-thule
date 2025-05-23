@@ -71,9 +71,8 @@ const postReducer = createSlice({
         state.loading.create = true;
         state.error.create = null;
       })
-      .addCase(createPostThunk.fulfilled, (state, action) => {
+      .addCase(createPostThunk.fulfilled, (state) => {
         state.loading.create = false;
-        state.posts.data.unshift(action.payload);
         state.posts.totalItems += 1;
       })
       .addCase(createPostThunk.rejected, (state, action) => {

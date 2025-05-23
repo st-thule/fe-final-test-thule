@@ -3,19 +3,19 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
-import { Post } from '@shared/models/post';
-import { formatDate } from '@shared/utils/formatDate';
-
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { useAppSelector } from '@app/store/hook/useAppSelector';
 import { deletePostThunk } from '@app/store/post/thunk/postThunk';
+import { removePostFromPersonalInfo } from '@app/store/user/reducers/userReducer';
 import femaleIcon from '@assets/icons/avatar-female.svg';
 import maleIcon from '@assets/icons/avatar-male.svg';
 import otherIcon from '@assets/icons/avatar-other.svg';
 import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
+import { Post } from '@shared/models/post';
 import { ModalTypes } from '@shared/types/enum';
+import { formatDate } from '@shared/utils/formatDate';
 import { ModalComponent } from './Modal';
 
 interface IPostProps {
@@ -38,12 +38,16 @@ export const PostComponent: React.FC<IPostProps> = ({
   const [modalOpen, setModalOpen] = useState(false);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
+
   const handleDeletePost = async (id: string | number) => {
     try {
-      await dispatch(deletePostThunk(id!));
+      console.log(id);
+      await dispatch(deletePostThunk(id)).unwrap();
       toast.success('Delete successfully');
-    } catch (error) {
-      throw error;
+      dispatch(removePostFromPersonalInfo(id));
+      setModalOpen(false);
+    } catch (error: any) {
+      toast.error(error?.message || 'Delete failed');
     }
   };
 
@@ -76,7 +80,8 @@ export const PostComponent: React.FC<IPostProps> = ({
             </div>
           )}
         </div>
-        {post.tags && post.tags.length > 0 ? (
+        {post.tags &&
+          post.tags.length > 0 &&
           post.tags.map((tag) => (
             <Link
               className="card-tag"
@@ -85,12 +90,12 @@ export const PostComponent: React.FC<IPostProps> = ({
             >
               {tag}
             </Link>
-          ))
-        ) : (
-          <></>
-        )}
+          ))}
         <div className="card-content">
-          <Link to={`${AppRoutes.POSTS}/${post.id}`} onClick={() => onClick}>
+          <Link
+            to={`${AppRoutes.POSTS}/${post.id}`}
+            onClick={() => onClick?.(post.id)}
+          >
             <h3 className="card-title">{post.title}</h3>
           </Link>
           <p className="card-desc">{post.description}</p>
