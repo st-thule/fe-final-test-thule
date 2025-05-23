@@ -10,5 +10,9 @@ export const PrivateRoute = ({
   component: React.ComponentType;
 }) => {
   const token = authStorage.getToken();
-  return token ? <Wrapped /> : <Navigate to={AppRoutes.LOGIN} replace />;
+  return token ? (
+    <Wrapped />
+  ) : (
+    <Navigate to={`${AppRoutes.AUTH}/${AppRoutes.LOGIN}`} replace />
+  );
 };
