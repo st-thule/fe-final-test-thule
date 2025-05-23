@@ -21,7 +21,11 @@ export const getPersonalInfoThunk = createAsyncThunk<
       Posts: sortedPosts,
     };
   } catch (error) {
-    return rejectWithValue(error.message || 'Failed to fetch user info');
+    const message =
+      error?.response?.data?.errors?.[0] ||
+      error?.response?.data?.message ||
+      'Login Failed';
+    return rejectWithValue(message);
   }
 });
 
@@ -34,6 +38,10 @@ export const updateInfoThunk = createAsyncThunk<
     const updatedUser = await userService.updateProfile(data);
     return updatedUser;
   } catch (error) {
-    return rejectWithValue(error.message || 'Failed to update info');
+    const message =
+      error?.response?.data?.errors?.[0] ||
+      error?.response?.data?.message ||
+      'Login Failed';
+    return rejectWithValue(message);
   }
 });

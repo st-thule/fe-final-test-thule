@@ -29,7 +29,11 @@ export const createPostThunk = createAsyncThunk<
     const response = await postService.createPost(postData);
     return response;
   } catch (error) {
-    return rejectWithValue(error.message || 'Failed to create post');
+    const message =
+      error?.response?.data?.errors?.[0] ||
+      error?.response?.data?.message ||
+      'Failed to create posts';
+    return rejectWithValue(message);
   }
 });
 
@@ -43,7 +47,11 @@ export const updatePostThunk = createAsyncThunk<
     const updatedPost = await postService.updatePost(id, data);
     return updatedPost;
   } catch (error) {
-    return rejectWithValue(error.message || 'Failed to update post');
+    const message =
+      error?.response?.data?.errors?.[0] ||
+      error?.response?.data?.message ||
+      'Failed to update post';
+    return rejectWithValue(message);
   }
 });
 
@@ -57,7 +65,11 @@ export const deletePostThunk = createAsyncThunk<
     await postService.deletePost(id);
     return id;
   } catch (error) {
-    return rejectWithValue(error.message || 'Failed to delete post');
+    const message =
+      error?.response?.data?.errors?.[0] ||
+      error?.response?.data?.message ||
+      'Failed to delete post';
+    return rejectWithValue(message);
   }
 });
 
@@ -71,7 +83,11 @@ export const getPostByIdThunk = createAsyncThunk<
     const post = await postService.getPostById(id);
     return post;
   } catch (error) {
-    return rejectWithValue(error.message || 'Failed to fetch post by id');
+    const message =
+      error?.response?.data?.errors?.[0] ||
+      error?.response?.data?.message ||
+      'Failed to fetch post by id';
+    return rejectWithValue(message);
   }
 });
 
@@ -85,9 +101,11 @@ export const getPostDetailUpdateThunk = createAsyncThunk<
     const post = await postService.getPostDetailUpdate(id);
     return post;
   } catch (error) {
-    return rejectWithValue(
-      error.message || 'Failed to fetch post detail for update'
-    );
+    const message =
+      error?.response?.data?.errors?.[0] ||
+      error?.response?.data?.message ||
+      'Failed to fetch post to update';
+    return rejectWithValue(message);
   }
 });
 
@@ -103,7 +121,11 @@ export const getPostsByTagThunk = createAsyncThunk<
       const response = await postService.getPostsByTag(tagName, page, size);
       return response;
     } catch (error) {
-      return rejectWithValue(error.message || 'Failed to fetch posts by tag');
+      const message =
+        error?.response?.data?.errors?.[0] ||
+        error?.response?.data?.message ||
+        'Failed to fetch posts by tag';
+      return rejectWithValue(message);
     }
   }
 );

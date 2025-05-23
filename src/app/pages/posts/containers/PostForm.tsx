@@ -116,12 +116,12 @@ const PostForm = () => {
 
   const handleUpdatePost = async (data: IPostForm) => {
     try {
-      const result = await dispatch(updatePostThunk({ id: id!, data }));
-      if (updatePostThunk.fulfilled.match(result)) {
+      const response = await dispatch(updatePostThunk({ id: id!, data }));
+      if (updatePostThunk.fulfilled.match(response)) {
         toast.success('Post updated successfully');
         navigate(`${AppRoutes.USER}/me`);
       } else {
-        toast.error('Failed to update post');
+        toast.error(response.payload);
       }
     } catch (err) {
       toast.error(err?.message || 'Update failed');
@@ -151,13 +151,13 @@ const PostForm = () => {
       setOpenModal(true);
     } else {
       try {
-        const result = await dispatch(createPostThunk(finalData));
-        if (createPostThunk.fulfilled.match(result)) {
-          const post = result.payload;
+        const response = await dispatch(createPostThunk(finalData));
+        if (createPostThunk.fulfilled.match(response)) {
+          const post = response.payload;
           toast.success('Post created successfully');
           navigate(`${AppRoutes.POSTS}/${post.id}`);
         } else {
-          toast.error('Failed to create post');
+          toast.error(response.payload);
         }
       } catch (err) {
         toast.error(err?.message || 'Create failed');

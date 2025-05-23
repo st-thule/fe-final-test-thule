@@ -30,11 +30,10 @@ interface IRegisterForm {
 }
 
 const Register = () => {
-  const authService = new AuthService();
   const navigation = useNavigate();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const loading = useAppSelector((state) => state.auth.loading);
+  const { loading, error } = useAppSelector((state) => state.auth);
 
   const {
     control,
@@ -49,7 +48,7 @@ const Register = () => {
 
   const onSubmit = async (data: IRegisterForm) => {
     try {
-      await dispatch(
+      const response = await dispatch(
         registerThunk({
           email: data.email!,
           password: data.password!,
@@ -61,8 +60,12 @@ const Register = () => {
           displayName: data.displayName!,
         })
       );
-      toast.success('Create successfully');
-      navigation(`${AppRoutes.AUTH}/${AppRoutes.LOGIN}`);
+      if (registerThunk.fulfilled.match(response)) {
+        toast.success('Create successfully');
+        navigation(`${AppRoutes.AUTH}/${AppRoutes.LOGIN}`);
+      } else {
+        toast.error(response.payload);
+      }
     } catch (error) {
       toast.error(error?.response?.data?.errors?.[0]);
     }

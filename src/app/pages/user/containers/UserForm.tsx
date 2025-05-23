@@ -64,10 +64,12 @@ const UserForm = () => {
 
   const onSubmit = async (data: IUserForm) => {
     try {
-      const result = await dispatch(updateInfoThunk(data));
-      if (updateInfoThunk.fulfilled.match(result)) {
+      const response = await dispatch(updateInfoThunk(data));
+      if (updateInfoThunk.fulfilled.match(response)) {
         toast.success('Profile updated successfully!');
         navigate(-1);
+      } else {
+        toast.error(response.payload);
       }
     } catch (error) {
       throw error;

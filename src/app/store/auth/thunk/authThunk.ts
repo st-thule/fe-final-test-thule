@@ -39,7 +39,11 @@ export const registerThunk = createAsyncThunk<
   try {
     await authService.registerAccount(registerPayload);
   } catch (error) {
-    return rejectWithValue(error.message || 'Register Failed');
+    const message =
+      error?.response?.data?.errors?.[0] ||
+      error?.response?.data?.message ||
+      'Register Failed';
+    return rejectWithValue(message);
   }
 });
 

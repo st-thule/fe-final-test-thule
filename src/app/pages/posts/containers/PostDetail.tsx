@@ -56,10 +56,15 @@ const PostDetail = () => {
     }
   }, [errorDelete]);
 
-  const handleDeletePost = (id: string | number) => {
-    dispatch(deletePostThunk(id!));
-    toast.success('Delete successfully');
-    navigate(-1);
+  const handleDeletePost = async (id: string | number) => {
+    const response = await dispatch(deletePostThunk(id!));
+    if (deletePostThunk.fulfilled.match(response)) {
+      toast.success('Delete successfully');
+      navigate(-1);
+    } else {
+      const errorMessage = response.payload || 'Something went wrong';
+      toast.error(errorMessage);
+    }
   };
 
   const author =
