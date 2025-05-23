@@ -21,6 +21,7 @@ import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 import { ModalTypes } from '@shared/types/enum';
+import { SkeletonPostDetail } from '@shared/components/partials/Skeleton';
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -83,21 +84,7 @@ const PostDetail = () => {
         <div className="wrapper wrapper-padding">
           <article className="article article-post">
             {loadingFetch ? (
-              <>
-                <div className="article-header">
-                  <div className="skeleton-tag mb-2"></div>
-                  <div className="skeleton-title"></div>
-                  <div className="skeleton-small">
-                    <div className="skeleton-circle"></div>
-                  </div>
-                </div>
-                <div className="article-body">
-                  <div className="article-thumbnail">
-                    <div className="skeleton-image"></div>
-                  </div>
-                  <div className="skeleton-content"></div>
-                </div>
-              </>
+              <SkeletonPostDetail />
             ) : post ? (
               <>
                 <div className="article-header">

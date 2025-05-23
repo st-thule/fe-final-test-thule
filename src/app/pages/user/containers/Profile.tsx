@@ -13,6 +13,10 @@ import maleIcon from '@assets/icons/avatar-male.svg';
 import otherIcon from '@assets/icons/avatar-other.svg';
 import { ModalComponent } from '@shared/components/Modal';
 import { Button, Input } from '@shared/components/partials';
+import {
+  SkeletonPost,
+  SkeletonProfile,
+} from '@shared/components/partials/Skeleton';
 import { ModalTypes } from '@shared/types/enum';
 import { PostList } from '../components/PostList';
 
@@ -90,16 +94,20 @@ const Profile = () => {
       <div className="container">
         <div className="wrapper wrapper-padding">
           {loading || !personalInfo ? (
-            <section className="section section-info">
-              <div className="section-image skeleton-avatar"></div>
-
-              <div className="section-content skeleton-content">
-                <div className="skeleton-title" />
-                <div className="skeleton-text" />
-                <div className="skeleton-text" />
-                <div className="skeleton-text" />
-              </div>
-            </section>
+            <>
+              <SkeletonProfile />
+              <section className="section section-list section-post">
+                <div className="section-header">
+                  <h2 className="section-title">Articles</h2>
+                </div>
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <SkeletonPost
+                    key={`skeleton-${index}`}
+                    className="col-12 col-sm-6 col-md-3"
+                  />
+                ))}
+              </section>
+            </>
           ) : (
             <>
               <section className="section section-info">

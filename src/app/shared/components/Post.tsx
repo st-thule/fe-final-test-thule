@@ -33,7 +33,6 @@ export const PostComponent: React.FC<IPostProps> = ({
   post,
   className,
   onClick,
-  loading = false,
   fallbackUser,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -55,27 +54,6 @@ export const PostComponent: React.FC<IPostProps> = ({
       ? maleIcon
       : otherIcon;
 
-  if (loading) {
-    return (
-      <li className={`list-item ${className}`}>
-        <div className="card">
-          <div className="card-img skeleton" />
-          <div className="card-content">
-            <div className="skeleton-tag mb-2" />
-            <div className="skeleton-text" />
-            <div className="skeleton-text mt-1" />
-            <div className="card-detail detail">
-              <div className="detail-group">
-                <div className="skeleton-circle" />
-                <div className="skeleton-text" />
-              </div>
-              <div className="skeleton-text" />
-            </div>
-          </div>
-        </div>
-      </li>
-    );
-  }
   return (
     <li className={`list-item ${className}`}>
       <div>
