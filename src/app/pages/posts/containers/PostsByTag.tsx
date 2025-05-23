@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { RootState } from '@app/store';
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
+import { useAppSelector } from '@app/store/hook/useAppSelector';
 import { getPostsByTagThunk } from '@app/store/post/thunk/postThunk';
 import { PostListPagination } from '@shared/components/PostListPagination';
 import { optionTags } from '@shared/constants/options';
-import { useSelector } from 'react-redux';
 
 const SIZE_PAGE = 8;
 
@@ -34,7 +33,7 @@ const PostsByTag = () => {
     [setSearchParams]
   );
 
-  const { posts, loading, error } = useSelector((state: RootState) => ({
+  const { posts, loading, error } = useAppSelector((state) => ({
     posts: state.post?.posts,
     loading: state.post?.loading.fetch,
     error: state.post?.error.fetch,

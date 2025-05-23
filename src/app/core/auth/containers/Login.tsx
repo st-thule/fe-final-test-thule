@@ -7,11 +7,10 @@ import { AppRoutes } from '@app/core/constants/app-routes';
 import { loginThunk } from '@app/store/auth/thunk/authThunk';
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { useAppSelector } from '@app/store/hook/useAppSelector';
-import { Button, Input } from '@shared/components/partials';
-import { validationRulesAuth } from '@shared/constants/validationRules';
-
 import hideIcon from '@assets/icons/hide.svg';
 import showIcon from '@assets/icons/show.svg';
+import { Button, Input } from '@shared/components/partials';
+import { validationRulesAuth } from '@shared/constants/validationRules';
 
 interface ILoginForm {
   email: string;
@@ -34,6 +33,7 @@ const Login = () => {
     mode: 'onChange',
   });
 
+  // login
   const onSubmit = async (data: ILoginForm) => {
     try {
       const response = await dispatch(

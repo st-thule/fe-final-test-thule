@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+
 import { ImageService } from '@shared/services/image.service';
 
 const imageService = new ImageService();

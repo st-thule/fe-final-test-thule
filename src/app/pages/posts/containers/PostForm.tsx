@@ -20,13 +20,9 @@ import { UploadImage } from '@shared/components/UploadImage';
 import { Button, Input } from '@shared/components/partials';
 import { Select } from '@shared/components/partials/Select';
 import { Textarea } from '@shared/components/partials/TextArea';
-import {
-  optionStatusPost,
-  optionTags,
-  StatusPost,
-} from '@shared/constants/options';
-import { ModalTypes, TypeUpload } from '@shared/types/enum';
+import { optionStatusPost, optionTags } from '@shared/constants/options';
 import { validationRulesPost } from '@shared/constants/validationRules';
+import { ModalTypes, StatusPost, TypeUpload } from '@shared/types/enum';
 
 interface IPostForm {
   title: string;
@@ -70,6 +66,7 @@ const PostForm = () => {
 
   const cover = watch('cover');
 
+  // get post detail update
   useEffect(() => {
     if (!isEdit || !user?.id) return;
 
@@ -98,6 +95,7 @@ const PostForm = () => {
       .catch(() => toast.error('Failed to load post'));
   }, [dispatch, id, isEdit, navigate, setValue, user.id]);
 
+  // upload image
   const handleUploadImage = async (file: File) => {
     try {
       const uploadResult = await dispatch(
@@ -114,6 +112,7 @@ const PostForm = () => {
     }
   };
 
+  // update post
   const handleUpdatePost = async (data: IPostForm) => {
     try {
       const response = await dispatch(updatePostThunk({ id: id!, data }));
@@ -130,6 +129,7 @@ const PostForm = () => {
     }
   };
 
+  // create post
   const onSubmit = async (data: IPostForm) => {
     if (!data.cover || data.cover.trim() === '') {
       toast.error('Please upload a cover image.');
@@ -279,7 +279,7 @@ const PostForm = () => {
           </form>
         </div>
       </div>
-
+      {/* modal confirm update */}
       {isEdit && (
         <ModalComponent
           type={ModalTypes.CONFIRM}

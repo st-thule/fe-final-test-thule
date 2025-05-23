@@ -10,25 +10,25 @@ const PostsByTag = React.lazy(() => import('./containers/PostsByTag'));
 
 const postRoutes: PageRoute[] = [
   {
-    path: AppRoutes.POSTS,
+    path: AppRoutes.POSTS, // posts
     element: Post,
     children: [
       {
-        path: AppRoutes.POSTSDETAIL,
+        path: AppRoutes.POSTSDETAIL, //posts/id
         element: PostDetail,
       },
       {
-        path: AppRoutes.POSTADD,
+        path: AppRoutes.POSTADD, //posts/create
         element: PostForm,
         isProtected: true,
       },
       {
-        path: AppRoutes.POSTEDIT,
+        path: AppRoutes.POSTEDIT, //posts/edit/:id
         element: PostForm,
         isProtected: true,
       },
       {
-        path: AppRoutes.POSTAGS,
+        path: AppRoutes.POSTAGS, //posts/tags/tagName
         element: PostsByTag,
       },
     ],

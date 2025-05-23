@@ -48,8 +48,10 @@ const Profile = () => {
     }
   }, [dispatch, id, authUser?.id]);
 
+  // check is my profile
   const isMyProfile = personalInfo?.id === authUser?.id;
 
+  // check gender to set default icon
   const author =
     personalInfo?.gender === 'female'
       ? femaleIcon
@@ -57,6 +59,7 @@ const Profile = () => {
       ? maleIcon
       : otherIcon;
 
+  // change password
   const handleChangePassword = async (data: IPasswordForm) => {
     if (data.newPassword === data.confirmPassword) {
       try {

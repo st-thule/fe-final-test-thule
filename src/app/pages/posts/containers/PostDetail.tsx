@@ -35,6 +35,7 @@ const PostDetail = () => {
 
   const errorDelete = useAppSelector((state) => state.post.error.delete);
 
+  // get post detail
   useEffect(() => {
     dispatch(getPostByIdThunk(id!)).then((action) => {
       if (getPostByIdThunk.fulfilled.match(action)) {
@@ -56,6 +57,7 @@ const PostDetail = () => {
     }
   }, [errorDelete]);
 
+  // delete post
   const handleDeletePost = async (id: string | number) => {
     const response = await dispatch(deletePostThunk(id!));
     if (deletePostThunk.fulfilled.match(response)) {
@@ -67,6 +69,7 @@ const PostDetail = () => {
     }
   };
 
+  // set default avatar follow gender
   const author =
     post?.user?.gender === 'female'
       ? femaleIcon

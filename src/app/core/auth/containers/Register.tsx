@@ -4,19 +4,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
-import { AuthService } from '@app/core/services/auth.service';
 import { registerThunk } from '@app/store/auth/thunk/authThunk';
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { useAppSelector } from '@app/store/hook/useAppSelector';
+import hideIcon from '@assets/icons/hide.svg';
+import showIcon from '@assets/icons/show.svg';
 import { Button } from '@shared/components/partials/Button';
 import { Input } from '@shared/components/partials/Input';
 import { Select } from '@shared/components/partials/Select';
-import { LabelGender, optionGender } from '@shared/constants/options';
-import { formatDate } from '@shared/utils/formatDate';
+import { optionGender } from '@shared/constants/options';
 import { validationRulesAuth } from '@shared/constants/validationRules';
-
-import hideIcon from '@assets/icons/hide.svg';
-import showIcon from '@assets/icons/show.svg';
+import { LabelGender } from '@shared/types/enum';
+import { formatDate } from '@shared/utils/formatDate';
 
 interface IRegisterForm {
   email: string;
@@ -33,7 +32,7 @@ const Register = () => {
   const navigation = useNavigate();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const { loading, error } = useAppSelector((state) => state.auth);
+  const { loading } = useAppSelector((state) => state.auth);
 
   const {
     control,
@@ -46,6 +45,7 @@ const Register = () => {
     },
   });
 
+  // register
   const onSubmit = async (data: IRegisterForm) => {
     try {
       const response = await dispatch(

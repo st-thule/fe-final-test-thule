@@ -328,9 +328,7 @@ export default function Ckeditor({ value = '', onChange }: CkeditorProps) {
   );
 }
 
-// --------------------
-// Custom Upload Adapter
-// --------------------
+// Upload Image in Ckeditor Adapter
 class S3UploadAdapter implements UploadAdapter {
   loader: FileLoader;
   typeUpload: TypeUpload;
