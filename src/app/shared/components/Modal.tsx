@@ -5,7 +5,8 @@ import { Button } from './partials';
 import { ModalTypes } from '@shared/types/enum';
 
 interface ModalProps {
-  type: ModalTypes;
+  className?: string;
+  type?: ModalTypes;
   isOpen?: boolean;
   title?: string;
   message?: string;
@@ -17,6 +18,7 @@ interface ModalProps {
 }
 
 export const ModalComponent: React.FC<ModalProps> = ({
+  className,
   type,
   isOpen,
   title,
@@ -32,35 +34,33 @@ export const ModalComponent: React.FC<ModalProps> = ({
       isOpen={isOpen}
       onRequestClose={onCancel}
       contentLabel={title}
-      className="modal"
+      className={`modal ${className}`}
       overlayClassName="modal-overlay"
       ariaHideApp={false}
     >
-      <div className="modal-confirm">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            {title && <h3 className="modal-title">{title}</h3>}
-            {type === ModalTypes.CONFIRM && message && (
-              <p className="modal-body">{message}</p>
-            )}
-            {children}
-            {type === ModalTypes.CONFIRM && (
-              <div className="modal-action">
-                <>
-                  <Button
-                    className="btn btn-primary btn-agree"
-                    label={confirmLabel}
-                    onClick={onConfirm}
-                  />
-                  <Button
-                    className="btn btn-primary btn-no"
-                    label={cancelLabel}
-                    onClick={onCancel}
-                  />
-                </>
-              </div>
-            )}
-          </div>
+      <div className="modal-dialog">
+        <div className="modal-content">
+          {title && <h3 className="modal-title">{title}</h3>}
+          {type === ModalTypes.CONFIRM && message && (
+            <p className="modal-body">{message}</p>
+          )}
+          {children}
+          {type === ModalTypes.CONFIRM && (
+            <div className="modal-action">
+              <>
+                <Button
+                  className="btn btn-primary btn-agree"
+                  label={confirmLabel}
+                  onClick={onConfirm}
+                />
+                <Button
+                  className="btn btn-primary btn-no"
+                  label={cancelLabel}
+                  onClick={onCancel}
+                />
+              </>
+            </div>
+          )}
         </div>
       </div>
     </Modal>

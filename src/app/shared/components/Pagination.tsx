@@ -68,6 +68,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               className={`list-item ${
                 item === currentPage ? 'list-active' : ''
               }${item === '...' ? 'list-dots' : ''}`}
+              key={index}
             >
               <a
                 className="list-link"

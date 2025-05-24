@@ -24,6 +24,7 @@ import { ModalTypes } from '@shared/types/enum';
 import { SkeletonPostDetail } from '@shared/components/partials/Skeleton';
 
 const PostDetail = () => {
+  
   const { id } = useParams();
   const [post, setPost] = useState<Post>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -91,7 +92,7 @@ const PostDetail = () => {
                   <ul className="list list-tags">
                     {post.tags && post.tags.length > 0 ? (
                       post.tags.map((tag) => (
-                        <li className="list-item">
+                        <li className="list-item" key={tag}>
                           <Link
                             className="tag"
                             to={`${AppRoutes.POSTS}/tags/${tag}`}
@@ -180,6 +181,7 @@ const PostDetail = () => {
         </div>
       </div>
       <ModalComponent
+        className="modal-confirm"
         type={ModalTypes.CONFIRM}
         isOpen={modalOpen}
         title="Confirm logout"
