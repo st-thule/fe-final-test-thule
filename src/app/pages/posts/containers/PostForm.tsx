@@ -18,7 +18,7 @@ import { ModalComponent } from '@shared/components/Modal';
 import { MultiSelect } from '@shared/components/MultiSelect';
 import { UploadImage } from '@shared/components/UploadImage';
 import { Button, Input } from '@shared/components/partials';
-import { Select } from '@shared/components/partials/Select';
+import { SingleSelect } from '@shared/components/partials/Select';
 import { Textarea } from '@shared/components/partials/TextArea';
 import { optionStatusPost, optionTags } from '@shared/constants/options';
 import { validationRulesPost } from '@shared/constants/validationRules';
@@ -132,8 +132,7 @@ const PostForm = () => {
   // create post
   const onSubmit = async (data: IPostForm) => {
     if (!data.cover || data.cover.trim() === '') {
-      toast.error('Please upload a cover image.');
-      return;
+      data.cover = 'cover';
     }
 
     const finalData = {
@@ -214,13 +213,13 @@ const PostForm = () => {
                     name="status"
                     rules={validationRulesPost.status}
                     render={({ field }) => (
-                      <Select
+                      <SingleSelect
                         label="Status"
-                        placeHolder="Status"
+                        placeholder="Status"
                         options={optionStatusPost}
                         value={field.value}
                         name={field.name}
-                        onChange={field.onChange}
+                        onChange={(value) => field.onChange(value)}
                         errorMsg={errors.status?.message}
                       />
                     )}
@@ -282,6 +281,7 @@ const PostForm = () => {
       {/* modal confirm update */}
       {isEdit && (
         <ModalComponent
+          className="modal-confirm"
           type={ModalTypes.CONFIRM}
           isOpen={openModal}
           title="Confirm Edit"

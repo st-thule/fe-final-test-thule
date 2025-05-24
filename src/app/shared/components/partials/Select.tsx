@@ -1,61 +1,61 @@
 import React from 'react';
-import { UseFormRegisterReturn } from 'react-hook-form';
+import Select, { IndicatorSeparatorProps, SingleValue } from 'react-select';
 
-interface SelectProps {
-  name: string;
+import { IOption } from '@shared/constants/options';
+
+const indicatorSeparatorStyle = {
+  alignSelf: 'stretch',
+  marginBottom: 8,
+  marginTop: 8,
+  width: 1,
+};
+
+const IndicatorSeparator = ({
+  innerProps,
+}: IndicatorSeparatorProps<IOption, false>) => {
+  return <span style={indicatorSeparatorStyle} {...innerProps} />;
+};
+
+interface ISingleSelect {
+  options: IOption[];
   label?: string;
-  errorMsg?: string;
-  options: { label: string; value: string }[];
-  register?: UseFormRegisterReturn;
   value?: string;
-  placeHolder?: string;
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  onBlur?: () => void;
+  onChange?: (selectedValue: string, name?: string) => void;
+  errorMsg?: string;
+  placeholder?: string;
+  name?: string;
 }
 
-export const Select: React.FC<SelectProps> = ({
-  name,
+export const SingleSelect: React.FC<ISingleSelect> = ({
+  options = [],
   label,
-  errorMsg,
-  options,
-  register,
   value,
-  placeHolder,
   onChange,
-  onBlur,
+  errorMsg,
+  placeholder = 'Select...',
+  name,
 }) => {
-  const isShowError = !!errorMsg;
+  const isError = !!errorMsg;
+  const selectedOption = options.find((opt) => opt.value === value) || null;
+
+  const handleChange = (selected: SingleValue<IOption>) => {
+    if (selected) {
+      onChange?.(selected.value, name);
+    }
+  };
 
   return (
     <div className="form-control">
-      {label && (
-        <label className="form-label" htmlFor={name}>
-          {label}
-        </label>
-      )}
-      <div className="input-group">
-        <select
-          id={name}
-          name={name}
-          className={`input ${isShowError ? 'is-invalid' : ''}`}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
-          {...register}
-        >
-          {placeHolder && (
-            <option value="" disabled hidden>
-              {placeHolder}
-            </option>
-          )}
-          {options.map(({ value, label }) => (
-            <option className="" value={value} key={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </div>
-      {isShowError && <span className="error-message">{errorMsg}</span>}
+      {label && <label className="form-label">{label}</label>}
+      <Select
+        options={options}
+        value={selectedOption}
+        onChange={handleChange}
+        components={{ IndicatorSeparator }}
+        classNamePrefix={`form-select${isError ? ' is-invalid' : ''}`}
+        placeholder={placeholder}
+      />
+      {isError && <span className="error-message">{errorMsg}</span>}
     </div>
   );
 };
