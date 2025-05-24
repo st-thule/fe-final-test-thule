@@ -9,7 +9,7 @@ import { fetchPostsThunk } from '@app/store/post/thunk/postThunk';
 import { Tag } from '@shared/components/TagComponent';
 import { optionTags } from '@shared/constants/options';
 
-const SIZE_PAGE = 8;
+const SIZE_PAGE = 9;
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +29,7 @@ const Home = () => {
     (page: number) => {
       setCurrentPage(page);
       setSearchParams({ page: page.toString() });
+
       postListRef.current?.scrollIntoView({ behavior: 'smooth' });
     },
     [setSearchParams]
