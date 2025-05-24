@@ -1,20 +1,29 @@
 @use 'sass:map';
 @use '../base/' as *;
 
+main {
+  min-height: calc(100vh - 98px - 79px);
+}
 .pages-container {
   display: flex;
   flex-direction: column;
   margin: auto;
   align-items: center;
-  min-height: calc(100vh - 40px);
   padding-top: calc(85px + 10px);
 }
 
 .avatar-icon {
-  max-width: 24px;
+  width: 24px;
   height: 24px;
 
   border-radius: $border-radius-circle;
 
   object-fit: cover;
+}
+
+.logo {
+  img {
+    width: 50%;
+    height: auto;
+  }
 }
