@@ -128,6 +128,13 @@
       &:hover {
         transform: scale(1.05);
       }
+
+      &.action-disabled {
+        cursor: auto;
+        &:hover {
+          transform: none;
+        }
+      }
     }
 
     img {
@@ -163,7 +170,7 @@
   }
 
   &-value {
-    max-width: 120px;
+    max-width: 100px;
 
     color: $color-grey;
     font-size: $font-size-xs;

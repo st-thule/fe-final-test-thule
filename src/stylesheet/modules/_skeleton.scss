@@ -138,8 +138,7 @@
 
 .section-image {
   &.skeleton-avatar {
-    width: 100px;
-    height: 100px;
+    width: 15%;
     border-radius: 50%;
 
     background-color: #e0e0e0;
@@ -166,5 +165,10 @@
       #f4f4f4 50%,
       #e0e0e0 75%
     );
+
+    @media screen and (max-width: $md) {
+      width: 50%;
+      height: 50px;
+    }
   }
 }

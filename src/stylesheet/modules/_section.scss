@@ -1,13 +1,14 @@
 @use '../base/' as *;
 
 .section {
+  padding: $spacing-3xl $spacing-none;
   &-header {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    padding: $spacing-3xl $spacing-none;
+    padding: $spacing-2xl $spacing-none;
 
     color: $color-black;
 

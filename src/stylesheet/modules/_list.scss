@@ -52,7 +52,7 @@
   }
 
   &-posts {
-    padding: $spacing-3xl $spacing-none;
+    padding: $spacing-lg $spacing-none;
 
     .loading-status {
       display: flex;
@@ -69,10 +69,6 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-
-    @media screen and (max-width: $md) {
-      gap: 20px;
-    }
 
     .list-item {
       padding: $spacing-sm-plus $spacing-md;
@@ -97,6 +93,9 @@
     gap: 20px;
 
     padding: $spacing-md-plus $spacing-none;
+    @media screen and (max-width: $sm) {
+      gap: 5px;
+    }
     .list-item {
       width: 40px;
       height: 40px;
@@ -108,6 +107,11 @@
       justify-content: center;
 
       transition: background-color 0.3s ease;
+
+      @media screen and (max-width: $sm) {
+        width: 35px;
+        height: 35px;
+      }
 
       .list-link {
         display: flex;
