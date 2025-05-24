@@ -22,13 +22,13 @@ const PostsByTag = () => {
     if (pageFromUrl) {
       setCurrentPage(Number(pageFromUrl));
     }
+    window.scrollTo(0, 0);
   }, [searchParams]);
 
   const handlePageChange = useCallback(
     (page: number) => {
       setCurrentPage(page);
       setSearchParams({ page: page.toString() });
-      postListRef.current?.scrollIntoView({ behavior: 'smooth' });
     },
     [setSearchParams]
   );
@@ -51,9 +51,13 @@ const PostsByTag = () => {
         <section className="section section-list section-tag" ref={postListRef}>
           <div className="section-header">
             <h1 className="section-title">{tag}</h1>
-            {optionTags.map((option) => {
+            {optionTags.map((option, index) => {
               if (option.label === tag) {
-                return <p className="section-desc">{option.description}</p>;
+                return (
+                  <p className="section-desc" key={index}>
+                    {option.description}
+                  </p>
+                );
               }
             })}
           </div>
