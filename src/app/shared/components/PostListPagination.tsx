@@ -5,7 +5,7 @@ import { PostComponent } from '@shared/components/Post';
 import { PostResponse } from '@shared/models/post';
 import { SkeletonPost } from './partials/Skeleton';
 
-const SIZE_PAGE = 8;
+const SIZE_PAGE = 6;
 
 interface PostListPaginationProps {
   postResponse: PostResponse;
@@ -29,7 +29,7 @@ export const PostListPagination: React.FC<PostListPaginationProps> = ({
           Array.from({ length: SIZE_PAGE }).map((_, index) => (
             <SkeletonPost
               key={`skeleton-${index}`}
-              className="col-12 col-sm-6 col-md-3"
+              className="col-12 col-sm-6 col-md-4"
             />
           ))
         ) : postResponse?.data && postResponse.data.length > 0 ? (
@@ -37,7 +37,7 @@ export const PostListPagination: React.FC<PostListPaginationProps> = ({
             <PostComponent
               key={post.id}
               post={post}
-              className="col-12 col-sm-6 col-md-3"
+              className="col-12 col-sm-6 col-md-4"
             />
           ))
         ) : (
