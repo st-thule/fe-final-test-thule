@@ -12,6 +12,7 @@ import maleIcon from '@assets/icons/avatar-male.svg';
 import otherIcon from '@assets/icons/avatar-other.svg';
 import deleteIcon from '@assets/icons/delete.svg';
 import editIcon from '@assets/icons/edit.svg';
+import lockIcon from '@assets/icons/lock.svg';
 import imagePost from '@assets/images/articles/article-travel.png';
 import { Post } from '@shared/models/post';
 import { ModalTypes } from '@shared/types/enum';
@@ -41,7 +42,6 @@ export const PostComponent: React.FC<IPostProps> = ({
 
   const handleDeletePost = async (id: string | number) => {
     try {
-      console.log(id);
       await dispatch(deletePostThunk(id)).unwrap();
       toast.success('Delete successfully');
       dispatch(removePostFromPersonalInfo(id));
@@ -77,6 +77,11 @@ export const PostComponent: React.FC<IPostProps> = ({
               <button className="action" onClick={() => setModalOpen(true)}>
                 <img className="action-icon" src={deleteIcon} alt="delete" />
               </button>
+              {post?.status === 'private' && (
+                <button className="action action-disabled">
+                  <img className="action-icon" src={lockIcon} alt="lock" />
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -126,6 +131,7 @@ export const PostComponent: React.FC<IPostProps> = ({
         </div>
       </div>
       <ModalComponent
+        className="modal-confirm"
         isOpen={modalOpen}
         title="Confirm delete"
         message="Are you sure you want to delete?"
