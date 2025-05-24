@@ -11,7 +11,7 @@ import hideIcon from '@assets/icons/hide.svg';
 import showIcon from '@assets/icons/show.svg';
 import { Button } from '@shared/components/partials/Button';
 import { Input } from '@shared/components/partials/Input';
-import { Select } from '@shared/components/partials/Select';
+import { SingleSelect } from '@shared/components/partials/Select';
 import { optionGender } from '@shared/constants/options';
 import { validationRulesAuth } from '@shared/constants/validationRules';
 import { LabelGender } from '@shared/types/enum';
@@ -20,6 +20,7 @@ import { formatDate } from '@shared/utils/formatDate';
 interface IRegisterForm {
   email: string;
   password: string;
+  confirmPassword: string;
   firstName: string;
   lastName: string;
   gender: string;
@@ -30,9 +31,18 @@ interface IRegisterForm {
 
 const Register = () => {
   const navigation = useNavigate();
-  const [showPassword, setShowPassword] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state) => state.auth);
+  const [showPassword, setShowPassword] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+
+  const toggleShowPassword = (field: string) => {
+    setShowPassword((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
 
   const {
     control,
@@ -141,11 +151,32 @@ const Register = () => {
           render={({ field }) => (
             <Input
               {...field}
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword[field.name] ? 'text' : 'password'}
               placeHolder="Enter password"
-              icon={showPassword ? showIcon : hideIcon}
-              onIconClick={() => setShowPassword((prev) => !prev)}
+              icon={showPassword[field.name] ? showIcon : hideIcon}
+              onIconClick={() => toggleShowPassword(field.name)}
               errorMessage={errors.password?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="confirmPassword"
+          rules={{
+            required: 'Confirm password is required',
+            validate: (value) =>
+              value === control._formValues.password ||
+              'Passwords do not match',
+          }}
+          render={({ field }) => (
+            <Input
+              {...field}
+              type={showPassword[field.name] ? 'text' : 'password'}
+              placeHolder="Confirm password"
+              icon={showPassword[field.name] ? showIcon : hideIcon}
+              onIconClick={() => toggleShowPassword(field.name)}
+              errorMessage={errors.confirmPassword?.message}
             />
           )}
         />
@@ -157,10 +188,10 @@ const Register = () => {
               name="gender"
               rules={validationRulesAuth.gender}
               render={({ field }) => (
-                <Select
+                <SingleSelect
                   {...field}
-                  placeHolder="Gender"
                   options={optionGender}
+                  placeholder="Select gender"
                   errorMsg={errors.gender?.message}
                 />
               )}

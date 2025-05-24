@@ -12,7 +12,7 @@ import femaleIcon from '@assets/icons/avatar-female.svg';
 import maleIcon from '@assets/icons/avatar-male.svg';
 import otherIcon from '@assets/icons/avatar-other.svg';
 import { Button, Input } from '@shared/components/partials';
-import { Select } from '@shared/components/partials/Select';
+import { SingleSelect } from '@shared/components/partials/Select';
 import { UploadImage } from '@shared/components/UploadImage';
 import { optionGender } from '@shared/constants/options';
 import { TypeUpload } from '@shared/types/enum';
@@ -162,9 +162,9 @@ const UserForm = () => {
                       control={control}
                       name="gender"
                       render={({ field }) => (
-                        <Select
+                        <SingleSelect
                           label="Status"
-                          placeHolder="Status"
+                          placeholder="Status"
                           options={optionGender}
                           value={field.value}
                           name={field.name}
