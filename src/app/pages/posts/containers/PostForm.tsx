@@ -82,7 +82,12 @@ const PostForm = () => {
             setValue('title', post.title);
             setValue('content', post.content);
             setValue('description', post.description);
-            setValue('cover', post.cover || '');
+            setValue(
+              'cover',
+              post.cover === 'cover'
+                ? '/assets/images/articles/article-travel.png'
+                : post.cover
+            );
             setValue('status', post.status as StatusPost);
             setValue('tags', post.tags || []);
             setRawContent(post.content);
