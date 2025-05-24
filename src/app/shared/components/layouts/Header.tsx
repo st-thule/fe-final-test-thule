@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { AppRoutes } from '@app/core/constants/app-routes';
@@ -19,7 +19,6 @@ export const Header = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const lastScrollY = useRef(0);
   const [hidden, setHidden] = useState(false);
 
   // check is authen
@@ -34,21 +33,6 @@ export const Header = () => {
       : user?.gender === 'male'
       ? maleIcon
       : otherIcon;
-
-  // scroll header
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
-        setHidden(true);
-      } else {
-        setHidden(false);
-      }
-      lastScrollY.current = currentScrollY;
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // click outsite to set close dropdown
   useEffect(() => {
@@ -65,10 +49,14 @@ export const Header = () => {
   }, []);
 
   // logout
-  const onLogoutConfirm = () => {
-    dispatch(logoutThunk());
-    toast.success('Logout successfully');
-    setModalOpen(false);
+  const onLogoutConfirm = async () => {
+    try {
+      await dispatch(logoutThunk()).unwrap();
+      toast.success('Logout successfully');
+      setModalOpen(false);
+    } catch (error) {
+      toast.error('Logout failed');
+    }
   };
 
   return (
@@ -147,6 +135,7 @@ export const Header = () => {
       </div>
 
       <ModalComponent
+        className="modal-confirm"
         type={ModalTypes.CONFIRM}
         isOpen={modalOpen}
         title="Confirm logout"
