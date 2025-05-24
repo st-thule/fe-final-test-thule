@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { User } from '@shared/models/user';
-import { getPersonalInfoThunk } from '../thunk/userThunk';
+import { getPersonalInfoThunk, updateInfoThunk } from '../thunk/userThunk';
 
 interface UserState {
   personalInfo: User | null;
@@ -40,6 +40,19 @@ const userReducer = createSlice({
       .addCase(getPersonalInfoThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to login';
+      });
+    builder
+      .addCase(updateInfoThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateInfoThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.personalInfo = action.payload;
+      })
+      .addCase(updateInfoThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to update post';
       });
   },
 });

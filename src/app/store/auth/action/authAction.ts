@@ -14,9 +14,6 @@ import {
   VALIDATE_TOKEN,
   VALIDATE_TOKEN_FAILURE,
   VALIDATE_TOKEN_SUCCESS,
-  UPDATE_USER_INFO,
-  UPDATE_USER_INFO_FAILURE,
-  UPDATE_USER_INFO_SUCCESS,
   CHANGE_PASSWORD,
   CHANGE_PASSWORD_SUCCESS,
   CHANGE_PASSWORD_FAILURE,
@@ -62,20 +59,6 @@ export interface ValidateTokenFailureAction
   payload: string;
 }
 
-export interface UpdateUserInfoAction extends Action<typeof UPDATE_USER_INFO> {
-  payload: User;
-}
-
-export interface UpdateUserInfoSuccessAction
-  extends Action<typeof UPDATE_USER_INFO_SUCCESS> {
-  payload: User;
-}
-
-export interface UpdateUserInfoFailureAction
-  extends Action<typeof UPDATE_USER_INFO_FAILURE> {
-  payload: string;
-}
-
 export interface ChangePasswordAction extends Action<typeof CHANGE_PASSWORD> {}
 
 export interface ChangePasswordSuccessAction
@@ -101,9 +84,6 @@ export type AuthActions =
   | ValidateTokenAction
   | ValidateTokenSuccessAction
   | ValidateTokenFailureAction
-  | UpdateUserInfoAction
-  | UpdateUserInfoSuccessAction
-  | UpdateUserInfoFailureAction
   | ChangePasswordAction
   | ChangePasswordSuccessAction
   | ChangePasswordFailureAction;
@@ -152,25 +132,6 @@ export const validateTokenFailure = (
   payload: string
 ): ValidateTokenFailureAction => ({
   type: VALIDATE_TOKEN_FAILURE,
-  payload,
-});
-
-export const updateUserInfo = (payload: User): UpdateUserInfoAction => ({
-  type: UPDATE_USER_INFO,
-  payload,
-});
-
-export const updateUserInfoSuccess = (
-  payload: User
-): UpdateUserInfoSuccessAction => ({
-  type: UPDATE_USER_INFO_SUCCESS,
-  payload,
-});
-
-export const updateUserInfoFailure = (
-  payload: string
-): UpdateUserInfoFailureAction => ({
-  type: UPDATE_USER_INFO_FAILURE,
   payload,
 });
 

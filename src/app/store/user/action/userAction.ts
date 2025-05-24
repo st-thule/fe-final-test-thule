@@ -4,6 +4,9 @@ import {
   FETCH_USER_INFO,
   FETCH_USER_INFO_FAILURE,
   FETCH_USER_INFO_SUCCESS,
+  UPDATE_USER_INFO,
+  UPDATE_USER_INFO_FAILURE,
+  UPDATE_USER_INFO_SUCCESS,
 } from './type/userActionTypes';
 import { User } from '@shared/models/user';
 
@@ -19,10 +22,27 @@ export interface FetchUserInfoFailureAction
   payload: string;
 }
 
+export interface UpdateUserInfoAction extends Action<typeof UPDATE_USER_INFO> {
+  payload: User;
+}
+
+export interface UpdateUserInfoSuccessAction
+  extends Action<typeof UPDATE_USER_INFO_SUCCESS> {
+  payload: User;
+}
+
+export interface UpdateUserInfoFailureAction
+  extends Action<typeof UPDATE_USER_INFO_FAILURE> {
+  payload: string;
+}
+
 export type UserActions =
   | FetchUserInfoAction
   | FetchUserInfoSuccessAction
-  | FetchUserInfoAction;
+  | FetchUserInfoAction
+  | UpdateUserInfoAction
+  | UpdateUserInfoSuccessAction
+  | UpdateUserInfoFailureAction;
 
 export const fetchUserInfo = (
   payload: number | string
@@ -45,3 +65,21 @@ export const fetchUserInfoFailure = (
   payload,
 });
 
+export const updateUserInfo = (payload: User): UpdateUserInfoAction => ({
+  type: UPDATE_USER_INFO,
+  payload,
+});
+
+export const updateUserInfoSuccess = (
+  payload: User
+): UpdateUserInfoSuccessAction => ({
+  type: UPDATE_USER_INFO_SUCCESS,
+  payload,
+});
+
+export const updateUserInfoFailure = (
+  payload: string
+): UpdateUserInfoFailureAction => ({
+  type: UPDATE_USER_INFO_FAILURE,
+  payload,
+});

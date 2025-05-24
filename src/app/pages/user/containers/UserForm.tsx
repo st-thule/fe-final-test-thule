@@ -7,7 +7,6 @@ import { AppRoutes } from '@app/core/constants/app-routes';
 import { useAppDispatch } from '@app/store/hook/useAppDispatch';
 import { useAppSelector } from '@app/store/hook/useAppSelector';
 import { uploadImageThunk } from '@app/store/image/thunk/imageThunk';
-import { updateInfoThunk } from '@app/store/user/thunk/userThunk';
 import femaleIcon from '@assets/icons/avatar-female.svg';
 import maleIcon from '@assets/icons/avatar-male.svg';
 import otherIcon from '@assets/icons/avatar-other.svg';
@@ -16,6 +15,8 @@ import { SingleSelect } from '@shared/components/partials/Select';
 import { UploadImage } from '@shared/components/UploadImage';
 import { optionGender } from '@shared/constants/options';
 import { TypeUpload } from '@shared/types/enum';
+import { updateInfoThunk } from '@app/store/user/thunk/userThunk';
+import { updateUser } from '@app/store/auth/reducers/authReducer';
 
 interface IUserForm {
   firstName: string;
@@ -27,6 +28,7 @@ interface IUserForm {
 }
 
 const UserForm = () => {
+  const personalInfo = useAppSelector((state) => state.user.personalInfo);
   const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -52,21 +54,26 @@ const UserForm = () => {
   const picture = watch('picture');
   // set value for field
   useEffect(() => {
-    if (user) {
-      setValue('firstName', user.firstName || '');
-      setValue('lastName', user.lastName || '');
-      setValue('gender', user.gender || '');
-      setValue('dob', user.dob || '');
-      setValue('displayName', user.displayName || '');
-      setValue('picture', user.picture || '');
+    if (personalInfo) {
+      setValue('firstName', personalInfo.firstName || '');
+      setValue('lastName', personalInfo.lastName || '');
+      setValue('gender', personalInfo.gender || '');
+      setValue('dob', personalInfo.dob || '');
+      setValue('displayName', personalInfo.displayName || '');
+      setValue('picture', personalInfo.picture || '');
     }
-  }, [user, setValue]);
+  }, [personalInfo, setValue]);
 
   // edit profile
   const onSubmit = async (data: IUserForm) => {
     try {
       const response = await dispatch(updateInfoThunk(data));
       if (updateInfoThunk.fulfilled.match(response)) {
+        const updatedAuth = response.payload;
+        if (user?.id === updatedAuth.id) {
+          dispatch(updateUser(updatedAuth));
+        }
+
         toast.success('Profile updated successfully!');
         navigate(-1);
       } else {
@@ -94,9 +101,9 @@ const UserForm = () => {
 
   // check avatar default follow gender
   const author =
-    user?.gender === 'female'
+    personalInfo?.gender === 'female'
       ? femaleIcon
-      : user?.gender === 'male'
+      : personalInfo?.gender === 'male'
       ? maleIcon
       : otherIcon;
 

@@ -25,7 +25,13 @@ const initialState: AuthState = {
 const authReducer = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    updateUser(state, action) {
+      if (state.user && state.user.id === action.payload.id) {
+        state.user = action.payload;
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginThunk.pending, (state) => {
@@ -82,19 +88,6 @@ const authReducer = createSlice({
       });
 
     builder
-      .addCase(updateInfoThunk.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(updateInfoThunk.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload;
-      })
-      .addCase(updateInfoThunk.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Failed to update post';
-      });
-    builder
       .addCase(changePasswordThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -109,4 +102,5 @@ const authReducer = createSlice({
   },
 });
 
+export const { updateUser } = authReducer.actions;
 export default authReducer.reducer;
