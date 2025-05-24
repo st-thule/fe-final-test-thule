@@ -11,6 +11,14 @@
   background-color: $color-white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 
+  &.modal-form {
+    width: 50%;
+
+    .form {
+      padding: $spacing-md-plus $spacing-none;
+    }
+  }
+
   &-overlay {
     position: fixed;
     top: 0;
