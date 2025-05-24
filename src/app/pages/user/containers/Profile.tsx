@@ -19,6 +19,10 @@ import {
 } from '@shared/components/partials/Skeleton';
 import { ModalTypes } from '@shared/types/enum';
 import { PostList } from '../components/PostList';
+import { formatDate } from '@shared/utils/formatDate';
+import hideIcon from '@assets/icons/hide.svg';
+import showIcon from '@assets/icons/show.svg';
+import { validationRulesAuth } from '@shared/constants/validationRules';
 
 interface IPasswordForm {
   oldPassword: string;
@@ -34,15 +38,29 @@ const Profile = () => {
   const authUser = useAppSelector((state) => state.auth.user);
   const { personalInfo, loading } = useAppSelector((state) => state.user);
 
+  const [showPassword, setShowPassword] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+
+  const toggleShowPassword = (field: string) => {
+    setShowPassword((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset,
+    getValues,
   } = useForm<IPasswordForm>({
+    mode: 'onChange',
     defaultValues: {
       oldPassword: '',
       newPassword: '',
+      confirmPassword: '',
     },
   });
 
@@ -100,12 +118,14 @@ const Profile = () => {
                 <div className="section-header">
                   <h2 className="section-title">Articles</h2>
                 </div>
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <SkeletonPost
-                    key={`skeleton-${index}`}
-                    className="col-12 col-sm-6 col-md-3"
-                  />
-                ))}
+                <ul className="row">
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <SkeletonPost
+                      key={`skeleton-${index}`}
+                      className="col-12 col-sm-6 col-md-6"
+                    />
+                  ))}
+                </ul>
               </section>
             </>
           ) : (
@@ -123,14 +143,25 @@ const Profile = () => {
                     <h1 className="section-title">
                       {personalInfo.firstName} {personalInfo.lastName}
                     </h1>
-                    <p className="section-subtitle">{personalInfo.email}</p>
-                    <p>{personalInfo.phone}</p>
-                    <p>{personalInfo.dob}</p>
+                    <div className="section-subtitle">
+                      {isMyProfile && (
+                        <>
+                          <p>Email: {personalInfo.email}</p>
+                          <p>Phone: {personalInfo.phone}</p>
+                        </>
+                      )}
+                      <p>
+                        Gender:
+                        {personalInfo.gender.charAt(0).toUpperCase() +
+                          personalInfo.gender.slice(1)}
+                      </p>
+                      <p>Date of birth: {formatDate(personalInfo.dob)}</p>
+                    </div>
                   </div>
                   {isMyProfile && (
                     <div className="section-action">
                       <Link to={`${AppRoutes.USER}/${AppRoutes.USER_EDIT}`}>
-                        Edit
+                        <Button className="btn btn-primary" label="Edit" />
                       </Link>
                       <Button
                         className="btn btn-primary"
@@ -161,6 +192,7 @@ const Profile = () => {
       </div>
 
       <ModalComponent
+        className="modal-form"
         type={ModalTypes.USER_FORM}
         isOpen={modalOpen}
         confirmLabel="Change"
@@ -176,24 +208,29 @@ const Profile = () => {
             <Controller
               name="oldPassword"
               control={control}
+              rules={validationRulesAuth.password}
               render={({ field }) => (
                 <Input
                   {...field}
-                  type="password"
+                  type={showPassword[field.name] ? 'text' : 'password'}
                   label="Old password"
-                  errorMessage=""
+                  icon={showPassword[field.name] ? showIcon : hideIcon}
+                  onIconClick={() => toggleShowPassword(field.name)}
+                  errorMessage={errors.oldPassword?.message}
                 />
               )}
             />
             <Controller
               name="newPassword"
               control={control}
-              rules={{ required: 'New password is required' }}
+              rules={validationRulesAuth.password}
               render={({ field }) => (
                 <Input
                   {...field}
-                  type="password"
+                  type={showPassword[field.name] ? 'text' : 'password'}
                   label="New password"
+                  icon={showPassword[field.name] ? showIcon : hideIcon}
+                  onIconClick={() => toggleShowPassword(field.name)}
                   errorMessage={errors.newPassword?.message || ''}
                 />
               )}
@@ -204,14 +241,16 @@ const Profile = () => {
               rules={{
                 required: 'Please confirm your password',
                 validate: (value) =>
-                  value === control._formValues.newPassword ||
+                  value === getValues('newPassword') ||
                   'Passwords do not match',
               }}
               render={({ field }) => (
                 <Input
                   {...field}
-                  type="password"
+                  type={showPassword[field.name] ? 'text' : 'password'}
                   label="Confirm password"
+                  icon={showPassword[field.name] ? showIcon : hideIcon}
+                  onIconClick={() => toggleShowPassword(field.name)}
                   errorMessage={errors.confirmPassword?.message || ''}
                 />
               )}
